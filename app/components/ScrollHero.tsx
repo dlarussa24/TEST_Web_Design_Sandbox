@@ -49,9 +49,19 @@ export default function ScrollHero() {
       const scale = Math.max(cw / iw, ch / ih);
       const dw = iw * scale;
       const dh = ih * scale;
-      ctx.fillStyle = '#000';
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = '#101012';
       ctx.fillRect(0, 0, cw, ch);
       ctx.drawImage(img, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
+      // Lift the footage's pure-black void up to the page's warm charcoal
+      // gradient so the hero never reads as flat #000.
+      ctx.globalCompositeOperation = 'lighten';
+      const tint = ctx.createLinearGradient(0, 0, 0, ch);
+      tint.addColorStop(0, '#101012');
+      tint.addColorStop(1, '#17110b');
+      ctx.fillStyle = tint;
+      ctx.fillRect(0, 0, cw, ch);
+      ctx.globalCompositeOperation = 'source-over';
       currentIdx = index;
     };
 
@@ -101,7 +111,7 @@ export default function ScrollHero() {
           width: '100vw',
           height: '100vh',
           overflow: 'hidden',
-          background: '#000',
+          background: 'linear-gradient(170deg, #101012 0%, #17110b 100%)',
         }}
       >
         <canvas
