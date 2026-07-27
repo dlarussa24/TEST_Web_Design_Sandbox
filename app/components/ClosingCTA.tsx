@@ -3,7 +3,7 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 
-const ACCENT = '#C8A96E';
+const ACCENT = '#C08A55';
 const ease = [0.25, 0, 0, 1] as const;
 
 export default function ClosingCTA() {
@@ -13,7 +13,7 @@ export default function ClosingCTA() {
   return (
     <section
       style={{
-        background: '#000',
+        background: 'transparent',
         padding: 'clamp(5rem, 12vw, 10rem) clamp(1.5rem, 6vw, 5rem)',
         textAlign: 'center',
       }}
@@ -79,13 +79,13 @@ export default function ClosingCTA() {
               position: 'absolute',
               inset: '-60px -120px',
               background:
-                'radial-gradient(ellipse, rgba(200,169,110,0.10) 0%, transparent 70%)',
+                'radial-gradient(ellipse, rgba(192,138,85,0.12) 0%, rgba(144,144,168,0.05) 45%, transparent 70%)',
               pointerEvents: 'none',
             }}
           />
           <motion.a
             href="#"
-            whileHover={{ backgroundColor: '#000000', color: ACCENT }}
+            whileHover={{ backgroundColor: '#100C08', color: ACCENT }}
             transition={{ duration: 0.25 }}
             style={{
               position: 'relative',

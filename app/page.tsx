@@ -5,7 +5,7 @@ import ClosingCTA from './components/ClosingCTA';
 
 export default function Home() {
   return (
-    <main style={{ background: '#000' }}>
+    <main>
       <ScrollHero />
       <FeaturesSection />
       <SpecsSection />

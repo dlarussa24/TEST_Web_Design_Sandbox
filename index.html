@@ -10,13 +10,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #000000;
+      /* Palette sampled from the hero footage: cedar timber (#C08A55),
+         slate roof (#9098A8), charcoal stone shadows. */
+      --bg: #101012;
       --text-primary: #ffffff;
       --text-body: #E5E5E5;
-      --accent: #C8A96E;
-      --accent-hover: #E8C98E;
+      --accent: #C08A55;
+      --accent-hover: #D9A570;
+      --slate: #9098A8;
       --dim: #888888;
-      --border-subtle: rgba(200, 169, 110, 0.2);
+      --border-subtle: rgba(192, 138, 85, 0.18);
       --font-playfair: 'Playfair Display', serif;
       --font-inter: 'Inter', sans-serif;
     }
@@ -24,7 +27,9 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background: var(--bg);
+      background-color: var(--bg);
+      background-image: linear-gradient(170deg, #101012 0%, #131114 30%, #17110b 70%, #100c08 100%);
+      background-attachment: fixed;
       color: var(--text-primary);
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
@@ -60,7 +65,7 @@
       flex-direction: column;
       justify-content: flex-end;
       pointer-events: none;
-      background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.35) 50%, transparent 100%);
+      background: linear-gradient(to top, rgba(15,12,9,0.92) 0%, rgba(16,14,12,0.35) 50%, transparent 100%);
     }
 
     .hero-content { padding: clamp(2rem, 6vw, 5rem); max-width: 900px; }
@@ -101,8 +106,8 @@
 
     .btn {
       display: inline-block;
-      background: var(--accent);
-      color: #000;
+      background: linear-gradient(135deg, #C08A55 0%, #8B5A38 100%);
+      color: #140E08;
       font-family: var(--font-inter);
       font-weight: 500;
       font-size: 0.7rem;
@@ -117,7 +122,7 @@
 
     /* ---------- Sections ---------- */
     section {
-      background: var(--bg);
+      background: transparent;
       padding: clamp(4rem, 10vw, 8rem) clamp(1.5rem, 6vw, 5rem);
     }
 
@@ -151,8 +156,10 @@
     }
 
     .feature-card {
-      border-top: 1px solid var(--border-subtle);
-      padding-top: 1.8rem;
+      background: linear-gradient(135deg, #15171B, #1B140D);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      padding: 1.8rem;
     }
     .feature-card svg { margin-bottom: 1.2rem; }
     .feature-card h3 {
@@ -175,7 +182,7 @@
       grid-template-columns: 1fr 2fr;
       gap: 1rem;
       padding: 1.1rem 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      border-bottom: 1px solid rgba(158, 163, 174, 0.14);
     }
     .spec-row dt {
       font-weight: 500;
@@ -215,14 +222,14 @@
     .cta-glow {
       position: absolute;
       inset: -60px -120px;
-      background: radial-gradient(ellipse, rgba(200,169,110,0.10) 0%, transparent 70%);
+      background: radial-gradient(ellipse, rgba(192,138,85,0.12) 0%, rgba(144,144,168,0.05) 45%, transparent 70%);
       pointer-events: none;
     }
     .btn-outline {
       position: relative;
       border: 1px solid var(--accent);
     }
-    .btn-outline:hover { background: #000; color: var(--accent); }
+    .btn-outline:hover { background: #100C08; color: var(--accent); }
 
     @media (max-width: 768px) {
       .features-grid { grid-template-columns: 1fr; }
@@ -257,42 +264,42 @@
         <h2 class="reveal" style="--stagger:0.1s; max-width:700px">Every layer of this house earns its place.</h2>
         <div class="features-grid">
           <div class="feature-card reveal" style="--stagger:0.2s">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#C8A96E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#C08A55" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M4 16 L16 5 L28 16" /><path d="M8 13 L8 20 M16 8 L16 20 M24 13 L24 20" /><path d="M6 20 L26 20" />
             </svg>
             <h3>Century Slate Roof</h3>
             <p>Hand-split Welsh slate, graded and laid in diminishing courses, engineered to shelter the residence for more than a hundred years.</p>
           </div>
           <div class="feature-card reveal" style="--stagger:0.3s">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#C8A96E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#C08A55" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M4 20 C10 12, 22 12, 28 20" /><path d="M4 24 C10 16, 22 16, 28 24" /><circle cx="16" cy="9" r="2.5" />
             </svg>
             <h3>Copper Ridgework</h3>
             <p>Standing-seam copper ridges, valleys and gutters, folded by hand and left to earn their patina season after season.</p>
           </div>
           <div class="feature-card reveal" style="--stagger:0.4s">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#C8A96E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#C08A55" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M16 4 C16 4, 25 9, 25 17 C25 23 21 27 16 27 C11 27 7 23 7 17 C7 9 16 4 16 4 Z" /><path d="M12 17 C12 20 14 22 16 22" />
             </svg>
             <h3>Envelope Waterproofing</h3>
             <p>A triple-membrane building envelope seals every junction from ridge to footing, tested against wind-driven rain at storm pressure.</p>
           </div>
           <div class="feature-card reveal" style="--stagger:0.5s">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#C8A96E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#C08A55" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M6 27 L6 10 L16 4 L26 10 L26 27" /><path d="M6 27 L26 27" /><path d="M6 10 L26 27 M26 10 L6 27" />
             </svg>
             <h3>Heritage Timber Frame</h3>
             <p>A post-and-beam skeleton of quarter-sawn oak, joined with pegged mortise and tenon exactly as the first Meridian houses were.</p>
           </div>
           <div class="feature-card reveal" style="--stagger:0.6s">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#C8A96E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#C08A55" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="16" cy="14" r="8" /><path d="M12.5 14 L15 16.5 L20 11.5" /><path d="M12 21 L10 28 L16 25 L22 28 L20 21" />
             </svg>
             <h3>Certified Craftsmanship</h3>
             <p>Every structural assembly is inspected twice — once by the master builder, once by an independent surveyor — before it is ever concealed.</p>
           </div>
           <div class="feature-card reveal" style="--stagger:0.7s">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#C8A96E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#C08A55" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="5" y="6" width="22" height="20" /><path d="M16 6 L16 26 M5 16 L27 16" />
             </svg>
             <h3>Panoramic Glazing</h3>

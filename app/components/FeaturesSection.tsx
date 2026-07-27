@@ -3,7 +3,7 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 
-const ACCENT = '#C8A96E';
+const ACCENT = '#C08A55';
 
 type Feature = {
   label: string;
@@ -99,7 +99,7 @@ export default function FeaturesSection() {
     <section
       id="features"
       style={{
-        background: '#000',
+        background: 'transparent',
         padding: 'clamp(4rem, 10vw, 8rem) clamp(1.5rem, 6vw, 5rem)',
       }}
     >
@@ -149,8 +149,10 @@ export default function FeaturesSection() {
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7, delay: 0.2 + i * 0.1, ease }}
               style={{
-                borderTop: '1px solid rgba(200,169,110,0.2)',
-                paddingTop: '1.8rem',
+                background: 'linear-gradient(135deg, #15171B, #1B140D)',
+                border: '1px solid rgba(192,138,85,0.18)',
+                borderRadius: 4,
+                padding: '1.8rem',
               }}
             >
               <div style={{ marginBottom: '1.2rem' }}>{feature.icon}</div>

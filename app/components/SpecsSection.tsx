@@ -3,7 +3,7 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 
-const ACCENT = '#C8A96E';
+const ACCENT = '#C08A55';
 const ease = [0.25, 0, 0, 1] as const;
 
 const specs: [string, string][] = [
@@ -26,7 +26,7 @@ export default function SpecsSection() {
   return (
     <section
       style={{
-        background: '#000',
+        background: 'transparent',
         padding: 'clamp(4rem, 10vw, 8rem) clamp(1.5rem, 6vw, 5rem)',
       }}
     >
@@ -74,7 +74,7 @@ export default function SpecsSection() {
                 gridTemplateColumns: '1fr 2fr',
                 gap: '1rem',
                 padding: '1.1rem 0',
-                borderBottom: '1px solid rgba(255,255,255,0.07)',
+                borderBottom: '1px solid rgba(158,163,174,0.14)',
               }}
             >
               <span

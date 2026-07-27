@@ -117,7 +117,7 @@ export default function ScrollHero() {
             justifyContent: 'flex-end',
             pointerEvents: 'none',
             background:
-              'linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.35) 50%, transparent 100%)',
+              'linear-gradient(to top, rgba(15,12,9,0.92) 0%, rgba(16,14,12,0.35) 50%, transparent 100%)',
           }}
         >
           <div style={{ padding: 'clamp(2rem, 6vw, 5rem)', maxWidth: 900 }}>
@@ -131,7 +131,7 @@ export default function ScrollHero() {
                 fontSize: '0.65rem',
                 letterSpacing: '0.25em',
                 textTransform: 'uppercase',
-                color: '#C8A96E',
+                color: '#C08A55',
                 marginBottom: '1.2rem',
               }}
             >
@@ -179,8 +179,8 @@ export default function ScrollHero() {
               href="#features"
               style={{
                 display: 'inline-block',
-                background: '#C8A96E',
-                color: '#000',
+                background: 'linear-gradient(135deg, #C08A55 0%, #8B5A38 100%)',
+                color: '#140E08',
                 fontFamily: 'var(--font-inter)',
                 fontWeight: 500,
                 fontSize: '0.7rem',

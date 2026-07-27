@@ -5,7 +5,18 @@
 }
 
 body {
-  background: #000;
+  /* Palette sampled from the hero footage: slate roof, cedar timber,
+     charcoal stone — background drifts from cool slate-charcoal into
+     the warm brown of the exposed frame. */
+  background-color: #101012;
+  background-image: linear-gradient(
+    170deg,
+    #101012 0%,
+    #131114 30%,
+    #17110b 70%,
+    #100c08 100%
+  );
+  background-attachment: fixed;
   color: #fff;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
