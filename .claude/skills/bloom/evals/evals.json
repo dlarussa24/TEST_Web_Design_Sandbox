@@ -1,0 +1,23 @@
+{
+  "skill_name": "bloom",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "/bloom vintage brass telescope",
+      "expected_output": "A self-contained index.html: hero canvas scrubs a Higgsfield-generated 4K deconstruction of a brass telescope (tube, lenses, focuser, tripod separating); brass/amber-derived palette with no pure-black backgrounds; drag-to-turn, layer captions, cursor glow, features/specs/gallery/CTA sections; JSON-LD and OG tags present; verify_page.mjs passes.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I want one of those scroll pages where the product comes apart as you scroll — do it for a carbon fiber road bike, make it feel like a high-end brand site",
+      "expected_output": "Same pipeline triggered without the /bloom keyword: bike explodes along frame lines (wheels, drivetrain, frame, bars), carbon/graphite palette with an accent from decals or components, luxury cycling copy, verified scrub.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "/bloom grand piano",
+      "expected_output": "Piano deconstruction (lid, soundboard, strings, hammers, keys, frame rising apart), ebony/brass/felt-derived design system, concert-hall voice in the copy, working standalone page with all engagement + SEO features.",
+      "files": []
+    }
+  ]
+}
