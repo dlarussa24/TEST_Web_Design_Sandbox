@@ -1,0 +1,44 @@
+name: Fetch act2 frames
+
+on:
+  workflow_dispatch:
+    inputs:
+      land_url:
+        description: URL of the 4K landscape continuation video
+        required: true
+      port_url:
+        description: URL of the 4K portrait continuation video
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Ensure ffmpeg
+        run: |
+          if ! command -v ffmpeg >/dev/null; then
+            sudo apt-get update && sudo apt-get install -y ffmpeg
+          fi
+
+      - name: Download and extract both orientations
+        run: |
+          curl -fSL "${{ github.event.inputs.land_url }}" -o land.mp4
+          curl -fSL "${{ github.event.inputs.port_url }}" -o port.mp4
+          rm -rf bloom-typhlosion/frames2 bloom-typhlosion/frames2-portrait
+          mkdir -p bloom-typhlosion/frames2 bloom-typhlosion/frames2-portrait
+          ffmpeg -i land.mp4 -vf "fps=24,scale=2560:-2" -q:v 2 "bloom-typhlosion/frames2/frame_%04d.jpg"
+          ffmpeg -i port.mp4 -vf "fps=24,scale=1080:-2" -q:v 2 "bloom-typhlosion/frames2-portrait/frame_%04d.jpg"
+          echo "land: $(ls bloom-typhlosion/frames2 | wc -l), portrait: $(ls bloom-typhlosion/frames2-portrait | wc -l)"
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A bloom-typhlosion/frames2 bloom-typhlosion/frames2-portrait
+          git commit -m "Replace Typhlosion act-2 frames with smoothed grounded-landing take"
+          git push
