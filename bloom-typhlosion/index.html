@@ -151,11 +151,33 @@
       .bloom-container { height: auto; }
       .reveal { opacity: 1; transform: none; transition: none; }
     }
+
+    /* ── Burning charcoal ember field (below the hero) ── */
+    #ember-field { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; opacity: 0; }
+    .heat-vignette { position: fixed; inset: 0; pointer-events: none; z-index: 4; opacity: 0;
+      background: radial-gradient(120% 55% at 50% 110%, rgba(255,110,30,0.16), transparent 62%); transition: opacity 0.4s; }
+    section h2 { text-shadow: 0 0 60px rgba(255,140,50,0.22); }
+    .feature-card { transition: transform 0.35s cubic-bezier(0.25,0,0,1), box-shadow 0.35s, border-color 0.35s; }
+    .feature-card:hover { transform: translateY(-4px); border-color: rgba(255,178,90,0.45); box-shadow: 0 10px 44px rgba(255,120,40,0.14); }
+    .spec-row { transition: border-color 0.3s; }
+    .spec-row:hover { border-bottom-color: rgba(255,150,70,0.35); }
+    .gallery img { transition: transform 0.45s cubic-bezier(0.25,0,0,1), box-shadow 0.45s; }
+    .gallery img:hover { transform: scale(1.015); box-shadow: 0 12px 60px rgba(255,110,40,0.12); }
+    .glow { animation: glowPulse 5s ease-in-out infinite; }
+    @keyframes glowPulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.55; transform: scale(1.07); } }
+    .btn { position: relative; overflow: hidden; }
+    .btn::after { content: ''; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
+      background: linear-gradient(105deg, transparent, rgba(255,255,255,0.35), transparent);
+      transform: skewX(-20deg); transition: left 0.6s ease; }
+    .btn:hover::after { left: 120%; }
+    @media (prefers-reduced-motion: reduce) { #ember-field, .heat-vignette { display: none; } .glow { animation: none; } }
   </style>
 </head>
 <body>
   <div class="cursor" id="cursor" aria-hidden="true"></div>
   <div class="progress-rail" aria-hidden="true"><i id="progress"></i></div>
+  <div class="heat-vignette" id="heat-vignette" aria-hidden="true"></div>
+  <canvas id="ember-field" aria-hidden="true"></canvas>
 
   <main>
     <div class="bloom-container" id="bloom-container" data-bloom-container>
@@ -356,6 +378,79 @@
         });
       }, { rootMargin: '-80px' });
       document.querySelectorAll('.reveal').forEach(function (el) { obs.observe(el); });
+    })();
+  </script>
+
+  <script>
+    (function () {
+      // Burning charcoal flakes: hot embers rise, charcoal shards fall,
+      // all flickering and parallaxing with scroll. Fades in as the hero
+      // bloom completes so the vortex hands off into drifting embers.
+      var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var cv = document.getElementById('ember-field');
+      var vig = document.getElementById('heat-vignette');
+      if (!cv || reduced) { if (cv) cv.remove(); if (vig) vig.remove(); return; }
+      var ctx = cv.getContext('2d');
+      var W, H;
+      function size() {
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        W = cv.clientWidth; H = cv.clientHeight;
+        cv.width = W * dpr; cv.height = H * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      size(); window.addEventListener('resize', size);
+      var hero = document.getElementById('bloom-container');
+      var N = window.innerWidth < 768 ? 42 : 78;
+      function rnd(a, b) { return a + Math.random() * (b - a); }
+      function mk(initial) {
+        var rise = Math.random() < 0.6;
+        var s = rise ? rnd(1.6, 4) : rnd(2.5, 7);
+        var verts = []; var vn = 5 + ((Math.random() * 3) | 0);
+        for (var i = 0; i < vn; i++) {
+          var a = (i / vn) * Math.PI * 2; var r = s * rnd(0.55, 1.15);
+          verts.push([Math.cos(a) * r, Math.sin(a) * r]);
+        }
+        return { rise: rise, x: rnd(-20, W + 20),
+          y: initial ? rnd(0, H) : (rise ? H + rnd(10, 60) : -rnd(10, 60)),
+          vy: rise ? -rnd(18, 55) : rnd(10, 32), amp: rnd(6, 26), freq: rnd(0.3, 1.1),
+          ph: rnd(0, 6.283), rot: rnd(0, 6.283), rotV: rnd(-0.8, 0.8), s: s, verts: verts,
+          heat: rise ? rnd(0.5, 1) : rnd(0.15, 0.7), fl: rnd(2, 6) };
+      }
+      var ps = []; for (var i = 0; i < N; i++) ps.push(mk(true));
+      var last = performance.now(), lastScroll = window.scrollY;
+      function frame(now) {
+        requestAnimationFrame(frame);
+        var dt = Math.min(0.05, (now - last) / 1000); last = now;
+        var vh = window.innerHeight;
+        var start = hero ? hero.offsetHeight - vh * 1.4 : vh;
+        var fade = Math.max(0, Math.min(1, (window.scrollY - start) / (vh * 0.6)));
+        cv.style.opacity = fade; if (vig) vig.style.opacity = fade;
+        if (!fade || document.hidden) { if (!fade) ctx.clearRect(0, 0, W, H); return; }
+        var ds = window.scrollY - lastScroll; lastScroll = window.scrollY;
+        ctx.clearRect(0, 0, W, H);
+        for (var i = 0; i < ps.length; i++) {
+          var p = ps[i];
+          p.y += p.vy * dt - ds * (p.s / 7) * 0.55;
+          p.x += Math.sin((now / 1000) * p.freq + p.ph) * p.amp * dt;
+          p.rot += p.rotV * dt;
+          var heat = Math.max(0, Math.min(1, p.heat + Math.sin((now / 1000) * p.fl + p.ph) * 0.3));
+          if (p.y < -80 || p.y > H + 80 || p.x < -60 || p.x > W + 60) { ps[i] = mk(false); continue; }
+          ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+          ctx.beginPath(); ctx.moveTo(p.verts[0][0], p.verts[0][1]);
+          for (var v = 1; v < p.verts.length; v++) ctx.lineTo(p.verts[v][0], p.verts[v][1]);
+          ctx.closePath();
+          var r = Math.round(26 + 120 * heat), g = Math.round(13 + 70 * heat), b = Math.round(8 + 20 * heat);
+          ctx.fillStyle = 'rgb(' + r + ',' + g + ',' + b + ')';
+          ctx.fill();
+          ctx.globalCompositeOperation = 'lighter';
+          var gr = ctx.createRadialGradient(0, 0, 0, 0, 0, p.s * 2.4);
+          gr.addColorStop(0, 'rgba(255,140,50,' + (0.5 * heat) + ')');
+          gr.addColorStop(1, 'rgba(255,80,20,0)');
+          ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(0, 0, p.s * 2.4, 0, 6.283); ctx.fill();
+          ctx.restore();
+        }
+      }
+      requestAnimationFrame(frame);
     })();
   </script>
 </body>

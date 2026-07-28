@@ -1,0 +1,41 @@
+name: Fetch portrait frames
+
+on:
+  workflow_dispatch:
+    inputs:
+      video_url:
+        description: URL of the 4K portrait hero video
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Ensure ffmpeg
+        run: |
+          if ! command -v ffmpeg >/dev/null; then
+            sudo apt-get update && sudo apt-get install -y ffmpeg
+          fi
+
+      - name: Download and extract
+        run: |
+          curl -fSL "${{ github.event.inputs.video_url }}" -o portrait.mp4
+          ffprobe -v error -select_streams v:0 \
+            -show_entries stream=width,height,r_frame_rate,nb_frames,duration \
+            -of default=noprint_wrappers=1 portrait.mp4
+          mkdir -p bloom-typhlosion/frames-portrait
+          ffmpeg -i portrait.mp4 -vf "fps=24,scale=1080:-2" -q:v 2 "bloom-typhlosion/frames-portrait/frame_%04d.jpg"
+          echo "Extracted $(ls bloom-typhlosion/frames-portrait | wc -l) portrait frames"
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add bloom-typhlosion/frames-portrait
+          git commit -m "Add Typhlosion portrait frames ($(ls bloom-typhlosion/frames-portrait | wc -l)) from 9:16 reframed 4K video"
+          git push
