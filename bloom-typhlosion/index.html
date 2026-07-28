@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Typhlosion — The Sacred Fire Awakens</title>
+  <meta name="description" content="A fan tribute to Typhlosion, the Volcano Pokémon. Scroll to awaken Sacred Fire — from first ember to a full spiral vortex, rendered in cinematic 4K." />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Typhlosion — The Sacred Fire Awakens" />
+  <meta property="og:description" content="Scroll to awaken Sacred Fire: ember, ignition, spiral rings, full vortex. A cinematic fan tribute to the Volcano Pokémon." />
+  <meta property="og:image" content="assets/typhlosion-stance.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#0E0F14" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:ital@0;1&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    "name": "Typhlosion",
+    "image": "assets/typhlosion-stance.png",
+    "description": "A fan tribute to Typhlosion, the Volcano Pokémon. Scroll to awaken Sacred Fire — from first ember to a full spiral vortex, rendered in cinematic 4K.",
+    "about": "Unofficial fan-art tribute. Pokémon and Typhlosion are trademarks of Nintendo, Creatures Inc., and GAME FREAK inc."
+  }
+  </script>
+  <style>
+    :root {
+      /* ── Design system sampled from the object (sample_palette.mjs) ── */
+      --bg: #0E0F14;
+      --accent: #F5A62E;
+      --accent-deep: #C1541F;
+      --accent-hover: #FFC14E;
+      --secondary: #4E8FA6;
+      --text-primary: #ffffff;
+      --text-body: #E5E5E5;
+      --border-subtle: rgba(245,166,46,0.18);
+      --divider: rgba(78,143,166,0.14);
+      --font-display: 'Cinzel', serif;
+      --font-body: 'Inter', sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: var(--bg);
+      background-image: linear-gradient(170deg, #0E0F14 0%, #12121A 30%, #1A120C 70%, #120C08 100%);
+      background-attachment: fixed;
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      font-family: var(--font-body);
+    }
+    .label { font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); }
+
+    /* ── Custom cursor (accent glow; hidden on touch / reduced motion) ── */
+    .cursor { position: fixed; top: 0; left: 0; width: 14px; height: 14px; border-radius: 50%;
+      background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+      pointer-events: none; z-index: 9999; opacity: 0.85; mix-blend-mode: screen;
+      transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s, opacity 0.2s; }
+    .cursor.hot { width: 44px; height: 44px; opacity: 1; }
+    @media (hover: none), (prefers-reduced-motion: reduce) { .cursor { display: none; } }
+
+    /* ── Scroll progress rail ── */
+    .progress-rail { position: fixed; top: 0; left: 0; width: 2px; height: 100vh; z-index: 90; background: rgba(255,255,255,0.05); }
+    .progress-rail i { display: block; width: 100%; height: 0%; background: var(--accent); }
+
+    /* ── Hero: 300vh scrub container, sticky stage ── */
+    .bloom-container { height: 300vh; position: relative; }
+    .bloom-stage { position: sticky; top: 0; width: 100vw; height: 100vh; overflow: hidden;
+      background: linear-gradient(170deg, #0E0F14 0%, #1A120C 100%); }
+    #bloom-canvas { display: block; width: 100%; height: 100%; cursor: grab; }
+    #bloom-canvas.dragging { cursor: grabbing; }
+    .hero-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end;
+      pointer-events: none;
+      background: linear-gradient(to top, rgba(14,15,20,0.92) 0%, rgba(14,15,20,0.35) 50%, transparent 100%); }
+    .hero-content { padding: clamp(2rem, 6vw, 5rem); max-width: 900px; }
+    .hero-content > * { opacity: 0; transform: translateY(16px); animation: fadeUp 0.8s ease-out forwards; }
+    .hero-content > :nth-child(1) { animation-delay: 0.8s; }
+    .hero-content > :nth-child(2) { animation-delay: 0.95s; }
+    .hero-content > :nth-child(3) { animation-delay: 1.1s; }
+    .hero-content > :nth-child(4) { animation-delay: 1.25s; }
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+    .hero-content .label { margin-bottom: 1.2rem; }
+    .hero-content h1 { font-family: var(--font-display); font-weight: 400;
+      font-size: clamp(2.4rem, 6vw, 5.5rem); line-height: 1.05; margin-bottom: 1.4rem; }
+    .hero-content .brand-line { font-weight: 300; font-size: 1.05rem; line-height: 1.7;
+      color: var(--text-body); max-width: 460px; margin-bottom: 2.2rem; }
+    .btn { display: inline-block; background: linear-gradient(135deg, var(--accent) 0%, var(--accent-deep) 100%);
+      color: #140D06; font-weight: 500; font-size: 0.7rem;
+      letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none;
+      padding: 0.9rem 2.6rem; pointer-events: auto; transition: filter 0.25s; }
+    .btn:hover { filter: brightness(1.12); }
+
+    /* ── Interaction hint + live layer caption ── */
+    .hint { position: absolute; top: 1.4rem; right: 1.6rem; display: flex; gap: 0.6rem; align-items: center;
+      font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-body);
+      opacity: 0; animation: fadeUp 0.8s ease-out 1.6s forwards; }
+    .hint b { color: var(--accent); font-weight: 500; }
+    .hint .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--accent); }
+    .layer-caption { position: absolute; top: 50%; right: clamp(1.5rem, 5vw, 4rem); transform: translateY(-50%);
+      text-align: right; max-width: 260px; opacity: 0; transition: opacity 0.5s;
+      font-size: 0.78rem; line-height: 1.6; color: var(--text-body); }
+    .layer-caption.on { opacity: 1; }
+    .layer-caption strong { display: block; font-family: var(--font-display); font-weight: 400;
+      font-size: 1.05rem; color: var(--accent); margin-bottom: 0.3rem; font-style: italic; }
+
+    /* ── Sections ── */
+    section { background: transparent; padding: clamp(4rem, 10vw, 8rem) clamp(1.5rem, 6vw, 5rem); }
+    .inner { max-width: 1200px; margin: 0 auto; }
+    .inner.narrow { max-width: 900px; }
+    section h2 { font-family: var(--font-display); font-weight: 400;
+      font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.15; margin-bottom: clamp(2.5rem, 6vw, 4.5rem); }
+    section .label { display: block; margin-bottom: 1.2rem; }
+    .reveal { opacity: 0; transform: translateY(24px);
+      transition: opacity 0.7s cubic-bezier(0.25,0,0,1), transform 0.7s cubic-bezier(0.25,0,0,1);
+      transition-delay: var(--stagger, 0s); }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: clamp(1.5rem, 3vw, 2.5rem); }
+    .feature-card { background: linear-gradient(135deg, #131A20, #1D130B);
+      border: 1px solid var(--border-subtle); border-radius: 4px; padding: 1.8rem; }
+    .feature-card svg { margin-bottom: 1.2rem; }
+    .feature-card h3 { font-weight: 500; font-size: 0.95rem; letter-spacing: 0.06em; margin-bottom: 0.7rem; }
+    .feature-card p { font-weight: 300; font-size: 0.9rem; line-height: 1.7; color: var(--text-body); }
+
+    .spec-row { display: grid; grid-template-columns: 1fr 2fr; gap: 1rem; padding: 1.1rem 0; border-bottom: 1px solid var(--divider); }
+    .spec-row dt { font-weight: 500; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); align-self: center; }
+    .spec-row dd { font-weight: 300; font-size: 0.95rem; line-height: 1.6; color: var(--text-body); }
+
+    .gallery { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1rem, 2vw, 2rem); }
+    .gallery img { width: 100%; height: auto; border: 1px solid var(--border-subtle); border-radius: 4px; }
+
+    .cta { text-align: center; padding: clamp(5rem, 12vw, 10rem) clamp(1.5rem, 6vw, 5rem); }
+    .cta .inner { max-width: 800px; }
+    .cta h2 { font-size: clamp(2.2rem, 5vw, 4.5rem); margin-bottom: 1.6rem; }
+    .cta h2 em { color: var(--text-body); }
+    .cta .subtext { font-weight: 300; line-height: 1.7; color: var(--text-body); max-width: 480px; margin: 0 auto 3rem; }
+    .glow-wrap { position: relative; display: inline-block; }
+    .glow { position: absolute; inset: -60px -120px; pointer-events: none;
+      background: radial-gradient(ellipse, rgba(245,166,46,0.12) 0%, rgba(78,143,166,0.05) 45%, transparent 70%); }
+    .btn-outline { position: relative; border: 1px solid var(--accent); }
+    .btn-outline:hover { background: #120C08; color: var(--accent); filter: none; }
+
+    @media (max-width: 768px) {
+      .features-grid, .gallery { grid-template-columns: 1fr; }
+      .spec-row { grid-template-columns: 1fr; gap: 0.35rem; }
+      .layer-caption { display: none; }
+    }
+    /* Reduced motion: no scrub — show the finest still instead */
+    @media (prefers-reduced-motion: reduce) {
+      .bloom-container { height: auto; }
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="cursor" id="cursor" aria-hidden="true"></div>
+  <div class="progress-rail" aria-hidden="true"><i id="progress"></i></div>
+
+  <main>
+    <div class="bloom-container" id="bloom-container" data-bloom-container>
+      <div class="bloom-stage">
+        <canvas id="bloom-canvas" role="img" aria-label="Typhlosion charging Sacred Fire: spiral rings of crimson and gold flame bloom outward as the page scrolls."></canvas>
+        <div class="hint" aria-hidden="true"><b>scroll</b> to open <span class="dot"></span> <b>drag</b> to turn</div>
+        <div class="layer-caption" id="layer-caption" aria-live="polite"></div>
+        <div class="hero-overlay">
+          <div class="hero-content">
+            <p class="label">No. 157 · Johto Region</p>
+            <h1>Typhlosion</h1>
+            <p class="brand-line">The Volcano Pokémon waits in the dark. Scroll to awaken Sacred Fire — ember by ember, ring by ring — until the vortex holds.</p>
+            <a class="btn" href="#features">Read the Field Notes</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section id="features" aria-label="Features">
+      <div class="inner">
+        <span class="label reveal">Field Notes · The Volcano Pokémon</span>
+        <h2 class="reveal" style="--stagger:0.1s; max-width:700px">Everything it burns, it burns on purpose.</h2>
+        <div class="features-grid">
+          <!-- 6 × feature-card: object-specific virtue, inline SVG icon (stroke var(--accent)),
+               one sentence of real copy. Stagger 0.2s…0.7s. -->
+          <div class="feature-card reveal" style="--stagger:0.2s"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" style="stroke:var(--accent)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4 C12 10 8 13 8 19 a8 8 0 0 0 16 0 C24 13 20 10 16 4 Z"/><path d="M16 14 c-2 2.5 -3 4 -3 6 a3 3 0 0 0 6 0 c0-2-1-3.5-3-6Z"/></svg><h3>The Flame Collar</h3><p>The ring of fire at its neck ignites in an instant, flaring hotter as the battle demands more of it.</p></div>
+          <div class="feature-card reveal" style="--stagger:0.3s"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" style="stroke:var(--accent)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="16" r="10"/><path d="M16 9 v7 l5 3"/></svg><h3>Blaze</h3><p>Pushed to its limit, Blaze answers — Fire-type moves surge to half again their power.</p></div>
+          <div class="feature-card reveal" style="--stagger:0.4s"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" style="stroke:var(--accent)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="16" r="4"/><circle cx="16" cy="16" r="8"/><circle cx="16" cy="16" r="12"/></svg><h3>Sacred Fire</h3><p>A purifying flame said to burn away deceit; half of all who face it carry the burn away with them.</p></div>
+          <div class="feature-card reveal" style="--stagger:0.5s"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" style="stroke:var(--accent)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 24 C10 18 12 12 16 12 C20 12 22 18 26 24"/><path d="M9 27 h14"/></svg><h3>Volcanic Physiology</h3><p>Heat shimmer wraps its body as a defensive haze, blurring its outline in the middle of an exchange.</p></div>
+          <div class="feature-card reveal" style="--stagger:0.6s"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" style="stroke:var(--accent)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16 h14 M10 10 h12 M10 22 h12"/><path d="M22 10 l6 6 -6 6"/></svg><h3>Speed Beneath the Fur</h3><p>Deceptively fast for its size — it closes the distance before the first ember lands.</p></div>
+          <div class="feature-card reveal" style="--stagger:0.7s"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" style="stroke:var(--accent)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="24" r="2.5"/><circle cx="16" cy="16" r="3.5"/><circle cx="25" cy="7" r="4.5"/><path d="M10 22 l3.5 -3.5 M18.5 13.5 L21 11"/></svg><h3>The Final Evolution</h3><p>Cyndaquil’s long road ends here: the quiet flame grown into a volcano that walks.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section aria-label="Specifications">
+      <div class="inner narrow">
+        <span class="label reveal">Technical Specifications</span>
+        <h2 class="reveal" style="--stagger:0.1s">The anatomy of an eruption.</h2>
+        <dl>
+          <!-- 8–10 × spec-row (dt/dd), accurate for the object's category. Stagger 0.2s+. -->
+          <div class="spec-row reveal" style="--stagger:0.2s"><dt>National №</dt><dd>157</dd></div>
+          <div class="spec-row reveal" style="--stagger:0.3s"><dt>Category</dt><dd>Volcano Pokémon</dd></div>
+          <div class="spec-row reveal" style="--stagger:0.4s"><dt>Type</dt><dd>Fire</dd></div>
+          <div class="spec-row reveal" style="--stagger:0.5s"><dt>Height</dt><dd>1.7 m</dd></div>
+          <div class="spec-row reveal" style="--stagger:0.6s"><dt>Weight</dt><dd>79.5 kg</dd></div>
+          <div class="spec-row reveal" style="--stagger:0.7s"><dt>Ability</dt><dd>Blaze</dd></div>
+          <div class="spec-row reveal" style="--stagger:0.8s"><dt>Signature Move</dt><dd>Sacred Fire</dd></div>
+          <div class="spec-row reveal" style="--stagger:0.9s"><dt>Move Power</dt><dd>100 · Accuracy 95%</dd></div>
+          <div class="spec-row reveal" style="--stagger:1.0s"><dt>Burn Chance</dt><dd>50% on contact with the purifying flame</dd></div>
+          <div class="spec-row reveal" style="--stagger:1.1s"><dt>Evolution Line</dt><dd>Cyndaquil → Quilava → Typhlosion</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section aria-label="Gallery">
+      <div class="inner">
+        <span class="label reveal">Studied From Every Ember</span>
+        <h2 class="reveal" style="--stagger:0.1s">At rest, and at full power.</h2>
+        <div class="gallery">
+          <img class="reveal" style="--stagger:0.2s" src="assets/typhlosion-stance.png" loading="lazy" alt="Typhlosion in battle stance, flame collar simmering, suspended in a dark void" />
+          <img class="reveal" style="--stagger:0.3s" src="assets/typhlosion-sacred-fire.png" loading="lazy" alt="Typhlosion surrounded by concentric spiral rings of Sacred Fire at full eruption" />
+        </div>
+      </div>
+    </section>
+
+    <section class="cta" aria-label="Contact">
+      <div class="inner">
+        <span class="label reveal">A Tribute in Fire</span>
+        <h2 class="reveal" style="--stagger:0.1s">A hundred embers remembered.<br /><em>One flame that purifies.</em></h2>
+        <p class="subtext reveal" style="--stagger:0.2s">An unofficial fan tribute, rendered frame by frame with AI cinematography. Pokémon and Typhlosion are © Nintendo, Creatures Inc., and GAME FREAK inc. — this page sells nothing and claims nothing but admiration.</p>
+        <div class="glow-wrap reveal" style="--stagger:0.3s">
+          <div class="glow"></div>
+          <a class="btn btn-outline" href="#bloom-container">Replay the Eruption</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      // Frames are injected by scripts/build_standalone.mjs (data URIs), or
+      // replace with paths ('frames/frame_0001.jpg', …) for a hosted build.
+      var FRAMES = /*__FRAMES__*/[];
+      var FRAME_COUNT = FRAMES.length;
+
+      // Layer captions: {at: fraction 0..1, title, text} — one per layer,
+      // in deconstruction order. Written by the model for this object.
+      var CAPTIONS = [{"at":0.08,"title":"The eyes open","text":"Twin points of ember light find you across the void."},{"at":0.25,"title":"The collar ignites","text":"Heat gathers at the fur ridge — the first tongues of flame stand up."},{"at":0.42,"title":"The ridge takes fire","text":"Flame runs the length of its back like a lit fuse."},{"at":0.55,"title":"The first ring forms","text":"Sacred Fire leaves the body — a ring of crimson lifts into orbit."},{"at":0.7,"title":"The spiral blooms","text":"Ring after ring, gold inside crimson, turning in perfect radial symmetry."},{"at":0.88,"title":"The vortex holds","text":"The attack at full power — embers suspended, the void alight."}];
+
+      var container = document.getElementById('bloom-container');
+      var canvas = document.getElementById('bloom-canvas');
+      var ctx = canvas.getContext('2d');
+      var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var images = [], currentIdx = -1, rafId = 0, dragOffset = 0;
+
+      function sizeCanvas() {
+        var dpr = window.devicePixelRatio || 1;
+        canvas.width = canvas.clientWidth * dpr;
+        canvas.height = canvas.clientHeight * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      function draw(index) {
+        var img = images[index];
+        if (!img || !img.complete || img.naturalWidth === 0) return;
+        var cw = canvas.clientWidth, ch = canvas.clientHeight;
+        var s = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
+        var dw = img.naturalWidth * s, dh = img.naturalHeight * s;
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.fillStyle = '#0E0F14';
+        ctx.fillRect(0, 0, cw, ch);
+        ctx.drawImage(img, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
+        // Lift the footage's #000 void to the page gradient — never flat black.
+        ctx.globalCompositeOperation = 'lighten';
+        var tint = ctx.createLinearGradient(0, 0, 0, ch);
+        tint.addColorStop(0, '#0E0F14');
+        tint.addColorStop(1, '#1A120C');
+        ctx.fillStyle = tint;
+        ctx.fillRect(0, 0, cw, ch);
+        ctx.globalCompositeOperation = 'source-over';
+        currentIdx = index;
+      }
+      sizeCanvas();
+      for (var i = 0; i < FRAME_COUNT; i++) {
+        var img = new Image();
+        img.src = FRAMES[i];
+        if (i === 0) img.onload = function () { draw(0); };
+        images.push(img);
+      }
+      function progress() {
+        var top = container.getBoundingClientRect().top;
+        return Math.max(0, Math.min(1, -top / (container.offsetHeight - window.innerHeight)));
+      }
+      function loop() {
+        var p = progress();
+        var target = Math.round(p * (FRAME_COUNT - 1)) + dragOffset;
+        target = Math.max(0, Math.min(FRAME_COUNT - 1, target));
+        if (target !== currentIdx) draw(target);
+        // progress rail
+        var doc = document.documentElement;
+        document.getElementById('progress').style.height =
+          (window.scrollY / (doc.scrollHeight - window.innerHeight) * 100) + '%';
+        // layer caption
+        var cap = null;
+        for (var c = 0; c < CAPTIONS.length; c++) if (p >= CAPTIONS[c].at) cap = CAPTIONS[c];
+        var el = document.getElementById('layer-caption');
+        var want = cap && p > 0.05 ? '<strong>' + cap.title + '</strong>' + cap.text : '';
+        if (el.dataset.cur !== want) {
+          el.dataset.cur = want; el.innerHTML = want;
+          el.classList.toggle('on', !!want);
+        }
+        rafId = requestAnimationFrame(loop);
+      }
+      if (reduced && FRAME_COUNT) { draw(FRAME_COUNT - 1); }
+      else { rafId = requestAnimationFrame(loop); }
+
+      window.addEventListener('resize', function () { sizeCanvas(); if (currentIdx >= 0) draw(currentIdx); });
+
+      // Drag to turn: horizontal drag nudges the frame index (decays on release).
+      var dragging = false, lastX = 0;
+      function dragStart(x) { dragging = true; lastX = x; canvas.classList.add('dragging'); }
+      function dragMove(x) {
+        if (!dragging) return;
+        dragOffset += Math.round((x - lastX) / 12);
+        dragOffset = Math.max(-40, Math.min(40, dragOffset));
+        lastX = x;
+      }
+      function dragEnd() {
+        dragging = false; canvas.classList.remove('dragging');
+        var decay = setInterval(function () {
+          dragOffset += dragOffset > 0 ? -1 : 1;
+          if (dragOffset === 0) clearInterval(decay);
+        }, 30);
+      }
+      canvas.addEventListener('mousedown', function (e) { dragStart(e.clientX); });
+      window.addEventListener('mousemove', function (e) { dragMove(e.clientX); });
+      window.addEventListener('mouseup', dragEnd);
+      canvas.addEventListener('touchstart', function (e) { dragStart(e.touches[0].clientX); }, { passive: true });
+      canvas.addEventListener('touchmove', function (e) { dragMove(e.touches[0].clientX); }, { passive: true });
+      canvas.addEventListener('touchend', dragEnd);
+
+      // Custom cursor
+      var cursor = document.getElementById('cursor');
+      window.addEventListener('mousemove', function (e) {
+        cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px';
+      });
+      document.querySelectorAll('a, button, canvas').forEach(function (el) {
+        el.addEventListener('mouseenter', function () { cursor.classList.add('hot'); });
+        el.addEventListener('mouseleave', function () { cursor.classList.remove('hot'); });
+      });
+
+      // Scroll reveals
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) { en.target.classList.add('in'); obs.unobserve(en.target); }
+        });
+      }, { rootMargin: '-80px' });
+      document.querySelectorAll('.reveal').forEach(function (el) { obs.observe(el); });
+    })();
+  </script>
+</body>
+</html>
