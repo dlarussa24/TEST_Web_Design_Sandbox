@@ -46,7 +46,9 @@ export default function ScrollHero() {
       const ch = canvas.clientHeight;
       const iw = img.naturalWidth;
       const ih = img.naturalHeight;
-      const scale = Math.max(cw / iw, ch / ih);
+      // Contain-fit: the whole subject stays in frame on every viewport;
+      // the tinted void fills the rest so letterboxing is invisible.
+      const scale = Math.min(cw / iw, ch / ih);
       const dw = iw * scale;
       const dh = ih * scale;
       ctx.globalCompositeOperation = 'source-over';

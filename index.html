@@ -375,7 +375,9 @@
         var ch = canvas.clientHeight;
         var iw = img.naturalWidth;
         var ih = img.naturalHeight;
-        var scale = Math.max(cw / iw, ch / ih);
+        // Contain-fit keeps the whole subject in frame on every viewport;
+        // the tinted void fills the rest so letterboxing is invisible.
+        var scale = Math.min(cw / iw, ch / ih);
         var dw = iw * scale;
         var dh = ih * scale;
         ctx.globalCompositeOperation = 'source-over';

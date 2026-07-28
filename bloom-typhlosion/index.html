@@ -262,7 +262,9 @@
         var img = images[index];
         if (!img || !img.complete || img.naturalWidth === 0) return;
         var cw = canvas.clientWidth, ch = canvas.clientHeight;
-        var s = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
+        // Contain-fit keeps the whole subject in frame on every viewport;
+        // the tinted void fills the rest so letterboxing is invisible.
+        var s = Math.min(cw / img.naturalWidth, ch / img.naturalHeight);
         var dw = img.naturalWidth * s, dh = img.naturalHeight * s;
         ctx.globalCompositeOperation = 'source-over';
         ctx.fillStyle = '#210605';
