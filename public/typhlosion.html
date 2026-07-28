@@ -65,7 +65,7 @@
     .progress-rail i { display: block; width: 100%; height: 0%; background: var(--accent); }
 
     /* ── Hero: 300vh scrub container, sticky stage ── */
-    .bloom-container { height: 300vh; position: relative; }
+    .bloom-container { height: 450vh; position: relative; }
     .bloom-stage { position: sticky; top: 0; width: 100vw; height: 100vh; overflow: hidden;
       background: linear-gradient(170deg, #210605 0%, #250705 100%); }
     #bloom-canvas { display: block; width: 100%; height: 100%; cursor: grab; }
@@ -264,8 +264,8 @@
       // Orientation-aware hosted frame sets: portrait phones get a true 9:16
       // master so the hero fills the screen with the whole subject in frame.
       var SETS = {
-        landscape: { base: 'typhlosion-scrub/land/', count: 121 },
-        portrait:  { base: 'typhlosion-scrub/port/', count: 121 }
+        landscape: { base: 'typhlosion-scrub/land/', count: 182 },
+        portrait:  { base: 'typhlosion-scrub/port/', count: 182 }
       };
       function setKey() { return window.innerHeight > window.innerWidth ? 'portrait' : 'landscape'; }
       var activeKey = null;
@@ -289,7 +289,7 @@
 
       // Layer captions: {at: fraction 0..1, title, text} — one per layer,
       // in deconstruction order. Written by the model for this object.
-      var CAPTIONS = [{"at":0.08,"title":"The eyes open","text":"Twin points of ember light find you across the void."},{"at":0.25,"title":"The collar ignites","text":"Heat gathers at the fur ridge — the first tongues of flame stand up."},{"at":0.42,"title":"The ridge takes fire","text":"Flame runs the length of its back like a lit fuse."},{"at":0.55,"title":"The first ring forms","text":"Sacred Fire leaves the body — a ring of crimson lifts into orbit."},{"at":0.7,"title":"The spiral blooms","text":"Ring after ring, gold inside crimson, turning in perfect radial symmetry."},{"at":0.88,"title":"The vortex holds","text":"The attack at full power — embers suspended, the void alight."}];
+      var CAPTIONS = [{"at":0.05,"title":"The eyes open","text":"Twin points of ember light find you across the void."},{"at":0.17,"title":"The collar ignites","text":"Heat gathers at the fur ridge — the first tongues of flame stand up."},{"at":0.28,"title":"The ridge takes fire","text":"Flame runs the length of its back like a lit fuse."},{"at":0.37,"title":"The first ring forms","text":"Sacred Fire leaves the body — a ring of crimson lifts into orbit."},{"at":0.47,"title":"The spiral blooms","text":"Ring after ring, gold inside crimson, turning in perfect radial symmetry."},{"at":0.58,"title":"The vortex holds","text":"The attack at full power — embers suspended, the void alight."},{"at":0.7,"title":"The column gathers","text":"Volcanic fire streams from the apex of the vortex — one breath, held."},{"at":0.8,"title":"The burst comes down","text":"The column crashes in a single vertical fall, the rings collapsing with it."},{"at":0.92,"title":"The landing","text":"Typhlosion meets the ground on its feet — the fire settles as the page begins."}];
 
       var container = document.getElementById('bloom-container');
       var canvas = document.getElementById('bloom-canvas');
