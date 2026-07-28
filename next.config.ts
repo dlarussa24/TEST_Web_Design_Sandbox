@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
         destination: '/typhlosion.html',
         permanent: false,
       },
+      {
+        source: '/basebloom',
+        destination: '/basebloom/index.html',
+        permanent: false,
+      },
     ];
   },
 };
