@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nintendo 64 — The Machine That Taught the World 3D</title>
+  <meta name="description" content="A fan tribute to the Nintendo 64. Scroll to open the machine — shell, cartridge, silicon — until the polygons fly, cascade, and power settles on." />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Nintendo 64 — The Machine That Taught the World 3D" />
+  <meta property="og:description" content="Scroll to open the N64: the shell lifts, the cartridge rises, the Reality Coprocessor bares its gold — and the polygons fly. A cinematic fan tribute." />
+  <meta property="og:image" content="n64-assets/console.webp" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#0F0F13" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:ital@0;1&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    "name": "Nintendo 64",
+    "image": "n64-assets/console.webp",
+    "description": "A fan tribute to the Nintendo 64. Scroll to open the machine — shell, cartridge, silicon — until the polygons fly, cascade, and power settles on.",
+    "about": "Unofficial fan-art tribute. Nintendo 64 and Nintendo are trademarks of Nintendo Co., Ltd."
+  }
+  </script>
+  <style>
+    :root {
+      /* ── Design system sampled from the object (sample_palette.mjs) ── */
+      --bg: #0F0F13;
+      --accent: #E8B54A;
+      --accent-deep: #A05A28;
+      --accent-hover: #FFD070;
+      --secondary: #7B87B0;
+      --text-primary: #ffffff;
+      --text-body: #E5E5E5;
+      --border-subtle: rgba(232,181,74,0.18);
+      --divider: rgba(123,135,176,0.14);
+      --font-display: 'Space Grotesk', serif;
+      --font-body: 'Inter', sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: var(--bg);
+      background-image: linear-gradient(170deg, #0F0F13 0%, #131319 30%, #16120D 70%, #0E0C0A 100%);
+      background-attachment: fixed;
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      font-family: var(--font-body);
+    }
+    .label { font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); }
+
+    /* ── Custom cursor (accent glow; hidden on touch / reduced motion) ── */
+    .cursor { position: fixed; top: 0; left: 0; width: 14px; height: 14px; border-radius: 50%;
+      background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+      pointer-events: none; z-index: 9999; opacity: 0.85; mix-blend-mode: screen;
+      transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s, opacity 0.2s; }
+    .cursor.hot { width: 44px; height: 44px; opacity: 1; }
+    @media (hover: none), (prefers-reduced-motion: reduce) { .cursor { display: none; } }
+
+    /* ── Scroll progress rail ── */
+    .progress-rail { position: fixed; top: 0; left: 0; width: 2px; height: 100vh; z-index: 90; background: rgba(255,255,255,0.05); }
+    .progress-rail i { display: block; width: 100%; height: 0%; background: var(--accent); }
+
+    /* ── Hero: 300vh scrub container, sticky stage ── */
+    .bloom-container { height: 450vh; position: relative; } /* two-act scrub: awakening + climax/settle */
+    .bloom-stage { position: sticky; top: 0; width: 100vw; height: 100vh; overflow: hidden;
+      background: linear-gradient(170deg, #0F0F13 0%, #16120D 100%); }
+    #bloom-canvas { display: block; width: 100%; height: 100%; cursor: grab; }
+    #bloom-canvas.dragging { cursor: grabbing; }
+    .hero-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end;
+      pointer-events: none;
+      background: linear-gradient(to top, rgba(15,15,19,0.92) 0%, rgba(15,15,19,0.35) 50%, transparent 100%); }
+    .hero-content { padding: clamp(2rem, 6vw, 5rem); max-width: 900px; }
+    .hero-content > * { opacity: 0; transform: translateY(16px); animation: fadeUp 0.8s ease-out forwards; }
+    .hero-content > :nth-child(1) { animation-delay: 0.8s; }
+    .hero-content > :nth-child(2) { animation-delay: 0.95s; }
+    .hero-content > :nth-child(3) { animation-delay: 1.1s; }
+    .hero-content > :nth-child(4) { animation-delay: 1.25s; }
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+    .hero-content .label { margin-bottom: 1.2rem; }
+    .hero-content h1 { font-family: var(--font-display); font-weight: 400;
+      font-size: clamp(2.4rem, 6vw, 5.5rem); line-height: 1.05; margin-bottom: 1.4rem; }
+    .hero-content .brand-line { font-weight: 300; font-size: 1.05rem; line-height: 1.7;
+      color: var(--text-body); max-width: 460px; margin-bottom: 2.2rem; }
+    .btn { display: inline-block; background: linear-gradient(135deg, var(--accent) 0%, var(--accent-deep) 100%);
+      color: #141008; font-weight: 500; font-size: 0.7rem;
+      letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none;
+      padding: 0.9rem 2.6rem; pointer-events: auto; transition: filter 0.25s; }
+    .btn:hover { filter: brightness(1.12); }
+
+    /* ── Interaction hint + live layer caption ── */
+    .hint { position: absolute; top: 1.4rem; right: 1.6rem; display: flex; gap: 0.6rem; align-items: center;
+      font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-body);
+      opacity: 0; animation: fadeUp 0.8s ease-out 1.6s forwards; }
+    .hint b { color: var(--accent); font-weight: 500; }
+    .hint .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--accent); }
+    .layer-caption { position: absolute; top: 50%; right: clamp(1.5rem, 5vw, 4rem); transform: translateY(-50%);
+      text-align: right; max-width: 260px; opacity: 0; transition: opacity 0.5s;
+      font-size: 0.78rem; line-height: 1.6; color: var(--text-body); }
+    .layer-caption.on { opacity: 1; }
+    .layer-caption strong { display: block; font-family: var(--font-display); font-weight: 400;
+      font-size: 1.05rem; color: var(--accent); margin-bottom: 0.3rem; font-style: italic; }
+
+    /* ── Sections ── */
+    section { background: transparent; padding: clamp(4rem, 10vw, 8rem) clamp(1.5rem, 6vw, 5rem); }
+    .inner { max-width: 1200px; margin: 0 auto; }
+    .inner.narrow { max-width: 900px; }
+    section h2 { font-family: var(--font-display); font-weight: 400;
+      font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.15; margin-bottom: clamp(2.5rem, 6vw, 4.5rem); }
+    section .label { display: block; margin-bottom: 1.2rem; }
+    .reveal { opacity: 0; transform: translateY(24px);
+      transition: opacity 0.7s cubic-bezier(0.25,0,0,1), transform 0.7s cubic-bezier(0.25,0,0,1);
+      transition-delay: var(--stagger, 0s); }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: clamp(1.5rem, 3vw, 2.5rem); }
+    .feature-card { background: linear-gradient(135deg, #14161F, #1E1710);
+      border: 1px solid var(--border-subtle); border-radius: 4px; padding: 1.8rem; }
+    .feature-card svg { margin-bottom: 1.2rem; }
+    .feature-card h3 { font-weight: 500; font-size: 0.95rem; letter-spacing: 0.06em; margin-bottom: 0.7rem; }
+    .feature-card p { font-weight: 300; font-size: 0.9rem; line-height: 1.7; color: var(--text-body); }
+
+    .spec-row { display: grid; grid-template-columns: 1fr 2fr; gap: 1rem; padding: 1.1rem 0; border-bottom: 1px solid var(--divider); }
+    .spec-row dt { font-weight: 500; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); align-self: center; }
+    .spec-row dd { font-weight: 300; font-size: 0.95rem; line-height: 1.6; color: var(--text-body); }
+
+    .gallery { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1rem, 2vw, 2rem); }
+    .gallery img { width: 100%; height: auto; border: 1px solid var(--border-subtle); border-radius: 4px; }
+
+    .cta { text-align: center; padding: clamp(5rem, 12vw, 10rem) clamp(1.5rem, 6vw, 5rem); }
+    .cta .inner { max-width: 800px; }
+    .cta h2 { font-size: clamp(2.2rem, 5vw, 4.5rem); margin-bottom: 1.6rem; }
+    .cta h2 em { color: var(--text-body); }
+    .cta .subtext { font-weight: 300; line-height: 1.7; color: var(--text-body); max-width: 480px; margin: 0 auto 3rem; }
+    .glow-wrap { position: relative; display: inline-block; }
+    .glow { position: absolute; inset: -60px -120px; pointer-events: none;
+      background: radial-gradient(ellipse, rgba(232,181,74,0.12) 0%, rgba(123,135,176,0.06) 45%, transparent 70%); }
+    .btn-outline { position: relative; border: 1px solid var(--accent); }
+    .btn-outline:hover { background: #0E0C0A; color: var(--accent); filter: none; }
+
+    @media (max-width: 768px) {
+      .features-grid, .gallery { grid-template-columns: 1fr; }
+      .spec-row { grid-template-columns: 1fr; gap: 0.35rem; }
+      .layer-caption { display: none; }
+    }
+    /* Reduced motion: no scrub — show the finest still instead */
+    @media (prefers-reduced-motion: reduce) {
+      .bloom-container { height: auto; }
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* ── Ambient element field (the object's signature medium drifting through
+          the body: embers for fire, droplets for liquid, dust for stone…) ── */
+    #element-field { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; opacity: 0; }
+    .medium-vignette { position: fixed; inset: 0; pointer-events: none; z-index: 4; opacity: 0;
+      background: radial-gradient(120% 55% at 50% 110%, rgba(232,181,74,0.16), transparent 62%); transition: opacity 0.4s; }
+    section h2 { text-shadow: 0 0 60px rgba(232,181,74,0.22); }
+    .feature-card { transition: transform 0.35s cubic-bezier(0.25,0,0,1), box-shadow 0.35s, border-color 0.35s; }
+    .feature-card:hover { transform: translateY(-4px); border-color: rgba(255,208,112,0.45); box-shadow: 0 10px 44px rgba(232,181,74,0.14); }
+    .spec-row { transition: border-color 0.3s; }
+    .spec-row:hover { border-bottom-color: rgba(232,181,74,0.35); }
+    .gallery img { transition: transform 0.45s cubic-bezier(0.25,0,0,1), box-shadow 0.45s; }
+    .gallery img:hover { transform: scale(1.015); box-shadow: 0 12px 60px rgba(232,181,74,0.12); }
+    .glow { animation: glowPulse 5s ease-in-out infinite; }
+    @keyframes glowPulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.55; transform: scale(1.07); } }
+    .btn { position: relative; overflow: hidden; }
+    .btn::after { content: ''; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
+      background: linear-gradient(105deg, transparent, rgba(255,255,255,0.35), transparent);
+      transform: skewX(-20deg); transition: left 0.6s ease; }
+    .btn:hover::after { left: 120%; }
+    @media (prefers-reduced-motion: reduce) { #element-field, .medium-vignette { display: none; } .glow { animation: none; } }
+  </style>
+</head>
+<body>
+  <div class="cursor" id="cursor" aria-hidden="true"></div>
+  <div class="progress-rail" aria-hidden="true"><i id="progress"></i></div>
+  <div class="medium-vignette" id="medium-vignette" aria-hidden="true"></div>
+  <canvas id="element-field" aria-hidden="true"></canvas>
+
+  <main>
+    <div class="bloom-container" id="bloom-container" data-bloom-container>
+      <div class="bloom-stage">
+        <canvas id="bloom-canvas" role="img" aria-label="A Nintendo 64 opening into an exploded view as glowing polygons in red, yellow, green and blue erupt, cascade down, and the console reassembles and powers on."></canvas>
+        <div class="hint" aria-hidden="true"><b>scroll</b> to open <span class="dot"></span> <b>drag</b> to turn</div>
+        <div class="layer-caption" id="layer-caption" aria-live="polite"></div>
+        <div class="hero-overlay">
+          <div class="hero-content">
+            <p class="label">1996 · Kyoto, Japan</p>
+            <h1>Nintendo 64</h1>
+            <p class="brand-line">The machine that taught the world 3D. Scroll to open it — shell, cartridge, silicon — until the polygons fly.</p>
+            <a class="btn" href="#features">Open the Hardware</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section id="features" aria-label="Features">
+      <div class="inner">
+        <span class="label reveal">Field Notes · 64 Bits of Courage</span>
+        <h2 class="reveal" style="--stagger:0.1s; max-width:700px">Every polygon had to be earned.</h2>
+        <div class="features-grid">
+          <!-- 6 × feature-card: object-specific virtue, inline SVG icon (stroke var(--accent)),
+               one sentence of real copy. Stagger 0.2s…0.7s. -->
+          <div class="feature-card reveal" style="--stagger:0.2s"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" style="stroke:var(--accent)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="18" height="18"/><path d="M7 13 h18 M7 19 h18 M13 7 v18 M19 7 v18"/></svg><h3>Reality Coprocessor</h3><p>Silicon Graphics silicon in a living-room box — the RCP drew worlds no console had dared at 62.5 MHz.</p></div>
+          <div class="feature-card reveal" style="--stagger:0.3s"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" style="stroke:var(--accent)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="14" height="14"/><path d="M12 4 v5 M16 4 v5 M20 4 v5 M12 23 v5 M16 23 v5 M20 23 v5 M4 12 h5 M4 16 h5 M4 20 h5 M23 12 h5 M23 16 h5 M23 20 h5"/></svg><h3>64-Bit VR4300</h3><p>A workstation-class MIPS heart beating at 93.75 MHz, back when "bits" were a battle cry.</p></div>
+          <div class="feature-card reveal" style="--stagger:0.4s"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" style="stroke:var(--accent)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10 C4 12 4 20 7 26 M24 10 C28 12 28 20 25 26 M8 10 h16 M16 10 v6"/><circle cx="16" cy="19" r="2.5"/></svg><h3>The Trident Controller</h3><p>Three grips, one analog stick — the first time a thumb could walk, run, and tiptoe.</p></div>
+          <div class="feature-card reveal" style="--stagger:0.5s"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" style="stroke:var(--accent)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6 h16 v14 l-3 3 h-10 l-3 -3 Z"/><path d="M11 10 h10 M11 14 h10"/></svg><h3>The Cartridge</h3><p>Gold contacts, zero load times — blow on it once for luck and the world was already there.</p></div>
+          <div class="feature-card reveal" style="--stagger:0.6s"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" style="stroke:var(--accent)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="12" r="3"/><circle cx="22" cy="12" r="3"/><circle cx="10" cy="22" r="3"/><circle cx="22" cy="22" r="3"/></svg><h3>Four Ports</h3><p>Multiplayer meant a couch, four controllers, and one friendship briefly on hold.</p></div>
+          <div class="feature-card reveal" style="--stagger:0.7s"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" style="stroke:var(--accent)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="12" width="16" height="12"/><path d="M12 12 V8 h8 v4 M12 18 h8"/></svg><h3>Expansion Pak</h3><p>Four more megabytes under a little red lid — and suddenly Hyrule had weather.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section aria-label="Specifications">
+      <div class="inner narrow">
+        <span class="label reveal">Technical Specifications</span>
+        <h2 class="reveal" style="--stagger:0.1s">The architecture of a revolution.</h2>
+        <dl>
+          <!-- 8–10 × spec-row (dt/dd), accurate for the object's category. Stagger 0.2s+. -->
+          <div class="spec-row reveal" style="--stagger:0.2s"><dt>Released</dt><dd>June 23, 1996 (Japan) · Sept 29, 1996 (NA)</dd></div>
+          <div class="spec-row reveal" style="--stagger:0.3s"><dt>CPU</dt><dd>NEC VR4300, 64-bit MIPS @ 93.75 MHz</dd></div>
+          <div class="spec-row reveal" style="--stagger:0.4s"><dt>Graphics</dt><dd>SGI Reality Coprocessor @ 62.5 MHz</dd></div>
+          <div class="spec-row reveal" style="--stagger:0.5s"><dt>Memory</dt><dd>4 MB RDRAM · 8 MB with Expansion Pak</dd></div>
+          <div class="spec-row reveal" style="--stagger:0.6s"><dt>Media</dt><dd>ROM cartridge, 4–64 MB</dd></div>
+          <div class="spec-row reveal" style="--stagger:0.7s"><dt>Resolution</dt><dd>256×224 up to 640×480</dd></div>
+          <div class="spec-row reveal" style="--stagger:0.8s"><dt>Controller Ports</dt><dd>Four, front-facing</dd></div>
+          <div class="spec-row reveal" style="--stagger:0.9s"><dt>Defining Title</dt><dd>Super Mario 64</dd></div>
+          <div class="spec-row reveal" style="--stagger:1.0s"><dt>Units Sold</dt><dd>32.9 million worldwide</dd></div>
+          <div class="spec-row reveal" style="--stagger:1.1s"><dt>Finish</dt><dd>Charcoal ABS over steel shielding</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section aria-label="Gallery">
+      <div class="inner">
+        <span class="label reveal">Studied From Every Angle</span>
+        <h2 class="reveal" style="--stagger:0.1s">Assembled, and opened wide.</h2>
+        <div class="gallery">
+          <img class="reveal" style="--stagger:0.2s" src="n64-assets/console.webp" loading="lazy" alt="Nintendo 64 console with trident controller, power LED glowing, in a dark void" />
+          <img class="reveal" style="--stagger:0.3s" src="n64-assets/exploded.webp" loading="lazy" alt="Exploded view of the Nintendo 64 with glowing four-color polygons rising through the parts" />
+        </div>
+      </div>
+    </section>
+
+    <section class="cta" aria-label="Contact">
+      <div class="inner">
+        <span class="label reveal">Player One, Ready</span>
+        <h2 class="reveal" style="--stagger:0.1s">Three decades of memory.<br /><em>Sixty-four bits at a time.</em></h2>
+        <p class="subtext reveal" style="--stagger:0.2s">An unofficial fan tribute, rendered frame by frame with AI cinematography. Nintendo 64 and Nintendo are trademarks of Nintendo Co., Ltd. — this page sells nothing and claims nothing but gratitude.</p>
+        <div class="glow-wrap reveal" style="--stagger:0.3s">
+          <div class="glow"></div>
+          <a class="btn btn-outline" href="#bloom-container">Press Start Again</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      // TWO DELIVERY MODES — pick one and delete the other:
+      // (a) Self-contained: build_standalone.mjs injects data URIs at the marker
+      //     below and you keep the single-set loader.
+      // (b) Hosted (recommended for deploys): per-orientation WebP sets so
+      //     portrait phones get a true 9:16 master that FILLS the screen with
+      //     the whole subject in frame (generate via reframe — see pipeline.md).
+      var FRAMES = /*__FRAMES__*/[];
+      var SETS = {
+        landscape: { base: 'n64-scrub/land/', count: 182 },
+        portrait:  { base: 'n64-scrub/port/', count: 182 }
+      };
+      function setKey() { return window.innerHeight > window.innerWidth ? 'portrait' : 'landscape'; }
+      var activeKey = null;
+      var FRAME_COUNT = 0;
+      function framePath(k, i) { return SETS[k].base + 'frame_' + String(i + 1).padStart(4, '0') + '.webp'; }
+      function loadSet(k) {
+        activeKey = k;
+        FRAME_COUNT = FRAMES.length || SETS[k].count;
+        images = [];
+        currentIdx = -1;
+        for (var i = 0; i < FRAME_COUNT; i++) {
+          var img = new Image();
+          img.src = FRAMES.length ? FRAMES[i] : framePath(k, i);
+          if (i === 0) { img.onload = function () { draw(0); }; }
+          images.push(img);
+        }
+        if (typeof reduced !== 'undefined' && reduced) {
+          images[FRAME_COUNT - 1].onload = function () { draw(FRAME_COUNT - 1); };
+        }
+      }
+
+      // Layer captions: {at: fraction 0..1, title, text} — one per layer,
+      // in deconstruction order. Written by the model for this object.
+      var CAPTIONS = [{"at":0.05,"title":"The LED wakes","text":"One red point of light in the dark — the machine remembers you."},{"at":0.15,"title":"The shell lifts","text":"Charcoal ABS rises away, the way it never did on the living-room carpet."},{"at":0.26,"title":"The cartridge rises","text":"Smoke-grey plastic and gold contacts — zero load times, infinite afternoons."},{"at":0.36,"title":"The shield floats","text":"The RF shield lifts like armor, silver over silicon."},{"at":0.47,"title":"The heart exposed","text":"VR4300 and Reality Coprocessor, bare on green and gold."},{"at":0.58,"title":"The polygons rise","text":"Red, yellow, green, blue — the birth of 3D escaping the machine."},{"at":0.7,"title":"The column gathers","text":"Every polygon streams to the apex — one breath, held."},{"at":0.8,"title":"The cascade","text":"The column comes down as the parts fall home, shell to feet."},{"at":0.92,"title":"Power on","text":"Assembled, settled, LED steady — the page begins where the game does."}];
+
+      var container = document.getElementById('bloom-container');
+      var canvas = document.getElementById('bloom-canvas');
+      var ctx = canvas.getContext('2d');
+      var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var images = [], currentIdx = -1, rafId = 0, dragOffset = 0;
+
+      function sizeCanvas() {
+        var dpr = window.devicePixelRatio || 1;
+        canvas.width = canvas.clientWidth * dpr;
+        canvas.height = canvas.clientHeight * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      function draw(index) {
+        var img = images[index];
+        if (!img || !img.complete || img.naturalWidth === 0) return;
+        var cw = canvas.clientWidth, ch = canvas.clientHeight;
+        // Contain-fit keeps the whole subject in frame on every viewport;
+        // the tinted void fills the rest so letterboxing is invisible.
+        var s = Math.min(cw / img.naturalWidth, ch / img.naturalHeight);
+        var dw = img.naturalWidth * s, dh = img.naturalHeight * s;
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.fillStyle = '#0F0F13';
+        ctx.fillRect(0, 0, cw, ch);
+        ctx.drawImage(img, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
+        // Lift the footage's #000 void to the page gradient — never flat black.
+        ctx.globalCompositeOperation = 'lighten';
+        var tint = ctx.createLinearGradient(0, 0, 0, ch);
+        tint.addColorStop(0, '#0F0F13');
+        tint.addColorStop(1, '#16120D');
+        ctx.fillStyle = tint;
+        ctx.fillRect(0, 0, cw, ch);
+        ctx.globalCompositeOperation = 'source-over';
+        currentIdx = index;
+      }
+      sizeCanvas();
+      loadSet(setKey());
+      function progress() {
+        var top = container.getBoundingClientRect().top;
+        return Math.max(0, Math.min(1, -top / (container.offsetHeight - window.innerHeight)));
+      }
+      function loop() {
+        var p = progress();
+        var target = Math.round(p * (FRAME_COUNT - 1)) + dragOffset;
+        target = Math.max(0, Math.min(FRAME_COUNT - 1, target));
+        if (target !== currentIdx) draw(target);
+        // progress rail
+        var doc = document.documentElement;
+        document.getElementById('progress').style.height =
+          (window.scrollY / (doc.scrollHeight - window.innerHeight) * 100) + '%';
+        // layer caption
+        var cap = null;
+        for (var c = 0; c < CAPTIONS.length; c++) if (p >= CAPTIONS[c].at) cap = CAPTIONS[c];
+        var el = document.getElementById('layer-caption');
+        var want = cap && p > 0.05 ? '<strong>' + cap.title + '</strong>' + cap.text : '';
+        if (el.dataset.cur !== want) {
+          el.dataset.cur = want; el.innerHTML = want;
+          el.classList.toggle('on', !!want);
+        }
+        rafId = requestAnimationFrame(loop);
+      }
+      if (reduced && FRAME_COUNT) { draw(FRAME_COUNT - 1); }
+      else { rafId = requestAnimationFrame(loop); }
+
+      window.addEventListener('resize', function () {
+        sizeCanvas();
+        if (!FRAMES.length && setKey() !== activeKey) { loadSet(setKey()); }
+        else if (currentIdx >= 0) { draw(currentIdx); }
+      });
+
+      // Drag to turn: horizontal drag nudges the frame index (decays on release).
+      var dragging = false, lastX = 0;
+      function dragStart(x) { dragging = true; lastX = x; canvas.classList.add('dragging'); }
+      function dragMove(x) {
+        if (!dragging) return;
+        dragOffset += Math.round((x - lastX) / 12);
+        dragOffset = Math.max(-40, Math.min(40, dragOffset));
+        lastX = x;
+      }
+      function dragEnd() {
+        dragging = false; canvas.classList.remove('dragging');
+        var decay = setInterval(function () {
+          dragOffset += dragOffset > 0 ? -1 : 1;
+          if (dragOffset === 0) clearInterval(decay);
+        }, 30);
+      }
+      canvas.addEventListener('mousedown', function (e) { dragStart(e.clientX); });
+      window.addEventListener('mousemove', function (e) { dragMove(e.clientX); });
+      window.addEventListener('mouseup', dragEnd);
+      canvas.addEventListener('touchstart', function (e) { dragStart(e.touches[0].clientX); }, { passive: true });
+      canvas.addEventListener('touchmove', function (e) { dragMove(e.touches[0].clientX); }, { passive: true });
+      canvas.addEventListener('touchend', dragEnd);
+
+      // Custom cursor
+      var cursor = document.getElementById('cursor');
+      window.addEventListener('mousemove', function (e) {
+        cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px';
+      });
+      document.querySelectorAll('a, button, canvas').forEach(function (el) {
+        el.addEventListener('mouseenter', function () { cursor.classList.add('hot'); });
+        el.addEventListener('mouseleave', function () { cursor.classList.remove('hot'); });
+      });
+
+      // Scroll reveals
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) { en.target.classList.add('in'); obs.unobserve(en.target); }
+        });
+      }, { rootMargin: '-80px' });
+      document.querySelectorAll('.reveal').forEach(function (el) { obs.observe(el); });
+    })();
+  </script>
+
+  <script>
+    (function () {
+      // Ambient element field: the object's signature medium drifts through
+      // every section below the hero, fading in as the hero's climax resolves
+      // so the story hands off seamlessly. MEDIUM tunes it per object:
+      //   fire    -> shards, rise-heavy, ember body ramp, warm glow
+      //   liquid  -> round droplets, fall-heavy, translucent body, cool glow
+      //   dust    -> tiny shards, slow drift, low glow
+      var MEDIUM = {"shape":"shard","riseRatio":0.55,"bodyLow":[22,22,28],"bodyHigh":[200,200,210],"glow":[255,200,90],
+        "riseSpeed":[14,40],"fallSpeed":[8,26],
+        "palette":[[230,55,60],[255,200,60],[60,190,90],[70,130,235]]};
+      var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var cv = document.getElementById('element-field');
+      var vig = document.getElementById('medium-vignette');
+      if (!cv || reduced) { if (cv) cv.remove(); if (vig) vig.remove(); return; }
+      var ctx = cv.getContext('2d');
+      var W, H;
+      function size() {
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        W = cv.clientWidth; H = cv.clientHeight;
+        cv.width = W * dpr; cv.height = H * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      size(); window.addEventListener('resize', size);
+      var hero = document.querySelector('[data-bloom-container]');
+      var N = window.innerWidth < 768 ? 42 : 78;
+      function rnd(a, b) { return a + Math.random() * (b - a); }
+      function mk(initial) {
+        var rise = Math.random() < MEDIUM.riseRatio;
+        var s = rise ? rnd(1.6, 4) : rnd(2.5, 7);
+        var verts = []; var vn = 5 + ((Math.random() * 3) | 0);
+        for (var i = 0; i < vn; i++) {
+          var a = (i / vn) * Math.PI * 2; var r = s * rnd(0.55, 1.15);
+          verts.push([Math.cos(a) * r, Math.sin(a) * r]);
+        }
+        return { rise: rise, x: rnd(-20, W + 20),
+          y: initial ? rnd(0, H) : (rise ? H + rnd(10, 60) : -rnd(10, 60)),
+          vy: rise ? -rnd(MEDIUM.riseSpeed[0], MEDIUM.riseSpeed[1]) : rnd(MEDIUM.fallSpeed[0], MEDIUM.fallSpeed[1]),
+          amp: rnd(6, 26), freq: rnd(0.3, 1.1), ph: rnd(0, 6.283),
+          rot: rnd(0, 6.283), rotV: rnd(-0.8, 0.8), s: s, verts: verts,
+          heat: rise ? rnd(0.5, 1) : rnd(0.15, 0.7), fl: rnd(2, 6),
+          tint: MEDIUM.palette ? MEDIUM.palette[(Math.random() * MEDIUM.palette.length) | 0] : null };
+      }
+      var ps = []; for (var i = 0; i < N; i++) ps.push(mk(true));
+      var last = performance.now(), lastScroll = window.scrollY;
+      function frame(now) {
+        requestAnimationFrame(frame);
+        var dt = Math.min(0.05, (now - last) / 1000); last = now;
+        var vh = window.innerHeight;
+        var start = hero ? hero.offsetHeight - vh * 1.4 : vh;
+        var fade = Math.max(0, Math.min(1, (window.scrollY - start) / (vh * 0.6)));
+        cv.style.opacity = fade; if (vig) vig.style.opacity = fade;
+        if (!fade || document.hidden) { if (!fade) ctx.clearRect(0, 0, W, H); return; }
+        var ds = window.scrollY - lastScroll; lastScroll = window.scrollY;
+        ctx.clearRect(0, 0, W, H);
+        for (var i = 0; i < ps.length; i++) {
+          var q = ps[i];
+          q.y += q.vy * dt - ds * (q.s / 7) * 0.55;
+          q.x += Math.sin((now / 1000) * q.freq + q.ph) * q.amp * dt;
+          q.rot += q.rotV * dt;
+          var heat = Math.max(0, Math.min(1, q.heat + Math.sin((now / 1000) * q.fl + q.ph) * 0.3));
+          if (q.y < -80 || q.y > H + 80 || q.x < -60 || q.x > W + 60) { ps[i] = mk(false); continue; }
+          ctx.save(); ctx.translate(q.x, q.y); ctx.rotate(q.rot);
+          var lo = MEDIUM.bodyLow, hi = q.tint ? q.tint.map(function (c) { return c; }) : MEDIUM.bodyHigh;
+          ctx.fillStyle = 'rgb(' + Math.round(lo[0] + (hi[0] - lo[0]) * heat) + ',' +
+            Math.round(lo[1] + (hi[1] - lo[1]) * heat) + ',' + Math.round(lo[2] + (hi[2] - lo[2]) * heat) + ')';
+          if (MEDIUM.shape === 'round') {
+            ctx.beginPath(); ctx.arc(0, 0, q.s * 0.9, 0, 6.283); ctx.fill();
+          } else {
+            ctx.beginPath(); ctx.moveTo(q.verts[0][0], q.verts[0][1]);
+            for (var v = 1; v < q.verts.length; v++) ctx.lineTo(q.verts[v][0], q.verts[v][1]);
+            ctx.closePath(); ctx.fill();
+          }
+          ctx.globalCompositeOperation = 'lighter';
+          var g = q.tint || MEDIUM.glow;
+          var gr = ctx.createRadialGradient(0, 0, 0, 0, 0, q.s * 2.4);
+          gr.addColorStop(0, 'rgba(' + g[0] + ',' + g[1] + ',' + g[2] + ',' + (0.5 * heat) + ')');
+          gr.addColorStop(1, 'rgba(' + g[0] + ',' + g[1] + ',' + g[2] + ',0)');
+          ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(0, 0, q.s * 2.4, 0, 6.283); ctx.fill();
+          ctx.restore();
+        }
+      }
+      requestAnimationFrame(frame);
+    })();
+  </script>
+</body>
+</html>
