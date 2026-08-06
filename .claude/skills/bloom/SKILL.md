@@ -65,8 +65,13 @@ Templates in `references/source-prompts.md` §"Parameterized templates".
    reference: the medium at full power around the intact object (exploded
    view / full vortex / wave at its crest above the glass). Same void.
 3. **Act-1 video** — `generate_video` (kling3_0, 10s, 16:9),
-   `start_image` = hero still, `end_image` = climax still. Camera orbits,
-   the awakening begins mid-shot, ends held at the climax state.
+   `start_image` = hero still, `end_image` = climax still. **The camera
+   never parks**: it orbits the object in one slow, continuous, theatrical
+   arc for the entire shot — the awakening begins mid-orbit and the
+   deconstruction unfolds WHILE the camera keeps circling, so the visitor
+   sees every beautiful side of the object and of its opened interior.
+   Aim for roughly half a revolution in Act 1; Act 2 completes the circle.
+   Keep the orbit slow — fast orbits make the model drift off-model.
 4. **Review before you upscale** (this ordering saves real credits): pull
    frames from the RAW take via the extraction route and LOOK at them —
    especially the first frame, the midpoint, and the last frame. Only when
@@ -79,13 +84,26 @@ Templates in `references/source-prompts.md` §"Parameterized templates".
 The continuation is what makes the page feel authored. Three rules learned
 the hard way:
 
-- **Anchor on the true last frame.** Never use a still as Act 2's start —
-  the model will re-invent the framing and the splice will jump. Import the
-  literal final extracted frame of Act 1 as media
-  (`media_import_url` — a public GitHub raw URL of the committed frame works
-  when the CDN is blocked) and pass it as `start_image`, with the prompt
-  opening "The shot begins EXACTLY at the provided frame… camera LOCKED, no
-  cut, no zoom, no reframing."
+- **Anchor both ends.** Act 2 takes TWO anchors, and each solves a failure
+  seen in production:
+  - `start_image` = the literal final extracted frame of Act 1 (imported via
+    `media_import_url` — a public GitHub raw URL of the committed frame works
+    when the CDN is blocked). Never a still: the model re-invents framing and
+    the splice jumps. Prompt opens "The shot begins EXACTLY at the provided
+    frame…".
+  - `end_image` = **the original Act-1 hero still (Asset 1)** — the ring-
+    composition rule. Without an end anchor the object drifts off-model by
+    the finale (the N64 ended with garbled logos and a changed shell). With
+    the hero still as the destination, the video's last frame IS its first
+    frame: the same accurate object, at the same angle, settled. The whole
+    scrub becomes one closed 360° orbit — open on the object, bloom it
+    apart, and return to exactly the image you started from.
+- **The camera keeps moving.** Act 2 is not camera-locked — the prompt says
+  the camera "CONTINUES the same slow orbital motion without any cut, zoom,
+  or speed change," completing the revolution begun in Act 1 so the arc
+  arrives back at the hero still's angle exactly as the parts finish
+  re-stacking. Continuity across the splice comes from the start anchor plus
+  "continues the same motion" — not from freezing the camera.
 - **The climax and the settling must co-occur and complete.** Spell out the
   physics: the eruption crashes down WHILE the object descends, both reaching
   ground together; the wave arcs down INTO the glass as the pour completes.
@@ -160,10 +178,14 @@ template carries the proven mechanics — restyle, don't rebuild:
 
 `node scripts/verify_page.mjs <index.html>` (scrub scrubs, void tinted,
 reveals fire, zero errors) — then LOOK at screenshots at the act joint
-(~62–70% scroll), the climax, and 100%. Check: no framing jump at the
-splice, the medium completes its arc, the final frame is settled. Test a
-portrait viewport too. Serve over localhost when testing hosted frame sets —
-file:// taints the canvas and getImageData throws.
+(~62–70% scroll), the climax, and 100%. Check four things by eye:
+no framing jump at the splice; the medium completes its arc; the final
+frame is settled; and **frame 1 vs the final frame side by side — same
+object, same fidelity, same angle** (the ring-composition check; if the
+finale's object wouldn't pass as the opening still's twin, reshoot Act 2
+before spending on upscales). Test a portrait viewport too. Serve over
+localhost when testing hosted frame sets — file:// taints the canvas and
+getImageData throws.
 
 ## Phase 8 — Deliver
 

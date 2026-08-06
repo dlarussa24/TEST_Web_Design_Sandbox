@@ -127,17 +127,25 @@ inputs is fine for a review run), Read the first/mid/last frames, and only
 promote a take that passes. A failed take costs 10cr to reshoot; a failed
 take you already finished costs ~70cr and half an hour.
 
-### Splice-perfect continuations
+### Splice-perfect continuations with ring closure
 
 1. Commit Act 1's frames, then import the literal last frame:
    `media_import_url("https://raw.githubusercontent.com/<owner>/<repo>/<branch>/<path>/frame_NNNN.jpg")`
 2. Use the returned media_id as `start_image`; open the prompt with "begins
-   EXACTLY at the provided frame… camera LOCKED… no cut, no zoom".
-3. End-anchor stills are optional — if the generation queue is jammed (image
-   jobs stuck in `queued` 10+ min happens), go video-first: the explicit
-   resolved-end-state + held-final-second prompt clauses carried the landing
-   on the first take in production.
-4. Reframe can false-positive its content filter ("nsfw" status on fire
+   EXACTLY at the provided first frame… the camera CONTINUES the same slow
+   orbital motion — no cut, no zoom, no speed change". Splice continuity
+   comes from the anchor + same-motion language, not from freezing the
+   camera; the orbit should keep circling through Act 2 and complete the
+   revolution begun in Act 1.
+3. Pass `end_image` = the original Asset-1 hero still (ring composition).
+   This is what guarantees the video's first and last frames show the SAME
+   accurate object at the same angle — without it the finale drifts
+   off-model (garbled logos, changed shells). If the image queue is jammed
+   the hero still already exists, so there is never a reason to skip the
+   end anchor on Act 2.
+4. Verify the ring after the raw-take review: put frame 0001 of Act 1 and
+   the last frame of Act 2 side by side — they should read as twins.
+5. Reframe can false-positive its content filter ("nsfw" status on fire
    footage). Retry with the other source (720p original vs 4K upscale) — it
    passed on retry both times it happened.
 

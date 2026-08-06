@@ -77,19 +77,29 @@ frame), `{NICHE_VOICE}` (one line describing the buyer and tone).
 > {MATERIALS} finish and material texture. No labels, no lines, no graphic
 > overlays.
 
-### Asset 3 — hero video (start_image: Asset 1, end_image: Asset 2; kling3_0, 10s, 16:9)
+### Asset 3 — Act-1 video (start_image: Asset 1, end_image: Asset 2; kling3_0, 10s, 16:9)
+
+The camera NEVER parks: it orbits for the entire shot, and the
+deconstruction happens while it circles — the visitor should see every
+beautiful side of the object and of its opened interior. Act 1 covers about
+half a revolution; Act 2 completes the circle back to the starting angle.
 
 > {OBJECT} floats in a pure black void, fully assembled, with no environment,
 > no ground plane, no ambient reflections. The camera begins at a
-> three-quarter angle and slowly orbits in a smooth, uninterrupted arc. As the
-> camera arrives at the direct front-facing position — approximately halfway
-> through the shot — {OBJECT} begins a seamless mechanical deconstruction.
-> Each component separates along its natural axis with deliberate, weighted
-> momentum: {LAYERS}, in that order. Parts float apart in perfect symmetry as
-> if gravity has been selectively reversed, revealing the inner construction.
-> The movement is slow, cinematic, and precise — never chaotic. By the end of
-> the shot, all parts are suspended in a balanced exploded arrangement, still
-> against the black void.
+> three-quarter angle and orbits {OBJECT} in one slow, smooth, theatrical,
+> uninterrupted arc that CONTINUES for the entire shot — it never stops
+> moving, revealing every side of the object in turn. As the orbit passes the
+> direct front-facing position — approximately halfway through the shot —
+> {OBJECT} begins a seamless mechanical deconstruction WHILE the camera keeps
+> circling: each component separates along its natural axis with deliberate,
+> weighted momentum — {LAYERS}, in that order — so the still-moving camera
+> sweeps around and between the floating parts, showing their faces, edges
+> and inner surfaces from changing angles. Parts float apart in perfect
+> symmetry as if gravity has been selectively reversed, revealing the inner
+> construction. The orbit stays slow and constant — no speed changes, no
+> cuts, no zooms. By the end of the shot, all parts are suspended in a
+> balanced exploded arrangement with the camera roughly half a revolution
+> from where it began, still gliding, against the black void.
 
 ### Copy skeleton (adapt, never paste verbatim across objects)
 
@@ -102,29 +112,39 @@ frame), `{NICHE_VOICE}` (one line describing the buyer and tone).
 - CTA: "A {timespan} of mastery. / One expression of it." + niche-correct
   button ("Find an Authorised …" retailer/builder/dealer)
 
-## Act 2 — continuation template (climax → settle)
+## Act 2 — continuation template (climax → settle → ring closure)
 
-Anchor: `start_image` = the TRUE last extracted frame of Act 1, imported via
-`media_import_url` (a public GitHub raw URL of the committed frame works when
-the CDN is blocked locally). No end still needed — the locked-frame prompt
-alone produced a perfect grounded ending in production. kling3_0, 5s, 16:9.
+TWO anchors, both mandatory. kling3_0, 5s, 16:9:
+- `start_image` = the TRUE last extracted frame of Act 1, imported via
+  `media_import_url` (a public GitHub raw URL of the committed frame works
+  when the CDN is blocked locally) — kills the splice jump.
+- `end_image` = **the original Asset-1 hero still** — the ring-composition
+  rule. It forces the video's final frame to be the same accurate object,
+  at the same angle, as its first frame. Without it the object drifts
+  off-model by the finale (production example: the N64's last frame had
+  garbled logos and a changed shell; its first frame was perfect).
 
-> The shot begins EXACTLY at the provided frame — {OBJECT} held at
-> {CLIMAX_STATE} in a dark void — and the camera stays LOCKED at this exact
-> framing and distance for the entire shot: no cut, no zoom, no reframing.
-> From this exact starting composition: {ERUPTION — the medium gathers/rises
-> for one breath}. Then {CRASH — it comes down/resolves in a single
-> continuous motion} — and {OBJECT} {SETTLES WITH IT — the two completing
-> together}. {EXPLICIT RESOLVED END STATE — e.g. "ALL FOUR FEET planted flat
-> on a visible scorched floor" / "the glass filled, the surface stilling, the
-> bottle upright"}. The final second HOLDS on this ending: {OBJECT} at rest,
-> settled, still. Weighted, cinematic, precise — never chaotic; the object
-> intact.
+> The shot begins EXACTLY at the provided first frame — {OBJECT} held at
+> {CLIMAX_STATE} in a dark void — and the camera CONTINUES the same slow,
+> smooth orbital motion it already has: no cut, no zoom, no speed change,
+> no reframing, just the unbroken continuation of the circling arc. As the
+> camera completes the revolution: {ERUPTION — the medium gathers/rises for
+> one breath}. Then {CRASH — it comes down/resolves in a single continuous
+> motion} — and {OBJECT} {SETTLES WITH IT — every component re-stacking and
+> seating home as the two complete together; NOTHING remains floating}.
+> {EXPLICIT RESOLVED END STATE — e.g. "ALL FOUR FEET planted flat on a
+> visible floor" / "the glass filled, the surface stilling"}. The orbit
+> arrives back at its starting angle exactly as everything settles, and the
+> final second HOLDS on this ending: {OBJECT} whole, at rest, identical to
+> how it appeared at the very beginning of the story — the provided final
+> frame. Weighted, cinematic, precise — never chaotic; the object intact.
 
-Why each clause exists: the locked-camera opener kills the splice jump; the
-"co-occur" phrasing forces the climax and the landing to be simultaneous;
-the explicit end state + held final second prevent the model ending
-mid-motion (which reads as floating hind legs / a pour that never lands).
+Why each clause exists: the exact-first-frame opener + "continues the same
+motion" kill the splice jump without freezing the camera; the "co-occur"
+phrasing forces the climax and the settling to be simultaneous; "NOTHING
+remains floating" prevents stray parts (the N64 badge); the end anchor +
+"identical to the very beginning" close the ring so first and last frames
+match; the held final second prevents ending mid-motion.
 
 ## Worked medium mappings
 
