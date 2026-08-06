@@ -1,0 +1,64 @@
+name: Fetch n64 frames
+
+on:
+  workflow_dispatch:
+    inputs:
+      act:
+        description: Which act (1 or 2) — chooses the output directories
+        required: true
+      land_url:
+        description: URL of the landscape video
+        required: true
+      port_url:
+        description: URL of the portrait video (pass the land URL for review runs)
+        required: true
+      console_still:
+        description: Optional URL of the 4K console still
+        required: false
+        default: ''
+      exploded_still:
+        description: Optional URL of the 4K exploded still
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Ensure ffmpeg
+        run: |
+          if ! command -v ffmpeg >/dev/null; then
+            sudo apt-get update && sudo apt-get install -y ffmpeg
+          fi
+
+      - name: Download and extract
+        run: |
+          A="${{ github.event.inputs.act }}"
+          LAND_DIR="bloom-n64/frames"; PORT_DIR="bloom-n64/frames-portrait"
+          if [ "$A" = "2" ]; then LAND_DIR="bloom-n64/frames2"; PORT_DIR="bloom-n64/frames2-portrait"; fi
+          curl -fSL "${{ github.event.inputs.land_url }}" -o land.mp4
+          curl -fSL "${{ github.event.inputs.port_url }}" -o port.mp4
+          rm -rf "$LAND_DIR" "$PORT_DIR"
+          mkdir -p "$LAND_DIR" "$PORT_DIR" bloom-n64/assets
+          ffmpeg -i land.mp4 -vf "fps=24,scale=2560:-2" -q:v 2 "$LAND_DIR/frame_%04d.jpg"
+          ffmpeg -i port.mp4 -vf "fps=24,scale=1080:-2" -q:v 2 "$PORT_DIR/frame_%04d.jpg"
+          echo "land: $(ls $LAND_DIR | wc -l), portrait: $(ls $PORT_DIR | wc -l)"
+          if [ -n "${{ github.event.inputs.console_still }}" ]; then
+            curl -fSL "${{ github.event.inputs.console_still }}" -o bloom-n64/assets/console.png
+          fi
+          if [ -n "${{ github.event.inputs.exploded_still }}" ]; then
+            curl -fSL "${{ github.event.inputs.exploded_still }}" -o bloom-n64/assets/exploded.png
+          fi
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add bloom-n64
+          git commit -m "Add N64 act-${{ github.event.inputs.act }} frames"
+          git push
