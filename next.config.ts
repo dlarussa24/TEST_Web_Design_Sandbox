@@ -13,6 +13,11 @@ const nextConfig: NextConfig = {
         destination: '/basebloom/index.html',
         permanent: false,
       },
+      {
+        source: '/n64',
+        destination: '/n64.html',
+        permanent: false,
+      },
     ];
   },
 };
