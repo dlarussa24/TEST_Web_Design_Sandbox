@@ -116,3 +116,46 @@ Uses the environment's Chromium (checks PLAYWRIGHT_BROWSERS_PATH, falls back
 to common install paths). Fails loudly if the scrub produces fewer than 4
 distinct canvas states, if void pixels are pure black, or if any page error
 fires. Always eyeball the screenshots before delivering.
+
+## Two-act pipeline additions (proven on the Typhlosion build)
+
+### Review raw takes BEFORE upscaling
+
+Reframes cost ~30–36cr and 4K upscales take minutes. Extract frames from the
+RAW take first (any transport route — passing the same URL for both workflow
+inputs is fine for a review run), Read the first/mid/last frames, and only
+promote a take that passes. A failed take costs 10cr to reshoot; a failed
+take you already finished costs ~70cr and half an hour.
+
+### Splice-perfect continuations
+
+1. Commit Act 1's frames, then import the literal last frame:
+   `media_import_url("https://raw.githubusercontent.com/<owner>/<repo>/<branch>/<path>/frame_NNNN.jpg")`
+2. Use the returned media_id as `start_image`; open the prompt with "begins
+   EXACTLY at the provided frame… camera LOCKED… no cut, no zoom".
+3. End-anchor stills are optional — if the generation queue is jammed (image
+   jobs stuck in `queued` 10+ min happens), go video-first: the explicit
+   resolved-end-state + held-final-second prompt clauses carried the landing
+   on the first take in production.
+4. Reframe can false-positive its content filter ("nsfw" status on fire
+   footage). Retry with the other source (720p original vs 4K upscale) — it
+   passed on retry both times it happened.
+
+### Orientation-aware delivery
+
+Portrait phones deserve a 9:16 master, not a letterboxed 16:9: reframe each
+act to 9:16 (content-preserving generative expansion), 4K-upscale, extract at
+1080 wide. Encode hosted WebP sets — every 2nd frame, land/ at 1920 q75,
+port/ at 1080 q75 — numbered continuously across acts (act 2 appends after
+act 1: frames 122+). The template's SETS loader picks by orientation and
+swaps on rotate. Keep the hero page HTML tiny (~30KB) and let frames stream.
+
+### Deployment gotchas
+
+- Gallery/OG images must live under the deployed public dir — repo-relative
+  asset paths 404 in production. Ship optimized WebPs (2560px q85).
+- Local testing of hosted frame sets needs an HTTP server; file:// taints
+  the canvas and verify's getImageData throws SecurityError.
+- On a Next.js-served site, public/ files are served verbatim but
+  directory-index resolution is NOT automatic — add explicit redirects for
+  clean URLs.

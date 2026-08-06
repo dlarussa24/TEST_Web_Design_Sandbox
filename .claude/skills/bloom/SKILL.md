@@ -1,199 +1,187 @@
 ---
 name: bloom
-description: Generate a luxury scroll-driven "3D bloom" landing page for ANY named object using Higgsfield AI generation. The object is photographed in a studio void, deconstructed into an exploded view, animated as a cinematic 4K deconstruction video, and turned into a self-contained landing page whose hero scrubs frame-by-frame through the object opening up as the visitor scrolls — with the entire design system (colors, gradients, accents, cursor, glows) sampled from the object itself. Use this skill whenever the user invokes /bloom followed by an object name, or asks for a "bloom page", "3D bloom", "scroll-driven landing page", "deconstruction page", "exploded-view site", "product landing page with AI video", or wants a Higgsfield-generated scroll experience for a product, building, vehicle, instrument, or any physical object — even if they don't say "bloom" explicitly.
+description: Generate a luxury scroll-driven "3D bloom" landing page for ANY named object using Higgsfield AI generation. The object is photographed in a studio void, animated as a cinematic two-act 4K hero — act one opens or awakens the object as the visitor scrolls, act two erupts into a climax and settles to rest exactly as the visitor reaches the body — and the object's own "signature medium" (fire for a volcano Pokémon, flowing tequila for a reposado, sawdust and light for a workshop) drifts as an ambient particle field through the rest of the page. The whole design system — colors, gradients, accents, cursor, glows, particles — is sampled from the object itself. Use this skill whenever the user invokes /bloom followed by an object name, or asks for a "bloom page", "3D bloom", "scroll-driven landing page", "deconstruction page", "exploded-view site", "product landing page with AI video", or wants a Higgsfield-generated scroll experience for a product, drink, building, vehicle, creature, instrument, or any physical object — even if they don't say "bloom" explicitly.
 ---
 
-# Bloom — object-driven scroll-deconstruction landing pages
+# Bloom — object-driven scroll-story landing pages
 
 Turn any named object into a cinematic landing page: `/bloom vintage Leica M6`,
-`/bloom carbon-fiber track bike`, `/bloom luxury alpine chalet`.
+`/bloom Casamigos Reposado`, `/bloom Typhlosion using Sacred Fire`.
 
-The finished page has one signature move: the hero holds a photoreal render of
-the object suspended in a dark void, and as the visitor scrolls, the object
-**opens** — its components separate along their natural mechanical axes,
-frame by frame, until it hangs in a balanced exploded arrangement. The visitor
-is weaving through the object's layers. Everything else on the page (palette,
-gradients, borders, glow, cursor) is derived from the object's own materials,
-so every bloom page looks like it was art-directed for that object alone.
+The finished page tells a story in one continuous scroll: the hero holds a
+photoreal render of the object in a dark void, and scrolling drives a
+**two-act film**, frame by frame — Act 1 opens/awakens the object (a watch
+blooms apart, a fire ignites ring by ring, a wave of tequila gathers), and
+Act 2 delivers the climax and settles it to rest (the fire crashes down and
+the creature lands on its feet; the liquid arcs down and fills a glass to a
+standing pour). The final frame lands exactly at the hero-to-body handoff.
+Below the hero, the object's **signature medium** — embers, droplets, dust —
+drifts through every section as an ambient particle field, so the story never
+stops. Everything (palette, gradients, borders, glow, cursor, particles) is
+derived from the object's own materials.
 
-This skill blends two proven briefs (read `references/source-prompts.md` for
-both originals): a luxury scroll-scrub landing page (canvas + JPEG frames, no
-video element, no scroll listener) and the BaseBloom "3D bloom" concept
-(scroll-to-open, drag-to-turn, jewel-dark aesthetic, interaction hints).
+Proven end to end on "The Meridian Estate" (house/roofing) and "Typhlosion —
+The Sacred Fire Awakens" (creature/energy). Read
+`references/source-prompts.md` for the parameterized prompt templates and
+worked medium examples.
 
 ## Workflow at a glance
 
-1. **Understand the object** — niche, materials, natural layers
-2. **Generate assets in Higgsfield** — still → exploded still → video → 4K
-3. **Extract frames** — 24 fps, 2560px, high quality
-4. **Sample the design system from the frames** — scripts/sample_palette.mjs
-5. **Build the page** — copy assets/template.html, fill slots, embed frames
-6. **Verify in a real browser** — scripts/verify_page.mjs
-7. **Deliver** — send index.html + screenshots; commit if in a repo
-
-Work through the phases in order; each depends on the previous one's output.
+1. **Understand the object** — niche, materials, layers, **signature medium**
+2. **Generate Act 1** — still → climax-state still → video → review → 4K + 9:16
+3. **Generate Act 2** — continuation anchored on Act 1's true last frame
+4. **Extract frames** — both acts, both orientations, 24 fps
+5. **Sample the design system** — scripts/sample_palette.mjs
+6. **Build the page** — assets/template.html, all slots + MEDIUM config
+7. **Verify in a real browser** — scripts/verify_page.mjs + eyeball the joints
+8. **Deliver** — page + screenshots; commit; deploy if a site is linked
 
 ## Phase 1 — Understand the object
 
-Before generating anything, decide three things (a sentence each is enough):
+Decide four things (a sentence each):
 
-- **Niche & voice**: who buys/loves this object? A watch page whispers heritage;
-  a synthesizer page hums with circuitry. All copy follows this voice — never
-  lorem ipsum, never generic.
-- **Materials**: the 3–5 surfaces that define it (e.g. cedar, slate, copper for
-  a chalet; brass, leather, glass for a camera). These predict the palette and
-  make the generation prompts concrete.
-- **Deconstruction layers**: 6–10 components it naturally splits into, along
-  which axes. A house lifts vertically (roof → trusses → walls → foundation);
-  a watch blooms radially; a bike explodes along its frame lines. Name them in
-  the prompts — vague prompts produce mushy deconstructions.
+- **Niche & voice**: who loves this object? A reposado page seduces; a watch
+  page whispers heritage; a Pokémon page reads like a trainer's field notes.
+- **Materials**: the 3–5 surfaces that define it — they predict the palette.
+- **Story layers**: 6–10 stages the scroll moves through, in order. For a
+  machine these are components separating; for a creature or drink they are
+  stages of the signature medium (ignition → rings → vortex; swell → arc →
+  pour → fill). Name them explicitly in prompts and layer captions.
+- **Signature medium** — the star of the page. The flowing/energetic element
+  that carries the narrative: Sacred Fire for Typhlosion (ring of fire,
+  vortex, eruption, burst-down, ember flakes); an aesthetic wave of agave-gold
+  tequila for Casamigos Reposado (sea-swell, arcing pour, splash crown, a
+  glass filled so invitingly the visitor wants to drink it); slate dust and
+  raking light for a house. The medium drives the hero choreography, the
+  Act-2 climax, the ambient particle field, the vignette, and every glow.
 
-## Phase 2 — Generate assets (Higgsfield MCP)
+## Phase 2 — Act 1 (Higgsfield MCP)
 
-Prompt templates with the `{OBJECT}`/materials/layers slots are in
-`references/source-prompts.md` §"Parameterized templates". The sequence:
+Templates in `references/source-prompts.md` §"Parameterized templates".
 
-1. **Hero still** — `generate_image` (nano_banana_pro or the current
-   recommendation from `models_explore` for product photography). Studio-grade
-   photo of {OBJECT}, three-quarter angle, **pure black background, no ground
-   plane, no reflections** (the void must be uniform so the page can tint it).
-   16:9.
-2. **Exploded still** — `generate_image` with the hero still's job id as a
-   reference image. Every named layer floats apart along its natural axis,
-   uniform spacing, symmetrical, technical-illustration calm. Same black void.
-3. **Hero video** — `generate_video` (kling3_0, 10s, 16:9) with
-   `start_image` = hero still and `end_image` = exploded still. Camera orbits
-   first, deconstruction begins mid-shot, ends suspended. The start/end anchors
-   are what make the scrub feel authored instead of hallucinated.
-4. **Upscale everything** — `upscale_video` (bytedance, `aigc` preset,
-   4K, fps 24) and `upscale_image` (4K) on both stills. The page's "extremely
-   high definition" quality comes from extracting frames from the 4K master,
-   never from upscaling soft frames later.
+1. **Hero still** — `generate_image` (nano_banana_pro): the object at rest,
+   medium dormant/simmering, pure black void, no ground plane. 16:9.
+2. **Climax-state still** — `generate_image` with the hero still as
+   reference: the medium at full power around the intact object (exploded
+   view / full vortex / wave at its crest above the glass). Same void.
+3. **Act-1 video** — `generate_video` (kling3_0, 10s, 16:9),
+   `start_image` = hero still, `end_image` = climax still. Camera orbits,
+   the awakening begins mid-shot, ends held at the climax state.
+4. **Review before you upscale** (this ordering saves real credits): pull
+   frames from the RAW take via the extraction route and LOOK at them —
+   especially the first frame, the midpoint, and the last frame. Only when
+   the take passes: `upscale_video` (bytedance, `aigc`, 4K, fps 24), then
+   `reframe` to 9:16 and 4K-upscale that output for the portrait master.
+   All quality comes from extracting off the 4K masters.
 
-Poll jobs with `job_display`. While generation runs, scaffold the page and
-workspace — don't idle.
+## Phase 3 — Act 2 (the climax that lands)
 
-## Phase 3 — Extract frames
+The continuation is what makes the page feel authored. Three rules learned
+the hard way:
 
-From the **4K upscaled** video:
+- **Anchor on the true last frame.** Never use a still as Act 2's start —
+  the model will re-invent the framing and the splice will jump. Import the
+  literal final extracted frame of Act 1 as media
+  (`media_import_url` — a public GitHub raw URL of the committed frame works
+  when the CDN is blocked) and pass it as `start_image`, with the prompt
+  opening "The shot begins EXACTLY at the provided frame… camera LOCKED, no
+  cut, no zoom, no reframing."
+- **The climax and the settling must co-occur and complete.** Spell out the
+  physics: the eruption crashes down WHILE the object descends, both reaching
+  ground together; the wave arcs down INTO the glass as the pour completes.
+  Demand the resolved end state explicitly ("ALL FOUR FEET planted flat on a
+  visible ground", "the glass full, surface stilling") and a HELD final
+  second — models love to end mid-motion, which reads as floating.
+- **The end of Act 2 = the hero-to-body handoff.** The last frame is what's
+  on screen when the visitor exits the hero, so it must be settled, grounded,
+  at rest. The ambient element field fades in right at that moment so the
+  medium hands off into the body.
 
-```bash
-ffmpeg -i hero.mp4 -vf "fps=24,scale=2560:-2" -q:v 2 "frames/frame_%04d.jpg"
-```
+Then the same finishing chain as Act 1: review raw → 4K → reframe 9:16 → 4K.
+(5s is usually enough for Act 2; reframe occasionally false-flags content —
+retry with the other-resolution source and it passes.)
 
-Count the files — that's `FRAME_COUNT`. Keep the 4K mp4 too (SEO video asset).
+## Phase 4 — Extract frames
 
-**Transport problem**: the generated media lives on Higgsfield's CDN, which
-sandboxed environments often can't reach. Pick the first route that works —
-all three are detailed in `references/pipeline.md`:
-
-- **Local**: `curl` the URL, run local ffmpeg (or `npm i ffmpeg-static`).
-- **Higgsfield sandbox**: `sandbox_exec` has ffmpeg + open internet; process
-  there, publish via `media_upload` presigned URL.
-- **GitHub Actions bridge** (for egress-blocked environments where only
-  github.com is reachable): commit a `workflow_dispatch` workflow that
-  downloads, extracts, and commits the frames; trigger it via the GitHub MCP;
-  `git pull` the result; delete the workflow afterwards. This is the proven
-  route when curl returns proxy 403s — don't fight the proxy, route around it.
-
-## Phase 4 — Sample the design system from the object
-
-Run `scripts/sample_palette.mjs <frames-dir>` (needs `npm i sharp`). It prints
-dominant warm/cool/bright clusters from an exploded-view frame. From those:
-
-- **Accent**: the object's signature material tone, brightened until it reads
-  clearly on the dark background (never dimmer than #888 equivalent). This
-  colors labels, icons, spec keys, buttons, cursor glow.
-- **Accent gradient**: accent → its darker sibling (e.g. cedar → copper) for
-  primary buttons.
-- **Secondary**: the object's cool/contrast tone, used sparingly — card
-  gradients, dividers, a hint in the CTA glow.
-- **Background gradient**: NOT pure black. Build a 3–4 stop, 170deg gradient
-  from the object's shadow tones (e.g. `#101012 → #131114 → #17110b → #100c08`
-  for a slate-and-cedar house). `background-attachment: fixed` on body;
-  sections transparent.
-- **Void tint**: the video frames have a #000 void — the canvas must lift it.
-  The template's draw loop composites a `lighten` gradient pass after each
-  frame so void pixels match the page gradient exactly. Keep it.
-
-## Phase 5 — Build the page
-
-Copy `assets/template.html` to the workspace as `index.html` and fill every
-`{{SLOT}}`. The template already contains the proven mechanics — don't rebuild
-them, restyle them:
-
-- 300vh sticky **canvas scrub hero** (rAF + getBoundingClientRect, no scroll
-  listener, no video element), devicePixelRatio-aware, cover-fit, void tint
-- **Drag to turn**: horizontal drag on the hero nudges the frame index, so the
-  visitor can "turn the object in their hand"; scroll remains the master
-  timeline. Hint chip: "scroll to open · drag to turn".
-- **Layer captions**: short labels that fade in at scrub milestones naming the
-  layer currently separating ("the slate lifts", "the movement rises"). Write
-  one per deconstruction layer from Phase 1 — this is the weaving-through-
-  the-passes storytelling.
-- **Custom cursor**: accent-colored glow dot that scales over interactive
-  elements (respects `prefers-reduced-motion` and disappears on touch).
-- **Scroll progress rail** along the viewport edge in the accent color.
-- Sections: features grid (6 cards, object-specific), specs table (8–10
-  accurate rows), 4K stills gallery (the two upscaled images), closing CTA
-  with radial glow. All reveal on scroll (IntersectionObserver, y 24→0,
-  staggered, once).
-- Mobile: single column below 768px; hero canvas untouched.
-
-Then embed the frames to make the file self-contained:
+For each act × orientation, from the 4K masters:
 
 ```bash
-node scripts/build_standalone.mjs --frames <frames-dir> --html index.html \
-  --width 1920 --quality 75 --every 2
+ffmpeg -i act.mp4 -vf "fps=24,scale=2560:-2" -q:v 2 "frames/frame_%04d.jpg"   # landscape
+ffmpeg -i act.mp4 -vf "fps=24,scale=1080:-2" -q:v 2 "frames/frame_%04d.jpg"   # portrait
 ```
 
-(Every 2nd frame at 1920px WebP ≈ visually identical scrub, ~half the bytes.
-If the user will host the page with a `frames/` folder instead, skip embedding
-and point the loader at the folder — offer both.)
+Transport routes when the CDN is unreachable (details in
+`references/pipeline.md`): local curl+ffmpeg → Higgsfield sandbox →
+**GitHub Actions bridge** (commit a workflow_dispatch workflow that fetches,
+extracts, commits; trigger via GitHub MCP; pull; delete after).
 
-### SEO & engagement (fill these — they're template slots, not suggestions)
+## Phase 5 — Sample the design system
 
-- `<title>` = object name + one differentiator; meta description ≤160 chars
-  written like ad copy; canonical URL slot.
-- Open Graph + Twitter card using the 4K hero still.
-- **JSON-LD** `Product` (or `House`/`Vehicle` when truer) with name, image,
-  description, brand.
-- One `<h1>` only; sections use `<h2>`; every image/canvas has alt/aria text;
-  the deconstruction narrative is mirrored in real text (layer captions render
-  as HTML, so the page's story is crawlable, not trapped in pixels).
-- `<link rel="preload">` for the first frame; lazy-load the gallery;
-  `prefers-reduced-motion` swaps the scrub for the 4K still.
+`node scripts/sample_palette.mjs <frames-dir>` on a mid-climax frame. Derive
+accent / accent-deep / secondary / bg gradient stops / borders exactly as the
+script suggests, then verify by eye. Never pure #000 anywhere: the template's
+draw loop lifts the footage's void to the page gradient with a `lighten`
+pass — keep it, it's what makes letterboxing invisible.
 
-## Phase 6 — Verify like you mean it
+## Phase 6 — Build the page
 
-Run `scripts/verify_page.mjs <path-to-index.html>` (needs `npm i
-playwright-core`; use the environment's preinstalled Chromium). It opens the
-page via `file://`, scrolls the hero at 0/25/50/75/100%, and asserts:
+Copy `assets/template.html` → the workspace and fill every `{{SLOT}}`. The
+template carries the proven mechanics — restyle, don't rebuild:
 
-- ≥4 distinct canvas states (the scrub actually scrubs)
-- void pixels are NOT pure black (tint works)
-- reveal elements gain their visible class
-- zero page errors
+- **Two-act scrub hero** (450vh, rAF + getBoundingClientRect, no scroll
+  listener, no video element), contain-fit so the whole subject stays in
+  frame on every viewport, devicePixelRatio-aware, void tint.
+- **Orientation-aware frame sets**: hosted WebP sets (`land/` 1920px,
+  `port/` 1080px, every 2nd frame, q75) chosen by viewport orientation and
+  swapped live on rotate — phones get the 9:16 master full-screen. The
+  embedded single-set mode remains for a self-contained deliverable file.
+- **Drag to turn** nudges the frame index; hint chip "scroll to open · drag
+  to turn".
+- **Layer captions** — one per story layer including the Act-2 stages ("The
+  column gathers", "The burst comes down", "The landing" — or for a spirit:
+  "The sea gathers", "The pour arcs", "The glass fills"). This narration is
+  crawlable text, so it's also the SEO story.
+- **Ambient element field** below the hero: the `MEDIUM` JSON slot tunes the
+  particle engine to the object — shard vs round particles, rise/fall ratio,
+  body color ramp, glow color, speeds. Fire = rise-heavy glowing shards;
+  liquid = fall-heavy translucent droplets with cool glow; dust = slow tiny
+  shards, faint glow. Plus the medium vignette breathing at the viewport
+  bottom, card hover lift + glow, warm heading underglow, pulsing CTA glow,
+  button shimmer sweep. All respect prefers-reduced-motion.
+- Sections: features (6 object-specific cards), specs (8–10 accurate rows),
+  gallery of the 4K stills — **serve gallery images from paths that exist on
+  the deployed site** (copy optimized WebPs into the public dir; a relative
+  path that only exists in the repo will 404 in production).
+- SEO pack: title, ≤160-char meta description, OG/Twitter from the 4K still,
+  JSON-LD (`Product`/`CreativeWork` for fan/brand tributes), one h1,
+  alt/aria text everywhere, lazy gallery, reduced-motion still fallback.
 
-It saves screenshots — **look at them**. Check the exploded frame for detail
-sharpness, and the sections for palette harmony. Then send the user the
-screenshots and the final file.
+## Phase 7 — Verify like you mean it
 
-## Phase 7 — Deliver
+`node scripts/verify_page.mjs <index.html>` (scrub scrubs, void tinted,
+reveals fire, zero errors) — then LOOK at screenshots at the act joint
+(~62–70% scroll), the climax, and 100%. Check: no framing jump at the
+splice, the medium completes its arc, the final frame is settled. Test a
+portrait viewport too. Serve over localhost when testing hosted frame sets —
+file:// taints the canvas and getImageData throws.
 
-- Send `index.html` (and screenshots) to the user.
-- In a git repo: commit page + frames + 4K assets, push to the working branch.
-- Report what was generated (asset job ids), the sampled palette, frame count,
-  and file size — and note the fonts load from Google Fonts (the only network
-  dependency).
+## Phase 8 — Deliver
+
+Send the page + screenshots; commit everything; if the repo is linked to a
+host (e.g. Netlify), push and live-verify the deployed URLs — including the
+last frame of each orientation set and the gallery images.
 
 ## Judgment calls
 
-- Model choices drift: when unsure, ask `models_explore(action:'recommend')`
-  rather than hardcoding yesterday's best model.
-- Credits are the user's money: preflight with `get_cost` when a generation
-  plan is unusual (multiple variants, long durations), and prefer one good
-  10s video over three mediocre ones.
-- If the user names a person, brand logo, or something that can't be
-  deconstructed (a liquid, a concept), say what you can do instead — e.g.
-  bloom the bottle, not the wine.
+- Brands (a tequila, a watch marque): build as an unmistakable concept/
+  tribute page unless the user owns the brand — no purchase claims, credit
+  the trademark holder in the JSON-LD/footer when it's fan work.
+- Model choices drift: consult `models_explore(action:'recommend')` when
+  unsure. Credits are the user's money — reframes are the expensive step
+  (~30–36cr each), so review raw takes BEFORE upscaling/reframing, and
+  prefer one good take to three mediocre ones.
+- Generation queues stall sometimes: fire a cheap duplicate and race them,
+  or go video-first with the ending controlled purely by a locked-frame
+  prompt (proven to work) instead of blocking on an anchor still.
+- If the object can't decompose or flow (a concept, a person), bloom the
+  vessel instead — the bottle, not the wine; the stadium, not the anthem.

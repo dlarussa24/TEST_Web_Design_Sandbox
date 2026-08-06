@@ -24,6 +24,10 @@ The essential mechanics, proven in production:
 - Rules: no lorem ipsum, no navbar/footer/cookie banner, single column below
   768px, no text dimmer than #888 on dark.
 
+(Superseded in the current template: cover-fit `Math.max` crops the subject
+on non-16:9 viewports — production now uses contain-fit `Math.min` with the
+void tint filling the letterbox, and 450vh for the two-act scrub.)
+
 ## Original B — BaseBloom "3D bloom" concept (Concept 02 · Depth & Material)
 
 Reverse-engineered from https://basebloom-concepts.netlify.app/site-2/:
@@ -97,3 +101,45 @@ frame), `{NICHE_VOICE}` (one line describing the buyer and tone).
 - Proof stats (from B): 3–4 measured brags about the page/object build
 - CTA: "A {timespan} of mastery. / One expression of it." + niche-correct
   button ("Find an Authorised …" retailer/builder/dealer)
+
+## Act 2 — continuation template (climax → settle)
+
+Anchor: `start_image` = the TRUE last extracted frame of Act 1, imported via
+`media_import_url` (a public GitHub raw URL of the committed frame works when
+the CDN is blocked locally). No end still needed — the locked-frame prompt
+alone produced a perfect grounded ending in production. kling3_0, 5s, 16:9.
+
+> The shot begins EXACTLY at the provided frame — {OBJECT} held at
+> {CLIMAX_STATE} in a dark void — and the camera stays LOCKED at this exact
+> framing and distance for the entire shot: no cut, no zoom, no reframing.
+> From this exact starting composition: {ERUPTION — the medium gathers/rises
+> for one breath}. Then {CRASH — it comes down/resolves in a single
+> continuous motion} — and {OBJECT} {SETTLES WITH IT — the two completing
+> together}. {EXPLICIT RESOLVED END STATE — e.g. "ALL FOUR FEET planted flat
+> on a visible scorched floor" / "the glass filled, the surface stilling, the
+> bottle upright"}. The final second HOLDS on this ending: {OBJECT} at rest,
+> settled, still. Weighted, cinematic, precise — never chaotic; the object
+> intact.
+
+Why each clause exists: the locked-camera opener kills the splice jump; the
+"co-occur" phrasing forces the climax and the landing to be simultaneous;
+the explicit end state + held final second prevent the model ending
+mid-motion (which reads as floating hind legs / a pour that never lands).
+
+## Worked medium mappings
+
+The signature medium is what "lifts and shifts" between objects — same
+mechanics, different matter. Examples:
+
+| Object | Medium | Act 1 (awakening) | Act 2 (climax → settle) | Element field | Palette family |
+|---|---|---|---|---|---|
+| Typhlosion using Sacred Fire | Sacred Fire | eyes → collar ignites → fire runs the ridge → rings lift → full vortex | column erupts from vortex apex → crashes down as it lands → all four feet on scorched stone | rising ember shards + falling charcoal flakes, warm glow | flame gold on crimson-charcoal, teal fur secondary |
+| Casamigos Reposado | agave-gold tequila | bottle at rest → a sea of liquid swells beneath → waves climb and wrap the bottle → a crest arcs overhead | the wave arcs down in one pour-stream → splash crown → the glass fills as the wave subsides → bottle and full glass at rest, surface stilling, irresistible | falling amber droplets + rising bubbles, round, honeyed glow | reposado amber on deep agave-brown, blue-weber green secondary |
+| Meridian Estate (house) | slate & timber, dust & light | roof lifts → membrane → trusses → walls → foundation | beams settle home, dust cascades and clears, light rakes the finished facade | drifting sawdust motes + falling slate dust, faint warm glow | cedar amber on charcoal, slate secondary |
+| Vintage Leica M6 | glinting brass & light | top plate lifts → lens elements fan out → shutter curtain unfurls | elements spiral back together as a shutter-click flash resolves to the assembled camera on a leather mat | floating silver dust + bokeh discs, cool glow | brass on black-chrome, leather secondary |
+
+MEDIUM JSON starting points:
+
+- fire: `{"shape":"shard","riseRatio":0.6,"bodyLow":[26,13,8],"bodyHigh":[146,83,28],"glow":[255,140,50],"riseSpeed":[18,55],"fallSpeed":[10,32]}`
+- liquid: `{"shape":"round","riseRatio":0.35,"bodyLow":[40,24,8],"bodyHigh":[220,160,60],"glow":[255,200,90],"riseSpeed":[10,26],"fallSpeed":[16,44]}`
+- dust: `{"shape":"shard","riseRatio":0.5,"bodyLow":[30,26,22],"bodyHigh":[120,104,84],"glow":[200,180,140],"riseSpeed":[6,16],"fallSpeed":[4,12]}`

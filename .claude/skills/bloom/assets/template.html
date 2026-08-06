@@ -66,7 +66,7 @@
     .progress-rail i { display: block; width: 100%; height: 0%; background: var(--accent); }
 
     /* ── Hero: 300vh scrub container, sticky stage ── */
-    .bloom-container { height: 300vh; position: relative; }
+    .bloom-container { height: 450vh; position: relative; } /* two-act scrub: awakening + climax/settle */
     .bloom-stage { position: sticky; top: 0; width: 100vw; height: 100vh; overflow: hidden;
       background: linear-gradient(170deg, {{BG_STOP_1}} 0%, {{BG_STOP_3}} 100%); }
     #bloom-canvas { display: block; width: 100%; height: 100%; cursor: grab; }
@@ -152,11 +152,34 @@
       .bloom-container { height: auto; }
       .reveal { opacity: 1; transform: none; transition: none; }
     }
+
+    /* ── Ambient element field (the object's signature medium drifting through
+          the body: embers for fire, droplets for liquid, dust for stone…) ── */
+    #element-field { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; opacity: 0; }
+    .medium-vignette { position: fixed; inset: 0; pointer-events: none; z-index: 4; opacity: 0;
+      background: radial-gradient(120% 55% at 50% 110%, {{ACCENT_RGBA_016 — accent at 16% alpha}}, transparent 62%); transition: opacity 0.4s; }
+    section h2 { text-shadow: 0 0 60px {{ACCENT_RGBA_022 — accent at 22% alpha}}; }
+    .feature-card { transition: transform 0.35s cubic-bezier(0.25,0,0,1), box-shadow 0.35s, border-color 0.35s; }
+    .feature-card:hover { transform: translateY(-4px); border-color: {{ACCENT_RGBA_045}}; box-shadow: 0 10px 44px {{ACCENT_RGBA_014}}; }
+    .spec-row { transition: border-color 0.3s; }
+    .spec-row:hover { border-bottom-color: {{ACCENT_RGBA_035}}; }
+    .gallery img { transition: transform 0.45s cubic-bezier(0.25,0,0,1), box-shadow 0.45s; }
+    .gallery img:hover { transform: scale(1.015); box-shadow: 0 12px 60px {{ACCENT_RGBA_012}}; }
+    .glow { animation: glowPulse 5s ease-in-out infinite; }
+    @keyframes glowPulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.55; transform: scale(1.07); } }
+    .btn { position: relative; overflow: hidden; }
+    .btn::after { content: ''; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
+      background: linear-gradient(105deg, transparent, rgba(255,255,255,0.35), transparent);
+      transform: skewX(-20deg); transition: left 0.6s ease; }
+    .btn:hover::after { left: 120%; }
+    @media (prefers-reduced-motion: reduce) { #element-field, .medium-vignette { display: none; } .glow { animation: none; } }
   </style>
 </head>
 <body>
   <div class="cursor" id="cursor" aria-hidden="true"></div>
   <div class="progress-rail" aria-hidden="true"><i id="progress"></i></div>
+  <div class="medium-vignette" id="medium-vignette" aria-hidden="true"></div>
+  <canvas id="element-field" aria-hidden="true"></canvas>
 
   <main>
     <div class="bloom-container" id="bloom-container" data-bloom-container>
@@ -224,10 +247,36 @@
 
   <script>
     (function () {
-      // Frames are injected by scripts/build_standalone.mjs (data URIs), or
-      // replace with paths ('frames/frame_0001.jpg', …) for a hosted build.
+      // TWO DELIVERY MODES — pick one and delete the other:
+      // (a) Self-contained: build_standalone.mjs injects data URIs at the marker
+      //     below and you keep the single-set loader.
+      // (b) Hosted (recommended for deploys): per-orientation WebP sets so
+      //     portrait phones get a true 9:16 master that FILLS the screen with
+      //     the whole subject in frame (generate via reframe — see pipeline.md).
       var FRAMES = /*__FRAMES__*/[];
-      var FRAME_COUNT = FRAMES.length;
+      var SETS = {
+        landscape: { base: '{{SCRUB_PATH — e.g. object-scrub}}/land/', count: {{FRAME_TOTAL — e.g. 182}} },
+        portrait:  { base: '{{SCRUB_PATH}}/port/', count: {{FRAME_TOTAL}} }
+      };
+      function setKey() { return window.innerHeight > window.innerWidth ? 'portrait' : 'landscape'; }
+      var activeKey = null;
+      var FRAME_COUNT = 0;
+      function framePath(k, i) { return SETS[k].base + 'frame_' + String(i + 1).padStart(4, '0') + '.webp'; }
+      function loadSet(k) {
+        activeKey = k;
+        FRAME_COUNT = FRAMES.length || SETS[k].count;
+        images = [];
+        currentIdx = -1;
+        for (var i = 0; i < FRAME_COUNT; i++) {
+          var img = new Image();
+          img.src = FRAMES.length ? FRAMES[i] : framePath(k, i);
+          if (i === 0) { img.onload = function () { draw(0); }; }
+          images.push(img);
+        }
+        if (typeof reduced !== 'undefined' && reduced) {
+          images[FRAME_COUNT - 1].onload = function () { draw(FRAME_COUNT - 1); };
+        }
+      }
 
       // Layer captions: {at: fraction 0..1, title, text} — one per layer,
       // in deconstruction order. Written by the model for this object.
@@ -268,12 +317,7 @@
         currentIdx = index;
       }
       sizeCanvas();
-      for (var i = 0; i < FRAME_COUNT; i++) {
-        var img = new Image();
-        img.src = FRAMES[i];
-        if (i === 0) img.onload = function () { draw(0); };
-        images.push(img);
-      }
+      loadSet(setKey());
       function progress() {
         var top = container.getBoundingClientRect().top;
         return Math.max(0, Math.min(1, -top / (container.offsetHeight - window.innerHeight)));
@@ -301,7 +345,11 @@
       if (reduced && FRAME_COUNT) { draw(FRAME_COUNT - 1); }
       else { rafId = requestAnimationFrame(loop); }
 
-      window.addEventListener('resize', function () { sizeCanvas(); if (currentIdx >= 0) draw(currentIdx); });
+      window.addEventListener('resize', function () {
+        sizeCanvas();
+        if (!FRAMES.length && setKey() !== activeKey) { loadSet(setKey()); }
+        else if (currentIdx >= 0) { draw(currentIdx); }
+      });
 
       // Drag to turn: horizontal drag nudges the frame index (decays on release).
       var dragging = false, lastX = 0;
@@ -343,6 +391,89 @@
         });
       }, { rootMargin: '-80px' });
       document.querySelectorAll('.reveal').forEach(function (el) { obs.observe(el); });
+    })();
+  </script>
+
+  <script>
+    (function () {
+      // Ambient element field: the object's signature medium drifts through
+      // every section below the hero, fading in as the hero's climax resolves
+      // so the story hands off seamlessly. MEDIUM tunes it per object:
+      //   fire    -> shards, rise-heavy, ember body ramp, warm glow
+      //   liquid  -> round droplets, fall-heavy, translucent body, cool glow
+      //   dust    -> tiny shards, slow drift, low glow
+      var MEDIUM = {{MEDIUM_JSON — e.g. {"shape":"shard","riseRatio":0.6,"bodyLow":[26,13,8],"bodyHigh":[146,83,28],"glow":[255,140,50],"riseSpeed":[18,55],"fallSpeed":[10,32]} }};
+      var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var cv = document.getElementById('element-field');
+      var vig = document.getElementById('medium-vignette');
+      if (!cv || reduced) { if (cv) cv.remove(); if (vig) vig.remove(); return; }
+      var ctx = cv.getContext('2d');
+      var W, H;
+      function size() {
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        W = cv.clientWidth; H = cv.clientHeight;
+        cv.width = W * dpr; cv.height = H * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      size(); window.addEventListener('resize', size);
+      var hero = document.querySelector('[data-bloom-container]');
+      var N = window.innerWidth < 768 ? 42 : 78;
+      function rnd(a, b) { return a + Math.random() * (b - a); }
+      function mk(initial) {
+        var rise = Math.random() < MEDIUM.riseRatio;
+        var s = rise ? rnd(1.6, 4) : rnd(2.5, 7);
+        var verts = []; var vn = 5 + ((Math.random() * 3) | 0);
+        for (var i = 0; i < vn; i++) {
+          var a = (i / vn) * Math.PI * 2; var r = s * rnd(0.55, 1.15);
+          verts.push([Math.cos(a) * r, Math.sin(a) * r]);
+        }
+        return { rise: rise, x: rnd(-20, W + 20),
+          y: initial ? rnd(0, H) : (rise ? H + rnd(10, 60) : -rnd(10, 60)),
+          vy: rise ? -rnd(MEDIUM.riseSpeed[0], MEDIUM.riseSpeed[1]) : rnd(MEDIUM.fallSpeed[0], MEDIUM.fallSpeed[1]),
+          amp: rnd(6, 26), freq: rnd(0.3, 1.1), ph: rnd(0, 6.283),
+          rot: rnd(0, 6.283), rotV: rnd(-0.8, 0.8), s: s, verts: verts,
+          heat: rise ? rnd(0.5, 1) : rnd(0.15, 0.7), fl: rnd(2, 6) };
+      }
+      var ps = []; for (var i = 0; i < N; i++) ps.push(mk(true));
+      var last = performance.now(), lastScroll = window.scrollY;
+      function frame(now) {
+        requestAnimationFrame(frame);
+        var dt = Math.min(0.05, (now - last) / 1000); last = now;
+        var vh = window.innerHeight;
+        var start = hero ? hero.offsetHeight - vh * 1.4 : vh;
+        var fade = Math.max(0, Math.min(1, (window.scrollY - start) / (vh * 0.6)));
+        cv.style.opacity = fade; if (vig) vig.style.opacity = fade;
+        if (!fade || document.hidden) { if (!fade) ctx.clearRect(0, 0, W, H); return; }
+        var ds = window.scrollY - lastScroll; lastScroll = window.scrollY;
+        ctx.clearRect(0, 0, W, H);
+        for (var i = 0; i < ps.length; i++) {
+          var q = ps[i];
+          q.y += q.vy * dt - ds * (q.s / 7) * 0.55;
+          q.x += Math.sin((now / 1000) * q.freq + q.ph) * q.amp * dt;
+          q.rot += q.rotV * dt;
+          var heat = Math.max(0, Math.min(1, q.heat + Math.sin((now / 1000) * q.fl + q.ph) * 0.3));
+          if (q.y < -80 || q.y > H + 80 || q.x < -60 || q.x > W + 60) { ps[i] = mk(false); continue; }
+          ctx.save(); ctx.translate(q.x, q.y); ctx.rotate(q.rot);
+          var lo = MEDIUM.bodyLow, hi = MEDIUM.bodyHigh;
+          ctx.fillStyle = 'rgb(' + Math.round(lo[0] + (hi[0] - lo[0]) * heat) + ',' +
+            Math.round(lo[1] + (hi[1] - lo[1]) * heat) + ',' + Math.round(lo[2] + (hi[2] - lo[2]) * heat) + ')';
+          if (MEDIUM.shape === 'round') {
+            ctx.beginPath(); ctx.arc(0, 0, q.s * 0.9, 0, 6.283); ctx.fill();
+          } else {
+            ctx.beginPath(); ctx.moveTo(q.verts[0][0], q.verts[0][1]);
+            for (var v = 1; v < q.verts.length; v++) ctx.lineTo(q.verts[v][0], q.verts[v][1]);
+            ctx.closePath(); ctx.fill();
+          }
+          ctx.globalCompositeOperation = 'lighter';
+          var g = MEDIUM.glow;
+          var gr = ctx.createRadialGradient(0, 0, 0, 0, 0, q.s * 2.4);
+          gr.addColorStop(0, 'rgba(' + g[0] + ',' + g[1] + ',' + g[2] + ',' + (0.5 * heat) + ')');
+          gr.addColorStop(1, 'rgba(' + g[0] + ',' + g[1] + ',' + g[2] + ',0)');
+          ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(0, 0, q.s * 2.4, 0, 6.283); ctx.fill();
+          ctx.restore();
+        }
+      }
+      requestAnimationFrame(frame);
     })();
   </script>
 </body>
