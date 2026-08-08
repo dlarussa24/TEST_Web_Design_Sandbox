@@ -6,6 +6,9 @@ export default defineConfig({
   base: '/basebloom/',
   build: {
     outDir: '../public/basebloom',
-    emptyOutDir: true,
+    // MUST stay false. The output dir also holds hand-placed runtime assets
+    // that Vite does not generate — the self-hosted hero loop (mp4 + webm)
+    // and fonts/. Emptying it on build deletes them.
+    emptyOutDir: false,
   },
 });
