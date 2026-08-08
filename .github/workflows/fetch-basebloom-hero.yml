@@ -41,17 +41,24 @@ jobs:
       - name: Try to download whatever we found
         run: |
           set -uo pipefail
-          SITE="${{ inputs.site }}"
+          # Follow the site to wherever it actually lives now, and use the
+          # mp4 name discovered in its root HTML rather than a guess.
+          SITE=$(curl -sS -o /tmp/root2.html -w "%{url_effective}" -L "${{ inputs.site }}/")
+          SITE="${SITE%/}"
+          echo "resolved site: $SITE"
           mkdir -p public/basebloom
-          CANDIDATES=$(cat <<'EOF'
-          /basebloom-hero-web-loop.mp4
-          /hero-web-loop.mp4
-          /hero.mp4
-          /assets/basebloom-hero-web-loop.mp4
-          EOF
-          )
+          DISCOVERED=$(grep -oE '[^"'"'"' ]+\.mp4' /tmp/root2.html | sed 's#^\./##' | sort -u)
+          echo "discovered: $DISCOVERED"
+          CANDIDATES=""
+          for d in $DISCOVERED; do
+            case "$d" in
+              http*) CANDIDATES="$CANDIDATES $d" ;;
+              /*)    CANDIDATES="$CANDIDATES $SITE$d" ;;
+              *)     CANDIDATES="$CANDIDATES $SITE/$d" ;;
+            esac
+          done
           for c in $CANDIDATES; do
-            code=$(curl -sS -o /tmp/try.mp4 -w "%{http_code}" -L "$SITE$c" || echo 000)
+            code=$(curl -sS -o /tmp/try.mp4 -w "%{http_code}" -L "$c" || echo 000)
             size=$(stat -c%s /tmp/try.mp4 2>/dev/null || echo 0)
             echo "$code  $size  $c"
             if [ "$code" = "200" ] && [ "$size" -gt 100000 ]; then
