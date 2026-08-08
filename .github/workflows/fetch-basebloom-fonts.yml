@@ -1,0 +1,67 @@
+name: Fetch basebloom fonts
+
+on:
+  workflow_dispatch:
+    inputs:
+      css_url:
+        description: Google Fonts css2 URL
+        required: true
+        default: https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Inter:wght@400;500;600&display=swap
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Download CSS and every woff2 it references
+        run: |
+          set -euo pipefail
+          mkdir -p public/basebloom/fonts
+
+          # A modern UA is required — Google serves woff2 only to browsers it
+          # recognises, and legacy UAs get ttf.
+          UA='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
+          curl -fSL -A "$UA" "${{ inputs.css_url }}" -o /tmp/google.css
+          echo "=== upstream css ($(wc -c < /tmp/google.css) bytes)"
+          head -c 600 /tmp/google.css; echo
+
+          grep -oE 'https://fonts\.gstatic\.com/[^)]+\.woff2' /tmp/google.css | sort -u > /tmp/urls.txt
+          echo "=== $(wc -l < /tmp/urls.txt) woff2 files"
+
+          cp /tmp/google.css /tmp/local.css
+          while read -r u; do
+            [ -z "$u" ] && continue
+            # Stable, readable filename: family-weight-style-subsethash.woff2
+            name=$(echo "$u" | sed -E 's#.*/s/##; s#/#-#g')
+            curl -fSL -A "$UA" "$u" -o "public/basebloom/fonts/$name"
+            printf '  %-52s %s\n' "$name" "$(stat -c%s "public/basebloom/fonts/$name") bytes"
+            # Rewrite the URL in the CSS to the self-hosted path.
+            python3 - "$u" "$name" <<'PY'
+import sys, pathlib
+url, name = sys.argv[1], sys.argv[2]
+p = pathlib.Path('/tmp/local.css')
+p.write_text(p.read_text().replace(url, f'/basebloom/fonts/{name}'))
+PY
+          done < /tmp/urls.txt
+
+          cp /tmp/local.css public/basebloom/fonts/fonts.css
+          echo "=== rewritten css head"
+          head -c 500 public/basebloom/fonts/fonts.css; echo
+          echo "=== any gstatic URLs left?"
+          grep -c 'fonts.gstatic.com' public/basebloom/fonts/fonts.css || echo 0
+
+      - name: Commit
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/basebloom/fonts
+          git diff --cached --quiet && { echo "No change."; exit 0; }
+          git commit -m "Add self-hosted basebloom font files"
+          git push origin HEAD:${{ github.ref_name }}
