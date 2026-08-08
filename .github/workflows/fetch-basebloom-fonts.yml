@@ -65,3 +65,5 @@ PY
           git diff --cached --quiet && { echo "No change."; exit 0; }
           git commit -m "Add self-hosted basebloom font files"
           git push origin HEAD:${{ github.ref_name }}
+
+# re-index nudge
