@@ -1,0 +1,51 @@
+name: Fetch basebloom hero video
+
+on:
+  workflow_dispatch:
+    inputs:
+      video_url:
+        description: Source URL of the hero loop mp4
+        required: true
+        default: https://basebloom-concepts.netlify.app/basebloom-hero-web-loop.mp4
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Download hero loop
+        run: |
+          set -euo pipefail
+          mkdir -p public/basebloom
+          curl -fSL --retry 3 --retry-delay 2 \
+            "${{ inputs.video_url }}" \
+            -o public/basebloom/basebloom-hero-web-loop.mp4
+          ls -lh public/basebloom/basebloom-hero-web-loop.mp4
+
+      - name: Probe it
+        run: |
+          set -euo pipefail
+          ffprobe -v error \
+            -show_entries format=duration,size,bit_rate \
+            -show_entries stream=codec_name,width,height,r_frame_rate \
+            -of default=noprint_wrappers=1 \
+            public/basebloom/basebloom-hero-web-loop.mp4
+
+      - name: Commit
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/basebloom/basebloom-hero-web-loop.mp4
+          if git diff --cached --quiet; then
+            echo "No change."
+            exit 0
+          fi
+          git commit -m "Add self-hosted basebloom hero loop"
+          git push origin HEAD:${{ github.ref_name }}

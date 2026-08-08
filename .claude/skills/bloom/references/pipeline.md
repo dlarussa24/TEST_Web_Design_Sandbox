@@ -7,6 +7,7 @@ generate_image  { model, prompt: <Asset 1 template>, aspect_ratio: "16:9" }
 generate_image  { model, prompt: <Asset 2 template>, aspect_ratio: "16:9",
                   medias: [{ value: <asset1 job id>, role: "image" }] }
 generate_video  { model: "kling3_0", duration: 10, aspect_ratio: "16:9",
+                  sound: "off",
                   prompt: <Asset 3 template>,
                   medias: [{ value: <asset1 id>, role: "start_image" },
                            { value: <asset2 id>, role: "end_image" }] }
@@ -26,6 +27,23 @@ Model choice: nano_banana_pro is the proven default for the stills (crisp
 product/diagram work, accepts reference images); kling3_0 for the video
 (honors start/end image anchors). If the catalog has moved on, trust
 `models_explore(action:'recommend')` over this file.
+
+**Always silence the video.** A bloom hero is a frame scrub — there is no
+audio element and no `<video>` tag, so any generated soundtrack is decoded,
+paid for, and thrown away. kling3_0 defaults `sound: "on"`; pass
+`sound: "off"`. On the Seedance / Wan / FLUX / Veo families the equivalent
+knob is `generate_audio: false` (also default-true on most of them). Check
+the model's `parameters` in `models_explore(action:'get')` before the call
+and switch off whichever one it exposes.
+
+Alternative video models worth knowing (verified against the live catalog):
+`seedance_2_0` matches kling3_0's start/end anchoring and adds native 4K
+(`mode:'std', resolution:'4k'`, collapsing the separate upscale step) plus
+`image_references` alongside the anchors — extra leverage against the
+object drifting off-model. `kling3_0_turbo` and `kling2_6` are start_image
+only, so they CANNOT do the ring-composition close; never use them for an
+act. Anything at a 720p cap (`seedance_2_5`, `seedance_2_0_mini`) re-adds
+the upscale you were trying to avoid.
 
 ## Frame extraction
 

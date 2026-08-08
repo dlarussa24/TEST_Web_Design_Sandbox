@@ -107,7 +107,10 @@ Templates in `references/source-prompts.md` §"Parameterized templates".
 2. **Climax-state still** — `generate_image` with the hero still as
    reference: the medium at full power around the intact object (exploded
    view / full vortex / wave at its crest above the glass). Same void.
-3. **Act-1 video** — `generate_video` (kling3_0, 10s, 16:9),
+3. **Act-1 video** — `generate_video` (kling3_0, 10s, 16:9, **`sound: "off"`**
+   — the hero is a silent frame scrub, so generated audio is pure waste and
+   most models default it ON; on Seedance/Wan/Veo the knob is
+   `generate_audio: false`),
    `start_image` = hero still, `end_image` = climax still. **The camera
    never parks**: it orbits the object in one slow, continuous, theatrical
    arc for the entire shot — the awakening begins mid-orbit and the
@@ -158,6 +161,7 @@ the hard way:
   at rest. The ambient element field fades in right at that moment so the
   medium hands off into the body.
 
+Act 2 is a second `generate_video` call, so it needs `sound: "off"` too.
 Then the same finishing chain as Act 1: review raw → 4K → reframe 9:16 → 4K.
 (5s is usually enough for Act 2; reframe occasionally false-flags content —
 retry with the other-resolution source and it passes.)
