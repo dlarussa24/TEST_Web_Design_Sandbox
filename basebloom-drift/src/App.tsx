@@ -3,7 +3,7 @@ import AboutSection from './components/AboutSection';
 import FeaturesSection from './components/FeaturesSection';
 import ConceptsSection from './components/ConceptsSection';
 
-const HERO_VIDEO = 'https://basebloom-concepts.netlify.app/basebloom-hero-web-loop.mp4';
+const HERO_VIDEO = '/basebloom/basebloom-hero-web-loop.mp4';
 
 export default function App() {
   return (
