@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Logo from './Logo';
 
-const BASE = 'https://basebloom-concepts.netlify.app';
+const BASE = 'https://basebloomdesign.com';
 
 type Trade = {
   kicker: string;

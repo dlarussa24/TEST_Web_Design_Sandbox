@@ -1,6 +1,6 @@
 import Logo from './Logo';
 
-const BASE = 'https://basebloom-concepts.netlify.app';
+const BASE = 'https://basebloomdesign.com';
 
 const concepts = [
   { n: '01', name: 'Living dust', tag: 'Cursor-reactive', href: `${BASE}/site-1-classic/` },
