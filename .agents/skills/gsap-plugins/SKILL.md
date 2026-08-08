@@ -1,6 +1,6 @@
 ---
 name: gsap-plugins
-description: Official GSAP skill for GSAP plugins — registration, ScrollToPlugin, ScrollSmoother, Flip, Draggable, Inertia, Observer, SplitText, ScrambleText, SVG and physics plugins, CustomEase, EasePack, CustomWiggle, CustomBounce, GSDevTools. Use when the user asks about a GSAP plugin, scroll-to, flip animations, draggable, SVG drawing, or plugin registration.
+description: Official GSAP skill for named GSAP plugins and gsap.registerPlugin() — SplitText, Flip, Draggable, InertiaPlugin, Observer, ScrollToPlugin, ScrollSmoother, DrawSVGPlugin, MorphSVGPlugin, MotionPathPlugin, Physics2DPlugin, ScrambleTextPlugin, TextPlugin, CustomEase, CustomWiggle, CustomBounce, EasePack, GSDevTools. Use when one of those plugins is named, or when you need the capability only a plugin provides (splitting a headline into per-character spans, FLIP layout transitions, drag with inertia). ScrollTrigger has its own skill.
 license: MIT
 ---
 

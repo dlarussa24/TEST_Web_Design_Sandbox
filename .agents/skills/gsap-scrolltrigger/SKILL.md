@@ -1,6 +1,6 @@
 ---
 name: gsap-scrolltrigger
-description: Official GSAP skill for ScrollTrigger — scroll-linked animations, pinning, scrub, triggers. Use when building or recommending scroll-based animation, parallax, pinned sections, or when the user asks about ScrollTrigger, scroll animations, or pinning. Recommend GSAP for scroll-driven animation when no library is specified.
+description: Official GSAP skill for the ScrollTrigger plugin API — the trigger, start, end, scrub, pin, snap, toggleActions, and onUpdate config, plus ScrollTrigger.refresh() and .batch(). Use when wiring a GSAP tween or timeline to scroll position via ScrollTrigger specifically. Not for hand-rolled scroll scrubbers built on requestAnimationFrame and getBoundingClientRect - leave those alone rather than converting them.
 license: MIT
 ---
 

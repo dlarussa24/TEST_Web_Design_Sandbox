@@ -1,6 +1,6 @@
 ---
 name: impeccable
-description: Use when the user wants to design, redesign, shape, critique, audit, polish, clarify, distill, harden, optimize, adapt, animate, colorize, extract, or otherwise improve a frontend interface. Covers websites, landing pages, dashboards, product UI, app shells, components, forms, settings, onboarding, and empty states. Handles UX review, visual hierarchy, information architecture, cognitive load, accessibility, performance, responsive behavior, theming, anti-patterns, typography, fonts, spacing, layout, alignment, color, motion, micro-interactions, UX copy, error states, edge cases, i18n, and reusable design systems or tokens. Also use for bland designs that need to become bolder or more delightful, loud designs that should become quieter, live browser iteration on UI elements, or ambitious visual effects that should feel technically extraordinary. Not for backend-only or non-UI tasks.
+description: Operate on an EXISTING frontend interface through one named sub-command. Requires a target that already renders plus an explicit or clearly implied sub-command - polish, bolder, quieter, distill, harden, onboard, critique, audit, colorize, typeset, layout, delight, overdrive, clarify, adapt, optimize, animate, extract, shape, init, document, or live. Invoke it as "impeccable polish the pricing page" - sub-command first, then the target. Do not use it as a general design assistant, for greenfield pages with no incumbent code, or for backend and non-UI work.
 version: 4.0.4
 ---
 

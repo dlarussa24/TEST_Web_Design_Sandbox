@@ -1,6 +1,6 @@
 ---
 name: bloom
-description: Generate a luxury scroll-driven "3D bloom" landing page for ANY named object using Higgsfield AI generation. A cinematic two-act 4K hero — act one awakens the object as the visitor scrolls, act two erupts into a climax and settles to rest exactly at the body handoff — while the object's "signature medium" (fire for a volcano Pokémon, flowing tequila for a reposado, dust and light for a workshop) drifts as an ambient particle field through the rest of the page. The whole design system is sampled from the object itself. Use this skill whenever the user invokes /bloom followed by an object name, or asks for a "bloom page", "3D bloom", "scroll-driven landing page", "deconstruction page", "exploded-view site", "product landing page with AI video", or wants a Higgsfield-generated scroll experience for a product, drink, building, vehicle, creature, instrument, or any physical object — even if they don't say "bloom" explicitly.
+description: Generate a luxury scroll-driven "3D bloom" landing page for ANY named object using Higgsfield AI generation, orchestrating the other installed design skills across its phases. A cinematic two-act 4K hero — act one awakens the object as the visitor scrolls, act two erupts into a climax and settles to rest exactly at the body handoff — while the object's "signature medium" (fire for a volcano Pokémon, flowing tequila for a reposado, dust and light for a workshop) drifts as an ambient particle field through the rest of the page. The design system is sampled from the object itself. Use whenever the user invokes /bloom followed by an object name (append --max for the full multi-skill pipeline), or asks for a "bloom page", "3D bloom", "scroll-driven landing page", "deconstruction page", "exploded-view site", or a Higgsfield-generated scroll experience for a product, drink, building, vehicle, creature, instrument, or any physical object — even if they don't say "bloom" explicitly.
 ---
 
 # Bloom — object-driven scroll-story landing pages
@@ -36,9 +36,52 @@ worked medium examples.
 7. **Verify in a real browser** — scripts/verify_page.mjs + eyeball the joints
 8. **Deliver** — page + screenshots; commit; deploy if a site is linked
 
+## Orchestration — bloom conducts, the other skills play
+
+Bloom owns the pipeline and the final page. The other installed design skills
+are **consultants bound to specific phases**: invoke them where the table says,
+take what serves the object, and discard advice that fights the proven
+mechanics below. Bloom's rules always win a conflict — no consultant may add a
+`<video>` element, a scroll event listener, a navbar, a footer, a cookie
+banner, lorem ipsum, or text dimmer than `#888888` on dark.
+
+### Two tiers
+
+| Invocation | Consults |
+|---|---|
+| `/bloom <object>` | **Default.** Phases 1, 5, 7 only — direction, palette validation, compliance audit. Fast, cheap, and already produces the proven page. |
+| `/bloom <object> --max` | **Full pipeline.** Everything in the default plus the phase-6 build consults (entry sequence, GSAP motion layer) and the phase-7 double audit. Use when the page is the deliverable and polish is worth the extra passes. |
+
+If the user names a skill explicitly (`/bloom Leica M6 --max, skip gsap`),
+their instruction overrides this table.
+
+### The map
+
+| Phase | Consult | For exactly this |
+|---|---|---|
+| 1 — Understand | `frontend-design` | The design thesis before any asset is generated: a named point of view for this object, one aesthetic risk you can justify, and the anti-default check (bloom's dark-void-plus-single-warm-accent look is itself becoming a default — make the direction specific to *this* object). |
+| 1 — Understand | `ui-ux-pro-max` | Candidate font pairings and motion presets to choose the display/body voice from. Query it for options; you pick. |
+| 5 — Design system | `ui-ux-pro-max` | Validate the palette `sample_palette.mjs` derived — contrast on dark, and whether the accent/secondary pair has a named precedent — and lock the display/body pair shortlisted in phase 1. The sampled hexes stay authoritative; this is a check, not a replacement. |
+| 6 — Build (`--max`) | `premium-frontend-ui` | The **entry sequence** — the one real gap in the current pages: a preloader that resolves the first frames and fonts, then reveals, so the visitor never sees the blank gradient beat while WebPs decode. Also its hero-architecture patterns (split headline spans, depth layering). Ignore its navigation section — bloom has no navbar. |
+| 6 — Build (`--max`) | `gsap-plugins` + `gsap-timeline` | SplitText letter-cascade on the h1 and one orchestrated reveal timeline for the hero copy, sequenced against the entry sequence. Layered *on top of* the frame scrubber, never replacing it. |
+| 6 — Build (`--max`) | `gsap-utils` | `mapRange` / `clamp` for the scroll→frame-index math and the act-joint crossfade, in place of hand-rolled arithmetic. |
+| 6 — Build (`--max`) | `gsap-performance` | 60fps discipline on everything added: transform/opacity only, `will-change` applied and removed, no layout reads inside the rAF loop. |
+| 7 — Verify | `web-design-guidelines` | Compliance pass against the external Vercel standard — focus states, contrast, reduced motion, semantics. Fix what it reports. |
+| 7 — Verify (`--max`) | `impeccable polish <page>` | **One bounded round**, invoked with the explicit sub-command on the built page. Batch desktop + mobile, fix what it surfaces, stop. Do not let it redesign the visual world bloom just derived from the object. |
+
+### Deliberately not consulted
+
+- `gsap-scrolltrigger` — would duplicate or replace the proven rAF +
+  `getBoundingClientRect` scrubber. GSAP layers on top of the scrub; it never
+  becomes the scrub.
+- `gsap-react`, `gsap-frameworks` — bloom emits a standalone vanilla page.
+- `gsap-core` — reached transitively through timeline/plugins; no separate
+  consult needed.
+
 ## Phase 1 — Understand the object
 
-Decide four things (a sentence each):
+Consult `frontend-design` for the thesis and `ui-ux-pro-max` for type/motion
+candidates (see Orchestration). Then decide four things (a sentence each):
 
 - **Niche & voice**: who loves this object? A reposado page seduces; a watch
   page whispers heritage; a Pokémon page reads like a trainer's field notes.
@@ -139,12 +182,17 @@ extracts, commits; trigger via GitHub MCP; pull; delete after).
 accent / accent-deep / secondary / bg gradient stops / borders exactly as the
 script suggests, then verify by eye. Never pure #000 anywhere: the template's
 draw loop lifts the footage's void to the page gradient with a `lighten`
-pass — keep it, it's what makes letterboxing invisible.
+pass — keep it, it's what makes letterboxing invisible. Run the sampled
+palette and the phase-1 type shortlist past `ui-ux-pro-max` before locking
+them in.
 
 ## Phase 6 — Build the page
 
 Copy `assets/template.html` → the workspace and fill every `{{SLOT}}`. The
-template carries the proven mechanics — restyle, don't rebuild:
+template carries the proven mechanics — restyle, don't rebuild. Under `--max`,
+this is where `premium-frontend-ui` (entry sequence, hero architecture) and
+the GSAP consults (`gsap-plugins`, `gsap-timeline`, `gsap-utils`,
+`gsap-performance`) layer in on top of those mechanics:
 
 - **Two-act scrub hero** (450vh, rAF + getBoundingClientRect, no scroll
   listener, no video element), contain-fit so the whole subject stays in
@@ -186,6 +234,9 @@ finale's object wouldn't pass as the opening still's twin, reshoot Act 2
 before spending on upscales). Test a portrait viewport too. Serve over
 localhost when testing hosted frame sets — file:// taints the canvas and
 getImageData throws.
+
+Then run `web-design-guidelines` over the built page and fix what it reports.
+Under `--max`, follow it with exactly one `impeccable polish <page>` round.
 
 ## Phase 8 — Deliver
 

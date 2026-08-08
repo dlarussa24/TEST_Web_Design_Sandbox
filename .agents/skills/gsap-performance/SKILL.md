@@ -1,6 +1,6 @@
 ---
 name: gsap-performance
-description: Official GSAP skill for performance — prefer transforms, avoid layout thrashing, will-change, batching. Use when optimizing GSAP animations, reducing jank, or when the user asks about animation performance, FPS, or smooth 60fps.
+description: Official GSAP skill for keeping GSAP animations on the compositor — animating transform and opacity only, avoiding layout thrashing, applying and removing will-change, batching reads and writes, and quickSetter/quickTo for high-frequency updates. Use when GSAP animation stutters or when reviewing GSAP code for 60fps discipline. Scoped to GSAP-driven motion, not general page load or bundle performance.
 license: MIT
 ---
 

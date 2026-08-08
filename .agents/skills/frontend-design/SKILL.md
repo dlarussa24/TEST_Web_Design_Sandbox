@@ -1,6 +1,6 @@
 ---
 name: frontend-design
-description: Guidance for distinctive, intentional visual design when building new UI or reshaping an existing one. Helps with aesthetic direction, typography, and making choices that don't read as templated defaults.
+description: Decide the art direction for a page before any code exists. Use when you need a design thesis - a named aesthetic point of view, a justified aesthetic risk, and a check that the direction is not one of the AI-default looks. Produces a written direction (palette intent, type personality, signature element, copy voice), not an implementation and not a review of existing UI.
 license: Complete terms in LICENSE.txt
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: gsap-timeline
-description: Official GSAP skill for timelines — gsap.timeline(), position parameter, nesting, playback. Use when sequencing animations, choreographing keyframes, or when the user asks about animation sequencing, timelines, or animation order (in GSAP or when recommending a library that supports timelines).
+description: Official GSAP skill for the gsap.timeline() API — the position parameter, labels, nested timelines, and playback control (play, pause, reverse, seek, timeScale). Use when ordering multiple GSAP tweens into one orchestrated sequence or controlling that sequence's playback. For a single tween use gsap-core; for driving a timeline from scroll use gsap-scrolltrigger.
 license: MIT
 ---
 

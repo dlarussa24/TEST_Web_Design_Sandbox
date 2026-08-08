@@ -1,6 +1,6 @@
 ---
 name: gsap-utils
-description: Official GSAP skill for gsap.utils — clamp, mapRange, normalize, interpolate, random, snap, toArray, wrap, pipe. Use when the user asks about gsap.utils, clamp, mapRange, random, snap, toArray, wrap, or helper utilities in GSAP.
+description: Official GSAP skill for the gsap.utils namespace — clamp, mapRange, normalize, interpolate, random, snap, toArray, wrap, wrapYoyo, distribute, splitColor, selector, unitize, and pipe. Use when remapping one numeric range onto another, clamping a progress value, snapping to increments, or composing those helpers - including in plain JS with no GSAP tween involved.
 license: MIT
 ---
 

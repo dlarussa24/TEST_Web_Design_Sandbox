@@ -1,6 +1,6 @@
 ---
 name: premium-frontend-ui
-description: 'A comprehensive guide for GitHub Copilot to craft immersive, high-performance web experiences with advanced motion, typography, and architectural craftsmanship.'
+description: 'Apply immersive page-architecture patterns to a page already being built. Owns three structures: the entry sequence (preloader and asset-resolution reveal that covers the blank beat before heavy media decodes), hero architecture (full-bleed stage, syntactically split headlines for cascading entrances, depth layering), and scroll narrative structure (pinned sections, horizontal journeys, parallax mapping). Use when a page needs those structural layers added; not for choosing an aesthetic and not for auditing finished UI.'
 metadata:
   author: 'Utkarsh Patrikar'
   author_url: 'https://github.com/utkarsh232005'
