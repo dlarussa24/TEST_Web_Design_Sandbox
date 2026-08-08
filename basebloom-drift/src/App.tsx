@@ -3,7 +3,11 @@ import AboutSection from './components/AboutSection';
 import FeaturesSection from './components/FeaturesSection';
 import ConceptsSection from './components/ConceptsSection';
 
-const HERO_VIDEO = '/basebloom/basebloom-hero-web-loop.mp4';
+// WebM first — browsers pick the first source they can decode. VP9 is ~14%
+// smaller here; Safari, which has no VP9 in a <video> on all versions, falls
+// through to the H.264 mp4.
+const HERO_VIDEO_WEBM = '/basebloom/basebloom-hero-web-loop.webm';
+const HERO_VIDEO_MP4 = '/basebloom/basebloom-hero-web-loop.mp4';
 
 export default function App() {
   return (
@@ -11,12 +15,14 @@ export default function App() {
       <section className="relative h-screen overflow-hidden mb-[-25px]">
         <video
           className="absolute inset-0 w-full h-full object-cover"
-          src={HERO_VIDEO}
           autoPlay
           muted
           loop
           playsInline
-        />
+        >
+          <source src={HERO_VIDEO_WEBM} type="video/webm" />
+          <source src={HERO_VIDEO_MP4} type="video/mp4" />
+        </video>
         <div className="absolute inset-0 bg-black/20" />
         <Navbar />
         <div className="relative z-10 h-full flex flex-col justify-end items-center pb-12 md:pb-16 px-6">
