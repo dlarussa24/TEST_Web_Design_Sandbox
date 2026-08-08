@@ -3,10 +3,10 @@ name: Fetch basebloom hero video
 on:
   workflow_dispatch:
     inputs:
-      video_url:
-        description: Source URL of the hero loop mp4
+      site:
+        description: Site root to probe
         required: true
-        default: https://basebloom-concepts.netlify.app/basebloom-hero-web-loop.mp4
+        default: https://basebloom-concepts.netlify.app
 
 permissions:
   contents: write
@@ -19,33 +19,65 @@ jobs:
         with:
           ref: ${{ github.ref_name }}
 
-      - name: Download hero loop
+      - name: Probe the site for the real video asset
         run: |
-          set -euo pipefail
+          set -uo pipefail
+          SITE="${{ inputs.site }}"
+          echo "=== root status"
+          curl -sS -o /tmp/root.html -w "%{http_code} %{url_effective}\n" -L "$SITE/"
+          echo "=== any .mp4 referenced in the root HTML"
+          grep -oE '[^"'"'"' ]+\.mp4' /tmp/root.html | sort -u || true
+          echo "=== script bundles"
+          grep -oE '/assets/[^"'"'"']+\.js' /tmp/root.html | sort -u > /tmp/js.txt || true
+          cat /tmp/js.txt
+          echo "=== mp4 URLs inside each bundle"
+          while read -r j; do
+            [ -z "$j" ] && continue
+            echo "--- $j"
+            curl -sS -L "$SITE$j" -o /tmp/b.js
+            grep -oE 'https?://[^"'"'"']+\.mp4|/[A-Za-z0-9._/-]+\.mp4' /tmp/b.js | sort -u || true
+          done < /tmp/js.txt
+
+      - name: Try to download whatever we found
+        run: |
+          set -uo pipefail
+          SITE="${{ inputs.site }}"
           mkdir -p public/basebloom
-          curl -fSL --retry 3 --retry-delay 2 \
-            "${{ inputs.video_url }}" \
-            -o public/basebloom/basebloom-hero-web-loop.mp4
-          ls -lh public/basebloom/basebloom-hero-web-loop.mp4
+          CANDIDATES=$(cat <<'EOF'
+          /basebloom-hero-web-loop.mp4
+          /hero-web-loop.mp4
+          /hero.mp4
+          /assets/basebloom-hero-web-loop.mp4
+          EOF
+          )
+          for c in $CANDIDATES; do
+            code=$(curl -sS -o /tmp/try.mp4 -w "%{http_code}" -L "$SITE$c" || echo 000)
+            size=$(stat -c%s /tmp/try.mp4 2>/dev/null || echo 0)
+            echo "$code  $size  $c"
+            if [ "$code" = "200" ] && [ "$size" -gt 100000 ]; then
+              cp /tmp/try.mp4 public/basebloom/basebloom-hero-web-loop.mp4
+              echo "GOT IT: $c"
+              break
+            fi
+          done
+          if [ -f public/basebloom/basebloom-hero-web-loop.mp4 ]; then
+            ffprobe -v error -show_entries format=duration,size \
+              -show_entries stream=codec_name,width,height,r_frame_rate \
+              -of default=noprint_wrappers=1 \
+              public/basebloom/basebloom-hero-web-loop.mp4
+          else
+            echo "No candidate resolved to a video."
+          fi
 
-      - name: Probe it
+      - name: Commit if we got it
         run: |
           set -euo pipefail
-          ffprobe -v error \
-            -show_entries format=duration,size,bit_rate \
-            -show_entries stream=codec_name,width,height,r_frame_rate \
-            -of default=noprint_wrappers=1 \
-            public/basebloom/basebloom-hero-web-loop.mp4
-
-      - name: Commit
-        run: |
-          set -euo pipefail
+          if [ ! -f public/basebloom/basebloom-hero-web-loop.mp4 ]; then
+            echo "Nothing to commit."; exit 0
+          fi
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add public/basebloom/basebloom-hero-web-loop.mp4
-          if git diff --cached --quiet; then
-            echo "No change."
-            exit 0
-          fi
+          git diff --cached --quiet && { echo "No change."; exit 0; }
           git commit -m "Add self-hosted basebloom hero loop"
           git push origin HEAD:${{ github.ref_name }}
