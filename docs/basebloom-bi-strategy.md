@@ -43,14 +43,23 @@ where he is genuinely senior.
 
 ### ⚠️ Evidence quality — read before quoting any number
 
-Market research for this plan ran through a proxy that **blocked every external
-vendor domain**. Zero primary sources were reachable — no Azure pricing
-calculator, no learn.microsoft.com, no tableau.com. Every dollar figure below
-comes from secondary search summaries, several from vendors who sell competing
-products and have an incentive to distort incumbent pricing.
+Two different confidence levels apply, and the difference matters:
 
-**Treat all figures as directional. Verify before any client proposal.** The
-architecture does not depend on which exact tier wins; the pricing does.
+- **Licensing rules: primary-source verified.** `learn.microsoft.com` and
+  `azure.microsoft.com` are blocked by this environment's egress proxy, but
+  Microsoft publishes its documentation source publicly on GitHub, which is
+  reachable. The licensing claims below are quoted from
+  `MicrosoftDocs/powerbi-docs` and `MicrosoftDocs/fabric-docs` at `main` — the
+  same text that renders on learn.microsoft.com. See §2.2.
+- **Pricing: secondary sources only.** The Azure pricing page and the Azure
+  retail prices API (`prices.azure.com`) are both blocked. Every dollar figure
+  here comes from search summaries, several written by vendors who sell
+  competing products. Independent sources agree and are internally consistent
+  with a published ~$0.18/CU-hour rate, but nothing is confirmed.
+
+**Treat every dollar figure as directional and verify in the Azure pricing
+calculator before any client proposal.** The licensing question — the one that
+determined the architecture — is settled.
 
 ---
 
@@ -133,10 +142,10 @@ The instinct is to embed Power BI everywhere. Resist it for Tier 1, for four
 reasons that all point the same way:
 
 - **Cost shape.** Embedding for viewers without licenses ("app owns data")
-  requires dedicated capacity — reportedly **Fabric F2 at ~$156/mo reserved or
-  ~$262/mo PAYG**, plus one Power BI Pro license (~$14/mo) for authoring. That
-  is a fixed platform cost spread across clients paying $100–$250/mo for
-  *everything including hosting*.
+  requires dedicated capacity — **Fabric F2**, reportedly ~$156/mo on a 1-year
+  reservation or ~$263/mo pay-as-you-go, plus one Power BI Pro license (~$14/mo)
+  for authoring. That is a fixed platform cost spread across clients paying
+  $100–$250/mo for *everything including hosting*.
 - **Latency.** An embedded report is a heavyweight iframe: SDK bundle, token
   round trip, then render. Expect multiple seconds to first paint against a site
   whose measured mobile LCP is **428 ms** and desktop CLS is **0**.
@@ -160,6 +169,60 @@ is not a limitation at all. A hand-built charting component over a small
 Postgres/Supabase backend is an equally valid path if you'd rather own the code.
 
 ### 2.2 Reserve real embedding for Tier 2 — and buy capacity late
+
+#### ✅ Settled: F2 is sufficient. The F64 rule does not apply to this use case.
+
+This was the plan's highest-priority open question — a ~$156/mo vs ~$8,400/mo
+difference — and secondary sources contradicted each other on it. Microsoft's
+own documentation source resolves it unambiguously.
+
+**`fabric-docs/docs/enterprise/licenses.md`**, "Power BI embedding scenarios":
+
+| Scenario | Required capacity or SKU | User license requirement | Notes |
+|---|---|---|---|
+| Embed for your organization (Microsoft Entra users) | F (any), P, or A/EM | Depends on SKU & size | F64+ or P capacities support viewing by users with a Microsoft Fabric free license. |
+| **App owns data (external users)** | **F (any)**, A/EM or P SKUs | **End users unlicensed** | Service principal handles authentication. |
+
+The same file scopes the F64 rule explicitly:
+
+> "In *Embed for your organization* and embedding in Microsoft 365 apps
+> (SharePoint Online, PowerPoint), F SKUs smaller than F64 and all A SKUs
+> require each consuming user to have a Pro, Premium Per User (PPU), or
+> individual trial license to view Power BI content."
+
+**`powerbi-docs/.../embedded/embedded-capacity.md`** (doc date 2026-05-12) states
+it directly:
+
+> "For Embedding for your customers (app owns data) customers, there are no
+> licensing requirements for the end users."
+
+In that article's SKU matrix, the Pro/PPU and F64 footnotes are attached only to
+the *Embed for your organization* and *Microsoft 365 apps* rows. The *Embed for
+your customers* row carries no footnote at all. **The confusion in the secondary
+sources is a conflation of organizational consumption in the Power BI service
+with app-owns-data embedding. They are different rules.**
+
+Three corrections and caveats that fall out of the same sources:
+
+- **A1 is not comparable to F2.** The official SKU table maps **A1 ≡ EM1 ≡ F8**
+  (1 Power BI v-core, 8 CU). F2 is 0.25 v-cores — a quarter of A1. The widely
+  repeated "A1 at ~$736/mo is ~4.7× worse than F2 at ~$156/mo" comparison is
+  apples-to-oranges; the honest comparison is A1 against F8. F2 is still the
+  right starting point, but expect it to be *much* smaller than A1, not merely
+  cheaper. Microsoft's own caveat on that table: *"Use this table as a reference
+  for comparing compute capacity, not as a statement of functional or licensing
+  equivalence."*
+- **You still need one Pro or PPU license** to publish content to a workspace.
+  The ~$14/mo authoring cost stands.
+- **Free embed trial tokens are development-only.** Until a capacity is
+  purchased, a *"Free trial version"* banner renders at the top of the embedded
+  report — so trial tokens cannot quietly serve a real client.
+
+Sizing, as opposed to licensing, remains unverified: F2 is *permitted*, but
+whether 2 CU performs acceptably under real embedded load is still an open
+question (§6).
+
+#### The economics
 
 Embedding earns its cost when the client has real data, real users, and is
 paying four or five figures. The economics are a **volume bet, not a per-client
@@ -295,8 +358,9 @@ public artifact proving dashboard capability. Nothing new is sold yet. Spend: ~$
   and every care-plan client site. Connect GBP. Inventory what data actually
   exists per client. Decide the metric set (calls, form fills, GBP
   views/searches/direction requests, review velocity) — no vanity metrics.
-  **In parallel, resolve the F2 licensing question** (§6, item 1) — it is a
-  ~$156/mo vs ~$8,400/mo question and everything downstream assumes the cheap answer.
+  **In parallel, confirm F2 pricing** in the Azure pricing calculator for your
+  region (§6, item 1). The licensing question is settled (§2.2); only the
+  numbers are outstanding.
 - **Week 2 — Build the Tier 1 report generator once.** Scheduled pull →
   per-client dataset → templated Evidence.dev report. Highest-leverage build in
   the plan: written once, amortized across every current and future care-plan
@@ -439,18 +503,48 @@ expensive to untangle later.
 
 ## 6 · Open items, highest priority first
 
-1. **Does F2 actually support app-owns-data embedding for unlimited external
-   viewers, or does an F64 threshold apply?** Sources conflicted, and the
-   conflation appears to be between *organizational consumption in the Power BI
-   service* (where the F64 rule is real) and *app-owns-data embedding* (where it
-   should not apply). This is a ~$156/mo vs ~$8,400/mo question. Verify at
-   `learn.microsoft.com/power-bi/developer/embedded/embedded-capacity` and
-   `learn.microsoft.com/fabric/enterprise/licenses`, or with a Microsoft partner.
-   **Do not publish Data pricing before this is settled.**
-2. **Re-verify all pricing** against the Azure pricing calculator directly. None
-   of the figures in this plan came from a primary source.
-3. **Real F2 performance under embedded load** — no benchmark data exists. A
-   two-week PAYG trial with a representative model is the only way to know.
-4. **Day-90 target numbers** — David to set, in week 0.
-5. **Case study consent** from the existing BI client.
-6. **Entity status** — LLC or sole proprietorship, and the footer corrected to match.
+1. **Verify all pricing** in the Azure pricing calculator for your region. No
+   dollar figure in this document came from a primary source — both
+   `azure.microsoft.com` and the Azure retail prices API are blocked from this
+   environment. Regional variance is reportedly ±10–15%.
+2. **Real F2 performance under embedded load** — F2 is *licensed* for
+   app-owns-data (§2.2), but at 2 CU / 0.25 v-cores it is small, and no
+   benchmark data exists. A two-week PAYG trial with a representative semantic
+   model is the only way to know. Budget for stepping up to F4/F8 if it doesn't
+   hold. This is now the biggest unknown in the plan.
+3. **Day-90 target numbers** — David to set, in week 0.
+4. **Case study consent** from the existing BI client.
+5. **Entity status** — LLC or sole proprietorship, and the footer corrected to match.
+
+### Resolved
+
+- ~~**Does F2 support app-owns-data embedding, or does F64 apply?**~~ **Settled
+  2026-08-09 against Microsoft's published documentation source:** F (any) SKU
+  is sufficient and end users are unlicensed. The F64 threshold applies only to
+  *Embed for your organization* and Microsoft 365 app embedding. Full quotes and
+  citations in §2.2.
+
+## Sources
+
+**Primary — Microsoft documentation source, fetched 2026-08-09.** These are the
+files that render on learn.microsoft.com; the rendered site is blocked from this
+environment but the source repositories are public.
+
+- [`powerbi-docs/developer/embedded/embedded-capacity.md`](https://github.com/MicrosoftDocs/powerbi-docs/blob/main/powerbi-docs/developer/embedded/embedded-capacity.md)
+  (doc date 2026-05-12) — SKU matrix, end-user licensing, trial-token banner
+- [`powerbi-docs/includes/capacity-table.md`](https://github.com/MicrosoftDocs/powerbi-docs/blob/main/powerbi-docs/includes/capacity-table.md)
+  (doc date 2026-08-01) — F↔A/EM/P SKU equivalence and v-core counts
+- [`fabric-docs/docs/enterprise/licenses.md`](https://github.com/MicrosoftDocs/fabric-docs/blob/main/docs/enterprise/licenses.md)
+  — "Power BI embedding scenarios" table and the F64 scoping sentence
+
+Rendered equivalents, for reference:
+[Capacity and SKUs in Power BI embedded analytics](https://learn.microsoft.com/en-us/power-bi/developer/embedded/embedded-capacity)
+· [Microsoft Fabric licenses](https://learn.microsoft.com/en-us/fabric/enterprise/licenses)
+
+**Secondary — pricing only, unverified.** Multiple independent summaries agree
+on ~$0.36/hr PAYG and ~$156/mo 1-year reserved for F2 in US East, derived from a
+~$0.18/CU-hour rate.
+[Solv Systems](https://solv-systems.com/resources/microsoft-fabric-pricing-2026)
+· [AlphaVima](https://alphavima.com/blog/microsoft-fabric-pricing/)
+· [SpendWeave](https://spendweave.com/blog/microsoft-fabric-pricing-capacity-planning/)
+· [Azure Fabric pricing (blocked here — check this first)](https://azure.microsoft.com/en-us/pricing/details/microsoft-fabric/)
