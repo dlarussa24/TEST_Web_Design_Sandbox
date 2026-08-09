@@ -1,0 +1,59 @@
+[
+  {
+    "label": "desktop",
+    "video": {
+      "src": "https://basebloomdesign.com/trades-hero-loop.mp4",
+      "readyState": 4,
+      "paused": false,
+      "t": 2.63,
+      "duration": 6.13,
+      "w": 1920,
+      "h": 1080
+    },
+    "bright": {
+      "mean": 114.2,
+      "nonBlackPct": 98.9
+    },
+    "h1Text": "We build the base. / Your business blooms.",
+    "h1Family": "Prata, Georgia, \"Times New Roman\", serif",
+    "emFamily": "Prata, Georgia, \"Times New Roman\", serif",
+    "loadedFaces": [
+      "Inter normal 400",
+      "Inter normal 600",
+      "JetBrains Mono normal 400",
+      "JetBrains Mono normal 500",
+      "Prata normal 400"
+    ],
+    "title": "BaseBloom · We build the base. Your business blooms.",
+    "hosts": [
+      "basebloomdesign.com"
+    ]
+  },
+  {
+    "label": "mobile",
+    "video": {
+      "src": "",
+      "readyState": 0,
+      "paused": true,
+      "t": 0,
+      "duration": 0,
+      "w": 0,
+      "h": 0
+    },
+    "bright": null,
+    "h1Text": "We build the base. / Your business blooms.",
+    "h1Family": "Prata, Georgia, \"Times New Roman\", serif",
+    "emFamily": "Prata, Georgia, \"Times New Roman\", serif",
+    "loadedFaces": [
+      "Inter normal 400",
+      "Inter normal 600",
+      "JetBrains Mono normal 400",
+      "JetBrains Mono normal 500",
+      "Prata normal 400"
+    ],
+    "title": "BaseBloom · We build the base. Your business blooms.",
+    "hosts": [
+      "basebloomdesign.com"
+    ]
+  }
+]
