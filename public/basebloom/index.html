@@ -1,18 +1,641 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BaseBloom — We build the base. Your business blooms.</title>
-    <meta name="description" content="BaseBloom builds cinematic websites for the trades. Nine niches, twenty-seven live demos — open yours and watch your business bloom." />
-    <meta property="og:title" content="BaseBloom — We build the base. Your business blooms." />
-    <meta property="og:description" content="Cinematic websites for the trades. Nine niches, twenty-seven live demos." />
-    <meta name="theme-color" content="#321C04" />
-    <link rel="stylesheet" href="/basebloom/fonts/fonts.css" />
-    <script type="module" crossorigin src="/basebloom/assets/index-CdCUjcpL.js"></script>
-    <link rel="stylesheet" crossorigin href="/basebloom/assets/index-Bur1tY7Q.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BaseBloom · We build the base. Your business blooms.</title>
+<meta name="description" content="Custom, high-end websites for local trades, live in 5 days from your photos. BaseBloom turns your Google listing into a site that books jobs. See a free demo of your site.">
+<meta property="og:title" content="BaseBloom · We build the base. Your business blooms.">
+<meta property="og:description" content="Custom websites for local businesses, built in days. See a free demo of your site.">
+<meta property="og:image" content="hero-poster.jpg">
+<meta name="theme-color" content="#101C13">
+<link rel="icon" href="brand/basebloom-icon.svg" type="image/svg+xml">
+<link rel="preload" href="fonts/prata-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* Self-hosted fonts: no render-blocking third-party request. */
+@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url('fonts/inter-400.woff2') format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url('fonts/inter-500.woff2') format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url('fonts/inter-600.woff2') format('woff2')}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url('fonts/jetbrains-mono-400.woff2') format('woff2')}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:500;font-display:swap;src:url('fonts/jetbrains-mono-500.woff2') format('woff2')}
+@font-face{font-family:'Space Grotesk';font-style:normal;font-weight:500;font-display:swap;src:url('fonts/space-grotesk-500.woff2') format('woff2')}
+@font-face{font-family:'Space Grotesk';font-style:normal;font-weight:600;font-display:swap;src:url('fonts/space-grotesk-600.woff2') format('woff2')}
+@font-face{font-family:'Space Grotesk';font-style:normal;font-weight:700;font-display:swap;src:url('fonts/space-grotesk-700.woff2') format('woff2')}
+@font-face{font-family:'Prata';font-style:normal;font-weight:400;font-display:swap;src:url('fonts/prata-400.woff2') format('woff2')}
+:root{
+  --ink:#101C13; --surface:#1B2416; --surface2:#232B1A; --border:#3A4430;
+  --muted:#A7A991; --text:#F4F2E9; --paper:#FFFFFF;
+  --bloom:#16B364; --bloom-hover:#0E9455;
+  --sand:#D8C6A0; --sand-dim:#B9A87F; --brown:#C89253; --brown-mid:#A9743C; --brown-deep:#7E5424;
+  --maxw:1160px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:#101C13;
+  color:var(--text);font-family:"Inter",system-ui,sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+/* The page gradient lives on a fixed pseudo-element instead of
+   background-attachment:fixed, which repaints on every scroll frame in iOS Safari. */
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:
+  radial-gradient(1100px 760px at 14% -8%, rgba(22,179,100,.10), transparent 60%),
+  radial-gradient(950px 680px at 100% 10%, rgba(216,198,160,.07), transparent 55%),
+  linear-gradient(170deg,#101C13 0%,#131A0F 32%,#181209 74%,#120D08 100%)}
+h1,h2,h3,.display{font-family:"Prata",Georgia,"Times New Roman",serif;font-weight:400;line-height:1.14;letter-spacing:0}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.bloom{color:var(--bloom)}
+.btn{display:inline-block;padding:.9rem 1.5rem;border-radius:10px;font-weight:600;font-size:1rem;cursor:pointer;transition:transform .15s ease,background .15s ease;border:0}
+/* The key CTA wears warm brown: a gentle caramel-to-tan wash. The deep bark
+   stop is gone so the button reads as one warm surface, not a steep fade. */
+.btn-coral{background:linear-gradient(160deg,var(--brown) 0%,var(--brown-mid) 100%);color:#1C1207}
+.btn-coral:hover{transform:translateY(-2px);filter:brightness(.95);box-shadow:0 10px 30px -12px rgba(169,116,60,.5)}
+.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
+.btn-ghost:hover{border-color:var(--bloom);color:var(--bloom)}
+.btn-bloom{background:var(--bloom);color:#05130c;box-shadow:0 0 0 rgba(22,179,100,0)}
+.btn-bloom:hover{transform:translateY(-2px);background:var(--bloom-hover);box-shadow:0 10px 30px -10px rgba(22,179,100,.6)}
+.btn-bloom .pt{font-size:.85em;margin-right:.4em}
+.kicker{font-family:"Prata",Georgia,serif;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--bloom)}
+
+/* nav */
+/* The banner is always on: over the hero film the links used to sit muted on
+   raw footage and vanished into the midtones. Same treatment top to bottom. */
+nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(15,22,14,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:70px}
+/* The leading B of the wordmark is the mark itself, so the lockup is set in
+   Prata: a grotesk lowercase beside a traced serif B reads as two fonts.
+   .bb-b is a replaced element, so its bottom edge sits on the text baseline
+   with no nudging; its height is Prata's cap (.8em) times the mark's
+   own height/cap ratio (1.0359), which is what keeps the two B's the same. */
+.logo{font-family:Prata,Georgia,"Times New Roman",serif;font-weight:400;font-size:1.5rem;letter-spacing:-.005em;white-space:nowrap}
+.logo .bb-b{height:0.8651em;width:auto;vertical-align:baseline;overflow:visible;
+  /* the viewBox is tight to the ink, so Prata's own B sidebearings (.040em /
+     .054em) have to be added back or the 'a' collides with the bowl */
+  margin:0 .054em 0 0}
+.logo b{color:var(--bloom);font-weight:400}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{color:var(--text);font-size:.95rem;transition:color .3s ease}
+.nav-links a:hover{color:var(--bloom)}
+.nav-cta{padding:.55rem 1.1rem;font-size:.9rem}
+.nav-tel{font-family:"Inter",sans-serif;font-size:.9rem;letter-spacing:0;color:var(--text)!important;white-space:nowrap}
+.nav-tel:hover{color:var(--bloom)!important}
+/* Phones: drop the section links but keep the two that answer "what does it cost"
+   and "who am I talking to"; a nav with no navigation is how pricing became
+   unreachable by tap. */
+@media(max-width:720px){
+  .nav-inner{height:60px}
+  .logo{font-size:1.28rem}
+  .nav-links{gap:14px}
+  .nav-links a.n-hide{display:none}
+  .nav-tel{font-size:.82rem}
+  .nav-links a.n-mini{font-size:.82rem}
+  .nav-cta{padding:.5rem .85rem;font-size:.82rem}
+}
+.nav-tel .tel-short{display:none}
+/* Never hide tap-to-call; on the narrowest phones it shrinks to "Call". */
+@media(max-width:430px){
+  .logo{font-size:1.13rem}
+  .nav-links{gap:10px}
+  .nav-tel .tel-full{display:none}
+  .nav-tel .tel-short{display:inline}
+  .nav-links a.n-mini{font-size:.78rem}
+}
+
+/* hero */
+.hero{position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden}
+.hero-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.hero-overlay{position:absolute;inset:0;z-index:1;background:
+  linear-gradient(90deg,rgba(15,22,14,.92),rgba(15,22,14,.55) 55%,rgba(15,22,14,.25)),
+  linear-gradient(0deg,rgba(16,18,10,.95),transparent 40%)}
+/* .hero-content shares its element with .wrap, so the shorthand must restate the
+   24px gutter or it silently zeroes .wrap's horizontal padding (flush-left on phones).
+   max-width matches --maxw so the hero's left edge sits on the same grid line as the
+   nav logo and every section heading below. */
+.hero-content{position:relative;z-index:2;width:100%;max-width:var(--maxw);padding:110px 24px 96px}
+.hero h1{font-size:clamp(2.6rem,5.5vw,4.1rem);margin:.6rem 0 1rem}
+.hero p{font-size:clamp(1.05rem,2vw,1.3rem);color:var(--text);max-width:560px;margin-bottom:2rem}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap}
+/* Trust strip: every claim here is verifiable. No invented reviews or clients. */
+.trust{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:26px;align-items:center;
+  font-size:.92rem;color:var(--text);font-family:"Prata",Georgia,serif;letter-spacing:.01em}
+.trust span{display:inline-flex;align-items:center;gap:7px}
+.trust span::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--bloom);flex:none}
+.hero-tel{display:inline-flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px;margin-top:22px;
+  font-family:"Inter",sans-serif;font-size:1.25rem;font-weight:600;letter-spacing:0;color:var(--text)}
+.hero-tel small{font-family:"Inter",sans-serif;font-size:.82rem;font-weight:400;color:var(--text);white-space:nowrap}
+.hero-tel:hover{color:var(--bloom)}
+@media(max-width:720px){
+  .hero-content{padding:88px 24px 84px}
+  .hero .kicker{font-size:.72rem;letter-spacing:.06em}
+  .trust{font-size:.8rem;display:grid;grid-template-columns:1fr 1fr;gap:9px 14px}
+  .hero-tel{font-size:1.5rem;gap:2px}
+  .hero-tel small{white-space:normal;flex-basis:100%}
+  .scroll-cue{display:none}
+}
+.scroll-cue{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:2;color:var(--text);font-family:"Prata",Georgia,serif;font-size:.75rem;letter-spacing:.1em}
+
+/* sections */
+section{padding:110px 0;position:relative}
+@media(max-width:720px){section{padding:72px 0}.section-head{margin-bottom:40px}}
+.section-head{max-width:640px;margin-bottom:56px}
+.section-head h2{font-size:clamp(2rem,4vw,3rem);margin:.5rem 0 .8rem}
+.section-head p{color:var(--text);font-size:1.1rem}
+
+.work-all{margin-top:34px;text-align:center}
+
+/* trade tiles (Find your trade) */
+.tcard{--ac:var(--bloom)}
+.tcard:hover{border-color:var(--ac)}
+.tcard .gnum{color:var(--ac);font-weight:700;text-shadow:0 1px 3px rgba(0,0,0,.7)}
+.tcard .disc{color:var(--ac)}
+.tcard .hook{font-size:.85rem;color:var(--text);line-height:1.35;margin-top:2px}
+
+/* the "More trades" tile */
+.morecard{position:relative;display:flex;flex-direction:column;justify-content:flex-end;gap:2px;
+  grid-column:1/-1;
+  border-radius:14px;overflow:hidden;border:1px solid var(--border);
+  background:var(--surface);padding:17px 19px;transition:transform .2s ease,border-color .2s ease}
+.morecard::before{content:"";position:absolute;inset:-60%;background:
+  conic-gradient(from 0deg,#4E9B47,#3E8FD8,#A9743C,#B07D4F,#2FA4E7,#B5834A,#8C6FC9,#4E9B47);
+  opacity:.16;filter:blur(38px);animation:moreSheen 14s linear infinite}
+.morecard:hover{transform:translateY(-4px);border-color:var(--bloom)}
+.morecard>*{position:relative;z-index:1}
+.morecard .mk{font-family:"Prata",Georgia,serif;font-size:.7rem;letter-spacing:.08em;color:var(--bloom);
+  margin-bottom:5px}
+.morecard h3{font-size:1.3rem}
+.morecard .mline{font-size:.85rem;color:var(--text);line-height:1.4}
+.mcycle{position:relative;height:1.5em;overflow:hidden;font-family:"JetBrains Mono";font-size:.78rem;
+  letter-spacing:.06em;text-transform:uppercase;margin:4px 0 2px}
+.mcycle span{position:absolute;inset:0;opacity:0;animation:mRoll 20s linear infinite}
+.mcycle span:nth-child(1){animation-delay:0s}.mcycle span:nth-child(2){animation-delay:2.5s}
+.mcycle span:nth-child(3){animation-delay:5s}.mcycle span:nth-child(4){animation-delay:7.5s}
+.mcycle span:nth-child(5){animation-delay:10s}.mcycle span:nth-child(6){animation-delay:12.5s}
+.mcycle span:nth-child(7){animation-delay:15s}.mcycle span:nth-child(8){animation-delay:17.5s}
+.morecard .go2{font-size:.82rem;font-weight:600;color:var(--bloom);margin-top:6px}
+@keyframes moreSheen{to{transform:rotate(1turn)}}
+@keyframes mRoll{0%{opacity:0;transform:translateY(8px)}
+  2%,10.5%{opacity:1;transform:none}
+  12.5%,100%{opacity:0;transform:translateY(-8px)}}
+.mstatic{display:none}
+@media(prefers-reduced-motion:reduce){
+  .morecard::before{animation:none}
+  .mcycle{display:none}
+  .mstatic{display:grid;grid-template-columns:1fr 1fr;gap:2px 12px;font-family:"JetBrains Mono";
+    font-size:.68rem;letter-spacing:.05em;text-transform:uppercase;color:var(--text);margin:4px 0}
+}
+
+/* concept gallery */
+.ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+.gcard{position:relative;display:block;border-radius:14px;overflow:hidden;border:1px solid var(--border);aspect-ratio:16/10;background:#0A0D11;transition:transform .2s ease,border-color .2s ease}
+.gcard:hover{transform:translateY(-4px);border-color:var(--bloom)}
+.gcard img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.gcard:hover img{transform:scale(1.05)}
+.gcard .gnum{position:absolute;top:11px;left:14px;z-index:2;font-family:"JetBrains Mono";font-size:.7rem;color:rgba(244,246,248,.96);letter-spacing:.12em;text-shadow:0 1px 4px rgba(0,0,0,.9),0 0 14px rgba(10,13,17,.7)}
+.gcard .gover{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(10,13,17,.88) 0%,rgba(10,13,17,.74) 9%,rgba(10,13,17,.36) 20%,rgba(10,13,17,0) 32%),linear-gradient(180deg,rgba(10,13,17,0) 30%,rgba(10,13,17,.62) 58%,rgba(10,13,17,.97));display:flex;flex-direction:column;justify-content:flex-end;padding:15px 17px}
+.gcard h3{font-size:1.15rem;margin-bottom:3px}
+.gcard .disc{font-family:"Prata",Georgia,serif;font-size:.74rem;letter-spacing:.07em;text-transform:uppercase;color:var(--bloom);text-shadow:0 1px 3px rgba(0,0,0,.75)}
+.gcard .go{margin-top:9px;font-size:.82rem;font-weight:600;color:var(--text);opacity:0;transform:translateY(6px);transition:opacity .25s ease,transform .25s ease}
+.gcard:hover .go{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.gcard:hover img{transform:none}.gcard .go{opacity:1;transform:none}}
+/* Touch has no hover: the tap affordance must simply be there. */
+@media(hover:none){.gcard .go{opacity:1;transform:none}.morecard .go2{opacity:1}}
+
+/* faq */
+.faq{max-width:760px}
+.faq details{border:1px solid var(--border);border-radius:12px;background:var(--surface);
+  margin-bottom:10px;overflow:hidden}
+.faq summary{cursor:pointer;list-style:none;padding:18px 20px;font-weight:400;font-size:1.05rem;
+  font-family:"Prata",Georgia,serif;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";color:var(--bloom);font-size:1.3rem;font-weight:500;flex:none;
+  transition:transform .2s ease}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{padding:0 20px 18px;color:var(--text);font-size:.98rem;max-width:640px}
+.faq details[open]{border-color:var(--bloom)}
+.faq summary:hover{color:var(--bloom)}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px}
+.step{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px}
+.step .num{font-family:"Prata",Georgia,serif;font-weight:400;font-size:1.4rem;color:var(--bloom);margin-bottom:10px}
+.step h3{font-size:1.2rem;margin-bottom:8px}
+.step p{color:var(--text)}
+.care{margin-top:26px;color:var(--text);font-size:1.02rem}
+.care b{color:var(--bloom)}
+
+/* pricing */
+.pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;max-width:1100px}
+@media(max-width:900px){.pricing{grid-template-columns:1fr 1fr;max-width:820px}}
+@media(max-width:640px){.pricing{grid-template-columns:1fr}}
+.price{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px}
+.price .amt{font-family:"Prata",Georgia,serif;font-weight:400;font-size:clamp(1.9rem,2.7vw,2.4rem);margin:.3rem 0}
+.price .lbl{color:var(--text)}
+.price .per{font-size:1rem;color:var(--text)}
+.terms{margin-top:22px;color:var(--text);font-size:.98rem}
+
+/* final cta */
+.final{background:linear-gradient(135deg,#0F2116,#171009);border-top:1px solid rgba(216,198,160,.22);text-align:center}
+.final h2{font-size:clamp(2.2rem,5vw,3.4rem);margin-bottom:14px}
+.final p{color:var(--text);font-size:1.15rem;margin-bottom:28px}
+.capture{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:560px;margin:0 auto;text-align:left}
+/* an explicit display wins over [hidden]; restate it or the form never hides */
+.capture[hidden],.thanks[hidden],.capture-note[hidden]{display:none}
+.capture input,.capture select{width:100%;padding:.9rem 1rem;border-radius:10px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:1rem;font-family:inherit}
+.capture input::placeholder{color:var(--muted)}
+.capture input:focus,.capture select:focus{outline:2px solid var(--bloom);outline-offset:1px;border-color:var(--bloom)}
+.capture .full{grid-column:1/-1}
+.capture button{grid-column:1/-1;width:100%}
+.capture .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.capture-note{margin-top:14px;font-size:.9rem;color:var(--text)}
+.capture-note a{color:var(--sand);text-decoration:underline}
+@media(max-width:560px){.capture{grid-template-columns:1fr}}
+.thanks{max-width:560px;margin:0 auto;padding:26px 22px;border:1px solid var(--bloom);border-radius:14px;
+  background:rgba(22,179,100,.08);text-align:left}
+.thanks h3{font-size:1.35rem;margin-bottom:8px;color:var(--text)}
+.thanks p{color:var(--text);font-size:1rem;margin-bottom:6px}
+.thanks a{color:var(--bloom);font-weight:600}
+
+/* footer */
+footer{border-top:1px solid var(--border);padding:40px 0;color:var(--text)}
+.foot-inner{display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;align-items:center}
+.foot-links{display:flex;gap:22px}
+.foot-links a:hover{color:var(--text)}
+
+/* ---- immersive layer -------------------------------------------------------
+   Mounted by JS only for fine pointers without reduced-motion; touch and
+   reduced-motion visitors never see any of it. Transform/opacity only. */
+/* cursor aura: a soft green bloom that rides the pointer, warming to sand
+   wherever it lands on something tappable */
+#aura{position:fixed;left:0;top:0;width:120px;height:120px;border-radius:50%;pointer-events:none;z-index:40;
+  background:radial-gradient(circle,rgba(22,179,100,.42),rgba(22,179,100,.16) 40%,transparent 62%);
+  mix-blend-mode:screen;opacity:0;transform:translate(-50%,-50%);will-change:transform;transition:opacity .45s ease}
+#aura.on{opacity:1}
+#aura.hot{background:radial-gradient(circle,rgba(200,146,83,.60),rgba(200,146,83,.22) 40%,transparent 62%)}
+/* card spotlight: a sand glow that tracks the cursor across tiles and cards */
+.spot{position:relative}
+.spot::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;z-index:3;opacity:0;
+  background:radial-gradient(240px circle at var(--mx,50%) var(--my,50%),rgba(216,198,160,.13),transparent 65%);
+  transition:opacity .35s ease}
+.spot:hover::after{opacity:1}
+/* scroll progress: a hairline of growth along the top edge */
+#sprog{position:fixed;top:0;left:0;right:0;height:2px;z-index:60;pointer-events:none;
+  transform:scaleX(0);transform-origin:0 50%;background:linear-gradient(90deg,var(--bloom),var(--sand))}
+/* scrollspy: the section under the reader lights its nav link */
+.nav-links a.active{color:var(--bloom)}
+/* the trade grid blooms in as a cascade, not a slab */
+.ggrid .reveal:nth-child(2){transition-delay:.06s}.ggrid .reveal:nth-child(3){transition-delay:.12s}
+.ggrid .reveal:nth-child(4){transition-delay:.18s}.ggrid .reveal:nth-child(5){transition-delay:.24s}
+.ggrid .reveal:nth-child(6){transition-delay:.3s}.ggrid .reveal:nth-child(7){transition-delay:.36s}
+.ggrid .reveal:nth-child(8){transition-delay:.42s}.ggrid .reveal:nth-child(9){transition-delay:.48s}
+.ggrid .reveal:nth-child(10){transition-delay:.54s}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+.reveal.in{opacity:1;transform:none}
+/* If JS never runs, the whole page below the hero must not stay invisible. */
+.no-js .reveal{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.hero-bg{display:none}
+  .nav-links a{transition:none}}
+</style>
+</head>
+<body class="no-js">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="bb-b" viewBox="430.8 371.2 971.5 934.8"><path d="M 469.824 406.516 C 563.605 477.03 671.511 457.339 751.53 545.012 C 803.951 602.447 816.149 674.16 814.091 748.273 C 812.705 745.375 811.243 742.513 809.709 739.69 C 766.25 660.064 700.847 594.587 621.269 551.04 C 607.184 543.223 586.034 531.569 571.064 527.091 L 592.901 541.881 C 612.418 554.7 631.601 571.332 649.453 586.415 C 714.697 641.537 771.498 715.028 803.319 794.931 C 723.42 772.896 661.841 750.057 598.187 693.484 C 518.942 623.054 475.781 510.927 469.824 406.516 z" fill="#16B364" transform="translate(812 860) rotate(2.700) scale(1.21094) translate(-803.3 -794.9)"/><path d="M698.8 1283.306875 798.2175 1267.0975V480.40250000000003L698.8 465.27375000000006V441.5H1028.390625Q1145.098125 441.5 1214.2581249999998 463.1125Q1283.418125 484.725 1314.75625 528.4903125000001Q1346.094375 572.255625 1346.094375 643.5768750000001Q1346.094375 799.1868750000001 1149.420625 842.411875V847.815Q1269.37 864.024375 1335.8284374999998 919.13625Q1402.2868749999998 974.2481250000001 1402.2868749999998 1072.585Q1402.2868749999998 1191.45375 1315.2965624999997 1248.7268749999998Q1228.3062499999999 1306.0 1080.260625 1306.0H698.8ZM1037.035625 839.1700000000001Q1123.4856249999998 839.1700000000001 1169.9524999999999 790.5418750000001Q1216.419375 741.91375 1216.419375 652.2218750000001V645.7381250000001Q1216.419375 468.515625 1028.390625 468.515625H917.0862499999998V839.1700000000001ZM1080.260625 1280.065Q1172.11375 1280.065 1222.9031249999998 1226.5740625Q1273.6924999999999 1173.083125 1273.6924999999999 1073.665625V1061.77875Q1273.6924999999999 963.441875 1223.4434375 914.81375Q1173.194375 866.1856250000001 1080.260625 866.1856250000001H917.0862499999998V1280.065Z" fill="#C89253"/></symbol></svg>
+<script>document.body.classList.remove('no-js')</script>
+<script src="./ambient-drift.js" data-drift="medley" data-n="90" data-z="30" defer></script>
+<noscript><style>.reveal{opacity:1!important;transform:none!important}</style></noscript>
+
+<nav id="nav">
+  <div class="wrap nav-inner">
+    <a class="logo" href="#top" aria-label="BaseBloom"><svg class="bb-b" viewBox="0 0 971.5 934.8" aria-hidden="true"><use href="#bb-b"/></svg>ase<b>Bloom</b></a>
+    <div class="nav-links">
+      <a class="n-hide" href="#work">Trades</a>
+      <a class="n-hide" href="#how">How it works</a>
+      <a class="n-mini" href="#pricing">Pricing</a>
+      <a class='n-hide' href='https://basebloomdesign.com/work'>Gallery</a>
+      <a class="nav-tel" href="tel:+12299386924" aria-label="Call BaseBloom"><span class="tel-full">(229) 938-6924</span><span class="tel-short">☎ Call</span></a>
+      <a class="btn btn-coral nav-cta" href="#demo">Free demo</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <!-- The source is attached by JS on wide viewports only. A phone on cell data gets
+       the 157KB poster and never requests the 6MB loop. -->
+  <video class="hero-bg" muted loop playsinline preload="none"
+         poster="trades-hero-poster.jpg" data-src="trades-hero-loop.mp4" aria-hidden="true"></video>
+  <div class="hero-overlay"></div>
+  <div class="wrap hero-content">
+    <span class="kicker">Websites for local trades · Atlanta, GA</span>
+    <h1>We build the base.<br><span class="bloom">Your business blooms.</span></h1>
+    <p>Custom, high-end websites for local trades. We turn your Google listing into a site that books jobs, live in five days from your photos.</p>
+    <a class="hero-tel" href="tel:+12299386924">(229) 938-6924 <small>ask for David, the lead developer</small></a>
+    <div class="hero-cta">
+      <a class="btn btn-coral" href="#demo">See a free demo of your site</a>
+      <a class="btn btn-bloom" href="#work"><span class="pt">▶</span>View live work</a>
+    </div>
+    <div class="trust">
+      <span>Atlanta-based</span>
+      <span>Live in 5 days from your photos</span>
+      <span>You own the site &amp; domain</span>
+      <span>No ranking promises</span>
+    </div>
+  </div>
+  <div class="scroll-cue">scroll ↓</div>
+</header>
+
+<section id="work">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="kicker">Find your trade</span>
+      <h2>Nine trades. Nine live demos. Open yours.</h2>
+      <p>Proof, not promises: every tile below is a real, working site built for that exact trade. Open yours and try it with your own hands.</p>
+      <p style="margin-top:10px"><a href="#pricing" style="color:var(--sand);text-decoration:underline;font-size:1rem">Just want the price? Jump to pricing →</a></p>
+    </div>
+    <div class="ggrid">
+      <a class="gcard tcard reveal" href="https://verdant-and-stone.netlify.app/" target="_blank" rel="noopener" style="--ac:#22B24C">
+        <span class="gnum">LAWN &amp; LANDSCAPING</span>
+        <img src="thumbs/trade-landscaping.webp" width="800" height="500" alt="Verdant &amp; Stone, estate landscape design, a scroll-animated landscaping landing page" loading="lazy">
+        <div class="gover"><h3>Lawn &amp; Landscaping</h3><span class="disc">Verdant &amp; Stone · live demo</span>
+          <span class="hook">An estate that unfolds as you scroll, composed like architecture.</span><span class="go">Open the demo →</span></div>
+      </a>
+      <a class="gcard tcard reveal" href="https://basebloomdesign.com/slate-and-storm/" style="--ac:#6B7F94">
+        <span class="gnum">ROOFING</span>
+        <img src="thumbs/trade-roofing.webp" width="800" height="500" alt="Slate &amp; Storm, estate roofing, a scroll-cinema roofing landing page" loading="lazy">
+        <div class="gover"><h3>Roofing</h3><span class="disc">Slate &amp; Storm · live demo</span>
+          <span class="hook">A ridgeline flight as the sky clears, built for the hundred-year storm.</span><span class="go">Open the demo →</span></div>
+      </a>
+      <a class="gcard tcard reveal" href="https://basebloomdesign.com/ember-and-air/" style="--ac:#E8784A">
+        <span class="gnum">HVAC · HEATING &amp; COOLING</span>
+        <img src="thumbs/trade-hvac.webp" width="800" height="500" alt="Ember &amp; Air, climate craft, a scroll-cinema HVAC landing page" loading="lazy">
+        <div class="gover"><h3>HVAC / Heating &amp; Cooling</h3><span class="disc">Ember &amp; Air · live demo</span>
+          <span class="hook">The seasons turn and the room holds. Comfort engineered to be forgotten.</span><span class="go">Open the demo →</span></div>
+      </a>
+      <a class="gcard tcard reveal" href="https://basebloomdesign.com/copper-and-spring/" style="--ac:#B87333">
+        <span class="gnum">PLUMBING</span>
+        <img src="thumbs/trade-plumbing.webp" width="800" height="500" alt="Copper &amp; Spring, master plumbing, a scroll-cinema plumbing landing page" loading="lazy">
+        <div class="gover"><h3>Plumbing</h3><span class="disc">Copper &amp; Spring · live demo</span>
+          <span class="hook">Water carried like it matters, workshop to clawfoot in one take.</span><span class="go">Open the demo →</span></div>
+      </a>
+      <a class="gcard tcard reveal" href="https://basebloomdesign.com/site-1-classic/" style="--ac:#FFC93C">
+        <span class="gnum">ELECTRICAL</span>
+        <img src="thumbs/trade-electrical.webp" width="800" height="500" alt="Fuse &amp; Filament, master electricians, a cursor-reactive electrical demo where live current arcs to your hand" loading="lazy">
+        <div class="gover"><h3>Electrical</h3><span class="disc">Fuse &amp; Filament · live demo</span>
+          <span class="hook">Move your cursor and the current follows, arcing to your hand.</span><span class="go">Open the demo →</span></div>
+      </a>
+      <a class="gcard tcard reveal" href="https://basebloomdesign.com/beam-and-bedrock/" style="--ac:#F5A623">
+        <span class="gnum">CONSTRUCTION</span>
+        <img src="thumbs/trade-construction.webp" width="800" height="500" alt="Beam &amp; Bedrock, design-build, a scroll-cinema construction landing page" loading="lazy">
+        <div class="gover"><h3>Construction</h3><span class="disc">Beam &amp; Bedrock · live demo</span>
+          <span class="hook">A crane-up through steel at dawn. Built plumb, built to outlive us.</span><span class="go">Open the demo →</span></div>
+      </a>
+      <a class="gcard tcard reveal" href="https://basebloomdesign.com/linen-and-light/" style="--ac:#5FB3D4">
+        <span class="gnum">HOUSE CLEANING</span>
+        <img src="thumbs/trade-cleaning.webp" width="800" height="500" alt="Linen &amp; Light, estate housekeeping, a scroll-cinema cleaning landing page" loading="lazy">
+        <div class="gover"><h3>House Cleaning</h3><span class="disc">Linen &amp; Light · live demo</span>
+          <span class="hook">A drawing room comes to order in one take, returned to the light.</span><span class="go">Open the demo →</span></div>
+      </a>
+      <a class="gcard tcard reveal" href="https://basebloomdesign.com/ochre-and-ivory/" style="--ac:#D9A62B">
+        <span class="gnum">PAINTING</span>
+        <img src="thumbs/trade-painting.webp" width="800" height="500" alt="Ochre &amp; Ivory, fine finishes, a scroll-cinema painting landing page" loading="lazy">
+        <div class="gover"><h3>Painting</h3><span class="disc">Ochre &amp; Ivory · live demo</span>
+          <span class="hook">A wall takes its coat as you scroll, cut clean at the line.</span><span class="go">Open the demo →</span></div>
+      </a>
+      <a class="gcard tcard reveal" href="https://basebloomdesign.com/grain-and-grove/" style="--ac:#C89B66">
+        <span class="gnum">CARPENTRY</span>
+        <img src="thumbs/trade-carpentry.webp" width="800" height="500" alt="Grain &amp; Grove, bespoke woodwork, a scroll-cinema carpentry landing page" loading="lazy">
+        <div class="gover"><h3>Carpentry</h3><span class="disc">Grain &amp; Grove · live demo</span>
+          <span class="hook">One plane stroke told as cinema. Wood joined to outlast trends.</span><span class="go">Open the demo →</span></div>
+      </a>
+      <a class="morecard reveal" href="#demo" aria-label="Your trade next: get a free demo">
+        <span class="mk">YOUR TRADE</span>
+        <h3>Don't see yours?</h3>
+        <div class="mcycle" aria-hidden="true">
+          <span style="color:#4E9B47">Tree service</span><span style="color:#8C6FC9">Pest control</span>
+          <span style="color:#B07D4F">Fencing</span><span style="color:#9AA5AD">Concrete &amp; masonry</span>
+          <span style="color:#B5834A">Junk removal</span><span style="color:#3E8FD8">Pressure washing</span>
+          <span style="color:#C89253">Garage doors</span><span style="color:#2FA4E7">Moving</span>
+        </div>
+        <div class="mstatic" aria-hidden="true"><span>Tree service</span><span>Pest control</span>
+          <span>Fencing</span><span>Concrete</span><span>Junk removal</span><span>Pressure washing</span>
+          <span>Garage doors</span><span>Moving</span></div>
+        <span class="mline">If locals search for it, we design for it.</span>
+        <span class="go2">Get your free demo →</span>
+      </a>
+    </div>
+    <div class="work-all reveal">
+      <a class='btn btn-ghost' href='https://basebloomdesign.com/work'>Not a trade? See the full design gallery →</a>
+    </div>
+  </div>
+</section>
+<section id="how" style="background:var(--surface);border-top:1px solid rgba(216,198,160,.16)">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="kicker">How it works</span>
+      <h2>Live in five days. Managed for good.</h2>
+    </div>
+    <div class="steps">
+      <div class="step reveal"><div class="num">01</div><h3>We build a real demo, free</h3><p>Using your photos and reviews, we build an actual sample of your site so you see it before you spend a cent.</p></div>
+      <div class="step reveal"><div class="num">02</div><h3>You love it, we launch</h3><p>Approve it and we put it live on your own domain within five days of your photos arriving. Hosting, SSL, the works.</p></div>
+      <div class="step reveal"><div class="num">03</div><h3>We host, manage &amp; keep you found</h3><p>Updates, edits and uptime are all handled. We also keep your Google listing, your reviews and your directory details working, because those decide whether people find you at all.</p></div>
+    </div>
+    <p class="care reveal">The recurring <b>care plan</b> is the relationship: your site stays fast and current, and your local search presence doesn’t go stale the month after launch.</p>
+  </div>
+</section>
+<section id="pricing">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="kicker">Fifty percent down, five days up</span>
+      <h2>No agencies. No surprises.</h2>
+    </div>
+    <div class="pricing">
+      <div class="price reveal"><div class="lbl">One-time build</div><div class="amt">$750–$1,500</div><div class="lbl"><b>A website that earns its keep.</b> A custom, high-end site built for your trade. Fast on a phone, and structured so search engines can read it.</div></div>
+      <div class="price reveal"><div class="lbl">Local search setup</div><div class="amt">$500–$750</div><div class="lbl"><b>Good work, findable.</b> One-time. Your Google Business Profile built out properly, your details fixed across the directories people and AI assistants pull from, and a review system that runs itself.</div></div>
+      <div class="price reveal"><div class="lbl">Care plan</div><div class="amt">$100–$250<span class="per">/mo</span></div><div class="lbl"><b>Built once. Tended for good.</b> Hosting, updates and edits, plus the monthly work that keeps you turning up in local search, and a plain-English report showing what moved.</div></div>
+    </div>
+    <p class="terms reveal">50% up front · live in 5 days from your photos · two revision rounds included.</p>
+    <p class="terms reveal">No ranking promises. Nobody can guarantee you the top spot, because more than half of local results are decided by how close the searcher is standing. We show you the numbers each month instead.</p>
+  </div>
+</section>
+<section id="faq">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="kicker">Straight answers</span>
+      <h2>The questions everyone asks.</h2>
+    </div>
+    <div class="faq reveal">
+      <details>
+        <summary>Who owns the website?</summary>
+        <p>You do. The site, the domain, the photos and the copy are all yours, registered in your name. We build it and look after it; we never hold it.</p>
+      </details>
+      <details>
+        <summary>What happens if I cancel the care plan?</summary>
+        <p>The site is still yours. We hand over the files and access, and you can host it anywhere. Nothing goes dark and nothing is held hostage. The care plan keeps the site maintained and found, and cancelling it never switches the site off.</p>
+      </details>
+      <details>
+        <summary>Am I locked into a contract?</summary>
+        <p>No. The build is a one-time job and the care plan is month-to-month. Cancel whenever you like.</p>
+      </details>
+      <details>
+        <summary>Do I keep my domain?</summary>
+        <p>Yes. It's registered in your name, not ours. If you already own one, we connect it; if you don't, we register it for you, as you.</p>
+      </details>
+      <details>
+        <summary>Who writes the words on the site?</summary>
+        <p>We do. It comes out of one 20-minute call about your work and your neighborhoods, plus your photos and your reviews. You read it before anything goes live, and two revision rounds are included.</p>
+      </details>
+      <details>
+        <summary>What does month two look like?</summary>
+        <p>The care plan: your site stays fast and updated, your Google listing gets fresh posts and photos, your reviews get watched, and you get a one-page plain-English report showing what people searched and what moved.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+<section class="final" id="demo">
+  <div class="wrap">
+    <h2 class="reveal">You've got the calluses.<br>Get the calls.</h2>
+    <p class="reveal">Tell us your trade and get a free demo of your site. Roofing, plumbing, HVAC, lawns, anything locals search for.</p>
+    <form class="capture reveal" id="demo-form" name="demo-request" method="POST"
+          data-netlify="true" netlify-honeypot="company-website" action="#thanks">
+      <input type="hidden" name="form-name" value="demo-request">
+      <p class="hp"><label>Leave this empty: <input name="company-website" tabindex="-1"></label></p>
+      <input class="full" type="text" id="f-biz" name="business" required
+             placeholder="Your business name" aria-label="Your business name" autocomplete="organization">
+      <input type="tel" id="f-phone" name="phone" required
+             placeholder="Phone number" aria-label="Phone number" autocomplete="tel">
+      <input type="text" id="f-trade" name="trade" required
+             placeholder="Your trade (roofing, HVAC…)" aria-label="Your trade">
+      <input class="full" type="email" id="f-email" name="email"
+             placeholder="Email (optional)" aria-label="Email address" autocomplete="email">
+      <button class="btn btn-coral" type="submit">See my free demo</button>
+    </form>
+    <p class="capture-note reveal">No cost, no commitment. We build the demo before you pay anything.
+      Prefer to talk? <a href="tel:+12299386924">(229) 938-6924</a>.</p>
+    <p class="capture-note reveal" style="margin-top:26px">Curious what else we build beyond the trades? <a href='https://basebloomdesign.com/work' style='color:var(--sand);text-decoration:underline'>Visit the design gallery →</a></p>
+    <div class="thanks reveal" id="thanks" hidden>
+      <h3>Got it. Thank you.</h3>
+      <p>David will call you back within one business day, usually the same morning.</p>
+      <p>In a hurry? <a href="tel:+12299386924">(229) 938-6924</a></p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-inner">
+    <div><span class="logo" role="img" aria-label="BaseBloom"><svg class="bb-b" viewBox="0 0 971.5 934.8" aria-hidden="true"><use href="#bb-b"/></svg>ase<b>Bloom</b></span> &nbsp;·&nbsp;
+      <a href="tel:+12299386924">(229) 938-6924</a> &nbsp;·&nbsp;
+      <a href="mailto:hello@basebloomdesign.com">hello@basebloomdesign.com</a></div>
+    <div class="foot-links">
+      <a href="#work">Trades</a><a href='https://basebloomdesign.com/work'>Gallery</a><a href="#pricing">Pricing</a><a href="#demo">Contact</a>
+    </div>
+    <div style="width:100%;font-size:.85rem;margin-top:8px">
+      BaseBloom LLC · Atlanta, Georgia · Websites for local trades &nbsp;·&nbsp; © 2026</div>
+  </div>
+</footer>
+
+<script>
+  const io=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.14});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  /* Scrollspy: navigation state, not motion - runs for everyone. */
+  (()=>{
+    const links=[...document.querySelectorAll('.nav-links a[href^="#"]')];
+    if(!links.length)return;
+    const map=new Map(links.map(a=>[a.getAttribute('href').slice(1),a]));
+    const spy=new IntersectionObserver(es=>es.forEach(e=>{
+      const a=map.get(e.target.id);
+      if(a&&e.isIntersecting){links.forEach(l=>l.classList.remove('active'));a.classList.add('active')}
+    }),{rootMargin:'-35% 0px -55% 0px'});
+    map.forEach((_,id)=>{const s=document.getElementById(id);if(s)spy.observe(s)});
+  })();
+
+  /* Immersive layer: cursor aura, card spotlight, magnetic CTAs, scroll
+     progress, hero parallax. Fine pointers only, and never when the visitor
+     asked for less motion - everyone else gets the page exactly as it stands. */
+  const fancy=matchMedia('(hover:hover) and (pointer:fine)').matches
+    &&!matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(fancy)(()=>{
+    const aura=document.createElement('div');aura.id='aura';document.body.appendChild(aura);
+    const prog=document.createElement('div');prog.id='sprog';document.body.appendChild(prog);
+    document.querySelectorAll('.gcard,.morecard,.step,.price,.faq details').forEach(el=>el.classList.add('spot'));
+    let mx=innerWidth/2,my=innerHeight/2,ax=mx,ay=my,as=1,ts=1,seen=false;
+    addEventListener('pointermove',e=>{
+      mx=e.clientX;my=e.clientY;
+      if(!seen){seen=true;ax=mx;ay=my;aura.classList.add('on')}
+      const hot=e.target.closest('a,button,summary');
+      ts=hot?1.3:1;aura.classList.toggle('hot',!!hot);
+      const card=e.target.closest('.spot');
+      if(card){const r=card.getBoundingClientRect();
+        card.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');
+        card.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%')}
+    },{passive:true});
+    document.querySelectorAll('.btn').forEach(b=>{
+      b.addEventListener('pointermove',e=>{const r=b.getBoundingClientRect();
+        const dx=(e.clientX-r.left-r.width/2)/r.width,dy=(e.clientY-r.top-r.height/2)/r.height;
+        b.style.transform=`translate(${(dx*6).toFixed(1)}px,${(dy*4-2).toFixed(1)}px)`},{passive:true});
+      b.addEventListener('pointerleave',()=>{b.style.transform=''},{passive:true});
+    });
+    const hero=document.querySelector('.hero'),hc=document.querySelector('.hero-content'),cue=document.querySelector('.scroll-cue');
+    let sy=scrollY;
+    addEventListener('scroll',()=>{sy=scrollY},{passive:true});
+    (function frame(){
+      ax+=(mx-ax)*.14;ay+=(my-ay)*.14;as+=(ts-as)*.12;
+      aura.style.transform=`translate(${ax.toFixed(1)}px,${ay.toFixed(1)}px) translate(-50%,-50%) scale(${as.toFixed(3)})`;
+      const max=document.documentElement.scrollHeight-innerHeight;
+      prog.style.transform=`scaleX(${max>0?(sy/max).toFixed(4):0})`;
+      if(hc&&hero){const p=Math.min(sy/hero.offsetHeight,1);
+        hc.style.transform=`translate3d(0,${(sy*.18).toFixed(1)}px,0)`;
+        hc.style.opacity=(1-p*.75).toFixed(3);
+        if(cue)cue.style.opacity=Math.max(0,1-sy/160).toFixed(3)}
+      requestAnimationFrame(frame);
+    })();
+  })();
+
+  /* Hero film: desktop only, and never when the visitor asked for less motion.
+     A prospect opening this on a phone mid-call gets the poster, not 6MB. */
+  (function(){
+    const v=document.querySelector('.hero-bg');
+    if(!v||!v.dataset.src) return;
+    const wide=window.matchMedia('(min-width:721px)').matches;
+    const still=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+    const saveData=navigator.connection&&navigator.connection.saveData;
+    if(!wide||still||saveData) return;
+    const s=document.createElement('source');
+    s.src=v.dataset.src;s.type='video/mp4';
+    v.appendChild(s);v.load();
+    /* preload:none means play() at attach time has zero buffered data and some
+       engines reject instead of queueing. Play when the buffer is ready, and
+       retry on first input or tab return for Low Power Mode rejections. */
+    const go=()=>{if(v.paused)v.play().catch(()=>{})};
+    v.addEventListener('canplay',go,{once:true});
+    go();
+    addEventListener('pointerdown',go,{once:true});
+    document.addEventListener('visibilitychange',()=>{if(!document.hidden)go()});
+  })();
+
+  /* Form: post to Netlify, then swap in the thank-you without losing the page. */
+  (function(){
+    const f=document.getElementById('demo-form'),ok=document.getElementById('thanks');
+    if(!f||!ok) return;
+    f.addEventListener('submit',(e)=>{
+      e.preventDefault();
+      const btn=f.querySelector('button');
+      btn.disabled=true;btn.textContent='Sending…';
+      fetch('/',{method:'POST',
+        headers:{'Content-Type':'application/x-www-form-urlencoded'},
+        body:new URLSearchParams(new FormData(f)).toString()})
+        .then(()=>{f.hidden=true;
+          const note=document.querySelector('.capture-note');if(note)note.hidden=true;
+          ok.hidden=false;ok.classList.add('in');
+          ok.scrollIntoView({block:'center',behavior:'smooth'});})
+        .catch(()=>{btn.disabled=false;btn.textContent='See my free demo';
+          alert('That didn’t send. Call or text (229) 938-6924 and we’ll sort it out.');});
+    });
+  })();
+</script>
+</body>
 </html>

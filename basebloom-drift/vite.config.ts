@@ -5,10 +5,12 @@ export default defineConfig({
   plugins: [react()],
   base: '/basebloom/',
   build: {
-    outDir: '../public/basebloom',
-    // MUST stay false. The output dir also holds hand-placed runtime assets
-    // that Vite does not generate — the self-hosted hero loop (mp4 + webm)
-    // and fonts/. Emptying it on build deletes them.
-    emptyOutDir: false,
+    // Was '../public/basebloom'. That directory is now a byte-for-byte mirror
+    // of the live basebloomdesign.com build, which is NOT produced by this
+    // Vite app — so building here would silently overwrite the mirror's
+    // index.html and assets with this older concept. Output is local now;
+    // nothing in this app is deployed until that is deliberately rewired.
+    outDir: 'dist',
+    emptyOutDir: true,
   },
 });
