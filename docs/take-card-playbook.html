@@ -1,0 +1,577 @@
+<title>The Take Card Playbook — faceless, voiceless, ownable</title>
+
+<style>
+  :root {
+    --ground:      #F4F7F6;
+    --surface:     #FFFFFF;
+    --surface-alt: #E8EEEC;
+    --ink:         #12181A;
+    --ink-soft:    #3E4A4C;
+    --ink-mute:    #677576;
+    --hairline:    #D7E0DD;
+    --hairline-hi: #BCC9C5;
+
+    --accent:      #056454;
+    --accent-wash: #E2F1ED;
+    --warn:        #8F5B04;
+    --stop:        #C31D53;
+    --focus:       #1F5FD0;
+
+    /* demo brand — constant across themes */
+    --b-ink:    #16130F;
+    --b-bone:   #F2EDE3;
+    --b-accent: #D2521B;
+    --b-mute:   #8C8375;
+
+    --measure: 66ch;
+    --step--2: 0.72rem;
+    --step--1: 0.8125rem;
+    --step-0:  1.0625rem;
+    --step-1:  1.25rem;
+    --step-2:  1.5rem;
+    --step-3:  2rem;
+    --step-4:  2.75rem;
+
+    --display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #101614; --surface: #18201E; --surface-alt: #1F2926;
+      --ink: #E8EFEC; --ink-soft: #BDCAC6; --ink-mute: #8A9A96;
+      --hairline: #28332F; --hairline-hi: #3A4844;
+      --accent: #3FD1B0; --accent-wash: #14261F;
+      --warn: #DCA23A; --stop: #FF5C8A; --focus: #7FA0FF;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #101614; --surface: #18201E; --surface-alt: #1F2926;
+    --ink: #E8EFEC; --ink-soft: #BDCAC6; --ink-mute: #8A9A96;
+    --hairline: #28332F; --hairline-hi: #3A4844;
+    --accent: #3FD1B0; --accent-wash: #14261F;
+    --warn: #DCA23A; --stop: #FF5C8A; --focus: #7FA0FF;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--ground); color: var(--ink);
+    font-family: var(--body); font-size: var(--step-0); line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 60rem; margin: 0 auto;
+    padding: clamp(2rem, 5vw, 4.5rem) clamp(1.1rem, 4vw, 2rem) 6rem;
+    display: flex; flex-direction: column; gap: 3rem;
+  }
+  a { color: var(--accent); text-underline-offset: 0.16em; }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 2px; }
+  p { margin: 0; max-width: var(--measure); }
+  strong { font-weight: 650; color: var(--ink); }
+
+  .masthead { display: flex; flex-direction: column; gap: 1.1rem; padding-bottom: 2rem; border-bottom: 2px solid var(--ink); }
+  .docket {
+    font-family: var(--mono); font-size: var(--step--1); letter-spacing: 0.09em;
+    text-transform: uppercase; color: var(--ink-mute); display: flex; flex-wrap: wrap; gap: 0.4rem 1.1rem;
+  }
+  h1 {
+    font-family: var(--display); font-weight: 600;
+    font-size: clamp(2rem, 6.5vw, var(--step-4));
+    line-height: 1.06; letter-spacing: -0.015em; text-wrap: balance; margin: 0;
+  }
+  .standfirst { font-size: var(--step-1); line-height: 1.5; color: var(--ink-soft); max-width: 46ch; }
+
+  section { display: flex; flex-direction: column; gap: 1.1rem; scroll-margin-top: 1.5rem; }
+  .sec-head { display: flex; flex-direction: column; gap: 0.35rem; padding-top: 1.25rem; border-top: 1px solid var(--hairline); }
+  .sec-num { font-family: var(--mono); font-size: var(--step--1); letter-spacing: 0.08em; color: var(--accent); }
+  h2 {
+    font-family: var(--display); font-weight: 600;
+    font-size: clamp(1.45rem, 4vw, var(--step-3));
+    line-height: 1.15; letter-spacing: -0.01em; text-wrap: balance; margin: 0;
+  }
+  h3 { font-family: var(--body); font-weight: 650; font-size: var(--step-0); margin: 0.55rem 0 0; color: var(--ink); }
+
+  ul.plain, ol.plain { margin: 0; padding-left: 1.15rem; max-width: var(--measure); display: flex; flex-direction: column; gap: 0.6rem; }
+  ul.plain li::marker { color: var(--accent); }
+  ol.plain li::marker { color: var(--ink-mute); font-family: var(--mono); font-size: 0.9em; }
+
+  .notice {
+    background: var(--surface); border: 1px solid var(--hairline);
+    border-left: 3px solid var(--ink-mute); padding: 1rem 1.2rem;
+    display: flex; flex-direction: column; gap: 0.55rem;
+  }
+  .notice--key { background: var(--accent-wash); border: 0; border-left: 3px solid var(--accent); }
+  .notice--warn { border-left-color: var(--stop); }
+  .notice__label {
+    font-family: var(--mono); font-size: var(--step--2); letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--ink-mute);
+  }
+  .notice p { font-size: var(--step--1); line-height: 1.6; color: var(--ink-soft); }
+
+  .scroller { overflow-x: auto; border: 1px solid var(--hairline); background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; min-width: 34rem; font-size: var(--step--1); }
+  thead th {
+    text-align: left; font-family: var(--mono); font-weight: 500; font-size: var(--step--2);
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-mute);
+    padding: 0.7rem 0.85rem; border-bottom: 1px solid var(--hairline-hi);
+    background: var(--surface-alt); white-space: nowrap;
+  }
+  tbody td { padding: 0.75rem 0.85rem; border-bottom: 1px solid var(--hairline); vertical-align: top; color: var(--ink-soft); }
+  tbody tr:last-child td { border-bottom: 0; }
+  tbody td:first-child { color: var(--ink); font-weight: 550; }
+  .yes { color: var(--accent); font-family: var(--mono); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .no  { color: var(--stop); font-family: var(--mono); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  /* ── Card gallery ─────────────────────────────────────────── */
+  .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); gap: 1.1rem; }
+  .spec { display: flex; flex-direction: column; gap: 0.55rem; }
+
+  .card {
+    aspect-ratio: 4 / 5; background: var(--b-ink); color: var(--b-bone);
+    padding: 1.15rem 1.05rem; display: flex; flex-direction: column; gap: 0.6rem;
+    border: 1px solid var(--hairline-hi); position: relative; overflow: hidden;
+  }
+  .card__eyebrow {
+    font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--b-accent);
+    display: flex; justify-content: space-between; gap: 0.75rem; flex: none;
+  }
+  .card__body { margin-top: auto; display: flex; flex-direction: column; gap: 0.5rem; }
+  .card__line {
+    font-family: var(--display); font-size: 1.02rem; line-height: 1.16;
+    letter-spacing: -0.012em; text-wrap: balance;
+  }
+  .card__line--big { font-size: 1.5rem; line-height: 1.05; }
+  .card__sub { font-size: 0.62rem; line-height: 1.45; color: var(--b-mute); }
+  .card__rule { height: 2px; background: var(--b-accent); width: 2rem; flex: none; }
+  .card__mark {
+    font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--b-mute); flex: none;
+  }
+  .card__num {
+    font-family: var(--display); font-size: 2.5rem; line-height: 0.95;
+    letter-spacing: -0.03em; color: var(--b-accent);
+  }
+
+  .rank { display: flex; flex-direction: column; gap: 0.3rem; margin-top: auto; }
+  .rank__row { display: flex; gap: 0.5rem; align-items: baseline; font-size: 0.7rem; }
+  .rank__n { font-family: var(--mono); font-size: 0.55rem; color: var(--b-accent); width: 1rem; flex: none; }
+  .rank__t { color: var(--b-bone); }
+
+  .vs { display: flex; flex-direction: column; gap: 0.4rem; margin-top: auto; }
+  .vs__side {
+    border: 1px solid rgba(242,237,227,0.28); padding: 0.5rem 0.6rem;
+    font-family: var(--display); font-size: 0.88rem; line-height: 1.2;
+  }
+  .vs__or {
+    font-family: var(--mono); font-size: 0.52rem; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--b-accent); text-align: center;
+  }
+
+  .tl { display: flex; flex-direction: column; gap: 0.4rem; margin-top: auto; }
+  .tl__row { display: grid; grid-template-columns: 2.1rem 1fr; gap: 0.5rem; align-items: baseline; }
+  .tl__y { font-family: var(--mono); font-size: 0.55rem; color: var(--b-accent); }
+  .tl__e { font-size: 0.66rem; line-height: 1.35; }
+
+  .quote__mark { font-family: var(--display); font-size: 2.2rem; line-height: 0.7; color: var(--b-accent); }
+  .quote__attr {
+    font-family: var(--mono); font-size: 0.52rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--b-mute);
+  }
+
+  .card__label {
+    font-family: var(--mono); font-size: var(--step--2); letter-spacing: 0.07em;
+    text-transform: uppercase; color: var(--ink-mute);
+  }
+  .card__use { font-size: var(--step--1); line-height: 1.5; color: var(--ink-soft); }
+  .card__use b { color: var(--ink); font-weight: 600; }
+
+  /* risk dot on archetype */
+  .rk { display: inline-flex; align-items: center; gap: 0.35rem; font-family: var(--mono); font-size: var(--step--2); text-transform: uppercase; letter-spacing: 0.06em; }
+  .rk::before { content: ""; width: 0.45rem; height: 0.45rem; border-radius: 50%; background: currentColor; }
+  .rk--low { color: var(--accent); }
+  .rk--mid { color: var(--warn); }
+  .rk--high { color: var(--stop); }
+
+  /* ── Pattern rows ─────────────────────────────────────────── */
+  .pattern { display: grid; grid-template-columns: 11rem 1fr; gap: 0.35rem 1.2rem; padding: 0.9rem 0; border-bottom: 1px solid var(--hairline); }
+  .pattern:last-child { border-bottom: 0; }
+  @media (max-width: 34rem) { .pattern { grid-template-columns: 1fr; } }
+  .pattern__n { font-weight: 650; color: var(--ink); font-size: var(--step--1); }
+  .pattern__d { font-size: var(--step--1); color: var(--ink-soft); line-height: 1.55; }
+  .pattern__ex {
+    font-family: var(--display); font-size: var(--step-0); line-height: 1.3;
+    color: var(--ink); margin-top: 0.3rem; padding-left: 0.75rem;
+    border-left: 2px solid var(--accent);
+  }
+
+  .phase { display: grid; grid-template-columns: 5.5rem 1fr; gap: 0 1.1rem; padding: 0.85rem 0; border-bottom: 1px solid var(--hairline); }
+  .phase:last-child { border-bottom: 0; }
+  .phase__w { font-family: var(--mono); font-size: var(--step--2); letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); padding-top: 0.22rem; }
+  .phase__t { font-weight: 600; color: var(--ink); font-size: var(--step-0); }
+  .phase__d { font-size: var(--step--1); color: var(--ink-soft); line-height: 1.55; margin-top: 0.15rem; }
+
+  footer {
+    border-top: 2px solid var(--ink); padding-top: 1.25rem;
+    font-size: var(--step--1); color: var(--ink-mute); max-width: var(--measure); line-height: 1.6;
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; } }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="docket">
+      <span>Format A — Deep Dive</span>
+      <span>Faceless &amp; Voiceless</span>
+      <span>Rev. August 2026</span>
+    </div>
+    <h1>The Take Card Playbook</h1>
+    <p class="standfirst">The one format that is simultaneously anonymous, silent, rights-clean, infinitely scalable, and yours — plus the honest account of what it costs you and how to fix that.</p>
+  </header>
+
+  <!-- ── 01 ─────────────────────────────────────────────────── -->
+  <section id="s1">
+    <div class="sec-head">
+      <span class="sec-num">§ 01</span>
+      <h2>Why this one, against the other four</h2>
+    </div>
+
+    <div class="scroller">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Format</th>
+            <th scope="col">Faceless</th>
+            <th scope="col">Voiceless</th>
+            <th scope="col">Scales</th>
+            <th scope="col">You own it</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>A — Take Card</td><td><span class="yes">Yes</span></td><td><span class="yes">Yes</span></td><td><span class="yes">Yes</span></td><td><span class="yes">Yes</span></td></tr>
+          <tr><td>B — Voiceover</td><td><span class="yes">Yes</span></td><td><span class="no">No</span></td><td><span class="yes">Yes</span></td><td><span class="no">Base isn't yours</span></td></tr>
+          <tr><td>C — Native Collab</td><td><span class="yes">Yes</span></td><td><span class="yes">Yes</span></td><td><span class="no">Gated by others</span></td><td><span class="no">No</span></td></tr>
+          <tr><td>D — Permissioned</td><td><span class="yes">Yes</span></td><td><span class="yes">Yes</span></td><td><span class="no">One ask at a time</span></td><td><span class="no">No</span></td></tr>
+          <tr><td>E — Owned Footage</td><td><span class="yes">Behind camera</span></td><td><span class="yes">Yes</span></td><td><span class="no">Physical access</span></td><td><span class="yes">Yes</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>C and D are faceless, but they are <em>distribution</em>, not identity — every post rents someone else's asset, and the day they stop saying yes you have nothing. A is the only row with yes in all four columns, which is why it should be the spine of the account rather than one format among five.</p>
+
+    <div class="notice notice--key">
+      <span class="notice__label">The compounding argument</span>
+      <p>Every other format's value evaporates when the post does. A Take Card leaves two things behind that accumulate: a <strong>visual system</strong> people recognize at thumbnail size, and a <strong>written voice</strong> they follow you for. Those are the only two assets in this business that a competitor cannot acquire by opening their wallet — and both are built by posting, not by spending.</p>
+    </div>
+
+    <h3>The honest cost</h3>
+    <p>Static text cards get less algorithmic weight than video on a Reels-first platform. That's real and you should plan for it rather than discover it in month three. <a href="#s4">§ 04</a> is the fix, and it does not require your voice or your face.</p>
+  </section>
+
+  <!-- ── 02 ─────────────────────────────────────────────────── -->
+  <section id="s2">
+    <div class="sec-head">
+      <span class="sec-num">§ 02</span>
+      <h2>Eight archetypes, one system</h2>
+    </div>
+    <p>"Take Card" is not one shape. These are eight, all rendered in the same three-value palette and two type roles from the build spec's kit — because the recognizability comes from the system staying fixed while the shape varies.</p>
+
+    <div class="gallery">
+
+      <div class="spec">
+        <div class="card">
+          <div class="card__eyebrow"><span>Take</span><span>01</span></div>
+          <div class="card__body">
+            <div class="card__line">Jerry Springer was the comment section before social media existed.</div>
+            <div class="card__rule"></div>
+          </div>
+          <div class="card__mark">popdesk</div>
+        </div>
+        <span class="card__label">The Cold Take</span>
+        <span class="card__use"><b>One declarative line, no hedging.</b> Your highest-ceiling and highest-variance card. Lives or dies on the writing.</span>
+        <span class="rk rk--low">Low risk</span>
+      </div>
+
+      <div class="spec">
+        <div class="card">
+          <div class="card__eyebrow"><span>Receipt</span><span>02</span></div>
+          <div class="card__body">
+            <div class="card__line">Secret Service agents evacuated a sitting president from a golf course after a man took seven hostages demanding to speak with him.</div>
+            <div class="card__sub">Augusta National, 1983</div>
+          </div>
+          <div class="card__mark">popdesk</div>
+        </div>
+        <span class="card__label">The Receipt</span>
+        <span class="card__use"><b>A verifiable fact plus a date.</b> Saves and shares well because it feels like knowledge, not opinion. Source it properly.</span>
+        <span class="rk rk--mid">Verify first</span>
+      </div>
+
+      <div class="spec">
+        <div class="card">
+          <div class="card__eyebrow"><span>Ranked</span><span>03</span></div>
+          <div class="card__line" style="font-size:0.9rem">Every screen Batman, by how convincingly they could hold down a day job</div>
+          <div class="rank">
+            <div class="rank__row"><span class="rank__n">01</span><span class="rank__t">Keaton — plausible recluse</span></div>
+            <div class="rank__row"><span class="rank__n">02</span><span class="rank__t">Bale — obvious HR problem</span></div>
+            <div class="rank__row"><span class="rank__n">03</span><span class="rank__t">Pattinson — unemployed</span></div>
+          </div>
+          <div class="card__mark">popdesk</div>
+        </div>
+        <span class="card__label">The Ranking</span>
+        <span class="card__use"><b>Engineered disagreement.</b> Comments are the point — leave one placement obviously arguable.</span>
+        <span class="rk rk--low">Low risk</span>
+      </div>
+
+      <div class="spec">
+        <div class="card">
+          <div class="card__eyebrow"><span>Versus</span><span>04</span></div>
+          <div class="card__line" style="font-size:0.9rem">One of these has to go. Choose.</div>
+          <div class="vs">
+            <div class="vs__side">The sequel everyone defends</div>
+            <div class="vs__or">or</div>
+            <div class="vs__side">The original nobody rewatches</div>
+          </div>
+          <div class="card__mark">popdesk</div>
+        </div>
+        <span class="card__label">The Versus</span>
+        <span class="card__use"><b>A forced binary.</b> Cheapest comment-driver you have. Works because picking a side is faster than writing an opinion.</span>
+        <span class="rk rk--low">Low risk</span>
+      </div>
+
+      <div class="spec">
+        <div class="card">
+          <div class="card__eyebrow"><span>Timeline</span><span>05</span></div>
+          <div class="card__line" style="font-size:0.9rem">How the role of a career becomes the regret of one</div>
+          <div class="tl">
+            <div class="tl__row"><span class="tl__y">1994</span><span class="tl__e">Turned the part down twice</span></div>
+            <div class="tl__row"><span class="tl__y">1995</span><span class="tl__e">Took it for scale</span></div>
+            <div class="tl__row"><span class="tl__y">1997</span><span class="tl__e">Won for it</span></div>
+            <div class="tl__row"><span class="tl__y">2019</span><span class="tl__e">Called it his worst decision</span></div>
+          </div>
+          <div class="card__mark">popdesk</div>
+        </div>
+        <span class="card__label">The Timeline</span>
+        <span class="card__use"><b>Carousel-native.</b> One beat per slide turns a single card into a 6-slide swipe, and swipes count as dwell.</span>
+        <span class="rk rk--mid">Verify first</span>
+      </div>
+
+      <div class="spec">
+        <div class="card">
+          <div class="card__eyebrow"><span>Number</span><span>06</span></div>
+          <div class="card__body">
+            <div class="card__num">$47M</div>
+            <div class="card__line" style="font-size:0.82rem">opening weekend, on a film the studio tried to shelve twice</div>
+          </div>
+          <div class="card__mark">popdesk</div>
+        </div>
+        <span class="card__label">The Number</span>
+        <span class="card__use"><b>One figure at display size.</b> Stops the scroll on shape alone — legible before it's read, which is the whole job of frame one.</span>
+        <span class="rk rk--mid">Verify first</span>
+      </div>
+
+      <div class="spec">
+        <div class="card">
+          <div class="card__eyebrow"><span>Quoted</span><span>07</span></div>
+          <div class="card__body">
+            <span class="quote__mark">&ldquo;</span>
+            <div class="card__line" style="font-size:1.16rem">I have never once watched it back and I never will.</div>
+            <div class="quote__attr">— on set, 2004</div>
+          </div>
+          <div class="card__mark">popdesk</div>
+        </div>
+        <span class="card__label">The Attributed Quote</span>
+        <span class="card__use"><b>Someone's words, verbatim.</b> Never paraphrase into quote marks. Link the source in the caption, every time.</span>
+        <span class="rk rk--high">Highest risk</span>
+      </div>
+
+      <div class="spec">
+        <div class="card">
+          <div class="card__eyebrow"><span>Actually</span><span>08</span></div>
+          <div class="card__body">
+            <div class="card__line">The line everybody quotes from that film is not in that film.</div>
+            <div class="card__sub">It was written for the trailer.</div>
+          </div>
+          <div class="card__mark">popdesk</div>
+        </div>
+        <span class="card__label">The Correction</span>
+        <span class="card__use"><b>Overturns a thing people believe.</b> Enormous save-and-send rate. Be right — a wrong correction is the fastest credibility loss available.</span>
+        <span class="rk rk--mid">Verify first</span>
+      </div>
+
+    </div>
+
+    <p>Rotate archetypes rather than repeating one. A feed of nothing but Cold Takes reads as a quote account within a fortnight; the mix is what makes it a publication.</p>
+  </section>
+
+  <!-- ── 03 ─────────────────────────────────────────────────── -->
+  <section id="s3">
+    <div class="sec-head">
+      <span class="sec-num">§ 03</span>
+      <h2>The writing, which is the actual product</h2>
+    </div>
+    <p>Strip the photograph out and there is nowhere to hide: the sentence is the entire post. Five patterns carry most of what works.</p>
+
+    <div>
+      <div class="pattern">
+        <span class="pattern__n">Recontextualize</span>
+        <div>
+          <div class="pattern__d">Frame a familiar thing as a different familiar thing. The pleasure is recognition, and it travels because people want to be the one who shows it to someone else.</div>
+          <div class="pattern__ex">X was the Y before Y existed.</div>
+        </div>
+      </div>
+      <div class="pattern">
+        <span class="pattern__n">Withhold the noun</span>
+        <div>
+          <div class="pattern__d">Describe the thing without naming it, so the only way to resolve the sentence is to stay on the post. Works best in the caption above a Ranking or a Timeline.</div>
+          <div class="pattern__ex">The most organized thing I've seen all week, and it isn't a person.</div>
+        </div>
+      </div>
+      <div class="pattern">
+        <span class="pattern__n">Turn on the last three words</span>
+        <div>
+          <div class="pattern__d">Build a sentence that resolves against expectation right at the end. Never front-load the payoff — a take that peaks in the middle reads as a caption, not a take.</div>
+          <div class="pattern__ex">He took the part for scale, won for it, and calls it his worst decision.</div>
+        </div>
+      </div>
+      <div class="pattern">
+        <span class="pattern__n">Specific beats big</span>
+        <div>
+          <div class="pattern__d">A number, a year, a place. Specificity reads as knowledge; adjectives read as filler. "Seven hostages" outperforms "a hostage situation" every time.</div>
+          <div class="pattern__ex">Augusta National, 1983. Seven hostages.</div>
+        </div>
+      </div>
+      <div class="pattern">
+        <span class="pattern__n">Name the omission</span>
+        <div>
+          <div class="pattern__d">Assert that something obvious is being overlooked. It recruits agreement and invites the reply "actually people talk about it constantly" — which is engagement either way.</div>
+          <div class="pattern__ex">…and nobody talks about it.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="notice">
+      <span class="notice__label">The 120px test</span>
+      <p>Shrink every card to thumbnail before you post. If the <em>shape</em> of the type — a big number, a stack of ranked rows, a quote mark — tells someone what kind of post it is before they can read a word, it works in a grid. If all eight archetypes look identical at that size, your system is doing nothing.</p>
+    </div>
+  </section>
+
+  <!-- ── 04 ─────────────────────────────────────────────────── -->
+  <section id="s4">
+    <div class="sec-head">
+      <span class="sec-num">§ 04</span>
+      <h2>Fixing the reach ceiling without a face or a voice</h2>
+    </div>
+    <p>This is the section that decides whether the account works. Static cards underperform video, and the answer is not to abandon the format — it is to ship the same card as a video object.</p>
+
+    <ol class="plain">
+      <li><strong>Motion cards.</strong> The card animates: line builds word by word, rule wipes in, ground carries slow grain or a gradient drift. Six to nine seconds, silent, no face, no voice — and the platform treats it as a Reel rather than a still. This is the single highest-leverage change available to a faceless operator.</li>
+      <li><strong>Design for sound-off, then add a bed.</strong> The great majority of feed viewing is muted, so the card must be complete in silence. Add an ambient track from the Meta Sound Collection afterwards, never trending audio — see the licensing note in the build spec.</li>
+      <li><strong>Carousels for the sequential archetypes.</strong> Timeline, Ranking, and Correction all decompose into one beat per slide. Swipes are dwell, and dwell is the metric that actually moves distribution.</li>
+      <li><strong>Frame one must be readable at a glance.</strong> Whatever animates in later, the hook has to land in the first frame — a viewer who has to wait for the sentence to assemble has already scrolled.</li>
+      <li><strong>Let C and D carry the video volume.</strong> Your permissioned and collab posts are the moving footage in the feed. A is the identity; C and D are the reach. That is the division of labour, and it is why A being the spine does not mean A being everything.</li>
+    </ol>
+
+    <div class="notice notice--key">
+      <span class="notice__label">Why not AI voiceover</span>
+      <p>Synthetic narration would unlock Format B without your voice, and it is worth knowing the trade before you reach for it. Both major platforms now label AI-generated audio, the labelling is applied to distribution as well as display, and — more importantly — a synthetic voice builds no asset. Nobody follows an account for a stock TTS read. Motion cards get you the same video treatment while the thing being built stays yours.</p>
+    </div>
+  </section>
+
+  <!-- ── 05 ─────────────────────────────────────────────────── -->
+  <section id="s5">
+    <div class="sec-head">
+      <span class="sec-num">§ 05</span>
+      <h2>The risk moves — it does not disappear</h2>
+    </div>
+    <p>This is the part most faceless operators get wrong, and it deserves more attention than the copyright material that got you here.</p>
+
+    <div class="notice notice--warn">
+      <span class="notice__label">Format A trades copyright risk for defamation risk</span>
+      <p>Take away the photograph and your <strong>text is the entire claim</strong>. There is no borrowed image doing the asserting for you and no source to point at. A card reading "she was fired for it" is a bare factual statement about a named person, published to an audience, with your name on it. That is the classic shape of a defamation claim — and unlike a copyright takedown, there is no notice-and-takedown step where you get to quietly delete and move on.</p>
+    </div>
+
+    <h3>What that means operationally</h3>
+    <ul class="plain">
+      <li><strong>Two independent sources for any factual assertion</strong>, and neither of them is another aggregator account. Trace to reporting, a transcript, or a filing.</li>
+      <li><strong>Opinion framing is not a magic shield, but it helps.</strong> "The worst casting decision of the decade" is protected opinion. "He got the part because of who his father is" is a factual claim about a real person. Know which one you are writing.</li>
+      <li><strong>Never paraphrase into quote marks.</strong> The Attributed Quote archetype is the riskiest of the eight for exactly this reason. Verbatim, or don't use the marks.</li>
+      <li><strong>Private individuals carry no actual-malice shield.</strong> A card about a named public figure's public conduct is very different from a card about the stranger in a viral clip.</li>
+      <li><strong>Log the sources for cards too.</strong> The source log in the build spec is not only for media — for Format A the sourcing note <em>is</em> the record that matters.</li>
+    </ul>
+
+    <p>The upside is that this risk is fully within your control in a way copyright never was. Nobody registers a fact in advance and goes looking for infringers. Verification is a habit, and habits are cheap.</p>
+  </section>
+
+  <!-- ── 06 ─────────────────────────────────────────────────── -->
+  <section id="s6">
+    <div class="sec-head">
+      <span class="sec-num">§ 06</span>
+      <h2>Monetizing a faceless account</h2>
+    </div>
+    <p>Anonymity closes one door and opens a better one. You will not get the personality-led sponsorships a face-forward creator gets — and in exchange you own something transferable.</p>
+
+    <div class="scroller">
+      <table>
+        <thead>
+          <tr><th scope="col">Route</th><th scope="col">Works faceless</th><th scope="col">Note</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Newsletter / paid tier</td><td><span class="yes">Strong</span></td><td>The written voice is already the product; this is the natural extension</td></tr>
+          <tr><td>Brand partnerships, product-led</td><td><span class="yes">Yes</span></td><td>Disclose the material connection in the post, every time</td></tr>
+          <tr><td>Affiliate</td><td><span class="yes">Yes</span></td><td>Same disclosure rule; works well with Ranking and Versus cards</td></tr>
+          <tr><td>Merch on your own IP</td><td><span class="yes">Yes</span></td><td>Your wordmark and your own lines only — never a celebrity's name or face</td></tr>
+          <tr><td>Selling the account</td><td><span class="yes">Best case</span></td><td>A faceless brand transfers cleanly; a personality-led one cannot be sold at all</td></tr>
+          <tr><td>Appearance and personality deals</td><td><span class="no">Closed</span></td><td>The trade you are making, knowingly</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>That last row is worth sitting with. A faceless account is an <strong>asset</strong>; a face-led account is a <strong>job</strong>. You are choosing the one with an exit.</p>
+  </section>
+
+  <!-- ── 07 ─────────────────────────────────────────────────── -->
+  <section id="s7">
+    <div class="sec-head">
+      <span class="sec-num">§ 07</span>
+      <h2>First 30 days</h2>
+    </div>
+
+    <div>
+      <div class="phase">
+        <span class="phase__w">Day 1–3</span>
+        <div>
+          <div class="phase__t">Fix the system, then stop deciding</div>
+          <div class="phase__d">Three colours, two type roles, one card anatomy with fixed slots. Build all eight archetypes as templates in one file. Every hour spent here is repaid every day afterwards — and re-deciding the design daily is the main reason these accounts stall.</div>
+        </div>
+      </div>
+      <div class="phase">
+        <span class="phase__w">Day 4–10</span>
+        <div>
+          <div class="phase__t">Thirty cards before you post any</div>
+          <div class="phase__d">Write in batch, publish nothing. You are looking for which archetypes you can actually write at volume — most people discover they have twenty Cold Takes and no Timelines in them, and it is better to learn that privately.</div>
+        </div>
+      </div>
+      <div class="phase">
+        <span class="phase__w">Day 11–24</span>
+        <div>
+          <div class="phase__t">Three a day, rotating archetypes, half in motion</div>
+          <div class="phase__d">Track saves and sends over likes — those two predict distribution and they are what a Receipt or a Correction earns. Start the C and D pipeline in parallel so there is video in the feed from week two.</div>
+        </div>
+      </div>
+      <div class="phase">
+        <span class="phase__w">Day 25–30</span>
+        <div>
+          <div class="phase__t">Cut what does not work</div>
+          <div class="phase__d">Kill the two weakest archetypes for your voice and double the two strongest. By now you should know whether the account is a ranking account, a receipts account, or a corrections account — being one of those beats being all eight.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>All cards drawn in CSS; no third-party media is reproduced. Card copy is illustrative — the film, casting, and quotation examples are written as format demonstrations and are not sourced factual claims, which is precisely the verification step § 05 asks you to do before any of them ships. "popdesk" is an invented placeholder. General information, not legal advice.</p>
+  </footer>
+
+</div>
