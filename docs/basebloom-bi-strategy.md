@@ -286,12 +286,56 @@ no way to gate it.
 pay for Microsoft 365, and the Power Automate refresh-chain work is the
 genuinely differentiated part of the offer.
 
-**Do not build the embedded line on Tableau.** Reported floor is ~$5,000/year in
-usage-based "analytical impressions" plus Creator seats — roughly 2–3× Power BI
-at the small end, sales-gated, annually committed, with no published pricing. For
-a solo operator that is friction with no upside. Keep Tableau as a competency for
-clients already standardized on it. **Tableau Public is portfolio-only** — flat
-files only, no database connections, no scheduled refresh, everything public.
+**Do not build the embedded line on Tableau.** Verified 2026-08-09, and the
+result is stronger than "more expensive" — Tableau is *structurally* wrong for
+this use case.
+
+*What is verified.* Tableau Cloud Standard list prices are published: **Creator
+$75, Explorer $42, Viewer $15** per user/month billed annually. The Usage-Based
+Licensing mechanics are published too: you buy a pool of **Analytical
+Impressions** instead of Viewer seats, and an impression is generated when a
+*"Usage Viewer (who must be a viewer outside your organization)"* loads a
+dashboard or worksheet, downloads or exports a visualization, receives a
+subscription, or requests Pulse detail insights.
+
+*What cannot be verified — and that is the finding.* **Tableau publishes no
+embedded price anywhere.** No dollar-per-impression, no minimum commitment, no
+entry point. A search restricted to `tableau.com` and `salesforce.com` returns
+the mechanics and then directs you to a sales representative. The widely
+repeated "~$5,000/year floor" traces only to third-party blogs. Compare
+Microsoft, which publishes both the complete licensing matrix and Azure list
+prices. **For a solo operator, an unpublished, sales-gated, annually committed
+price is a disqualifying property in itself**, independent of what the number
+turns out to be.
+
+*The architectural objections, from Tableau's own open-source embedding
+playbook* (`tableau/embedding-playbook`, cloned at `188fff0`):
+
+- **Multi-tenancy is per-site, not per-row.** *"If you have a multi-tenant
+  deployment of Tableau Server, you should have one site per tenant. This is the
+  only bullet-proof method of assuring different tenants do not learn about each
+  other or see each others' data."* Ten SMB clients means ten sites to
+  provision, permission and maintain. Power BI's app-owns-data model is one
+  semantic model, one report, one DAX filter, N tenants. **That difference is
+  the entire economics of a solo practice.**
+- **The recommended alternative is worse.** The playbook's "Template Dashboard +
+  Document API" pattern literally clones a workbook per tenant via a Python
+  script. That is a build artifact per client, forever.
+- **Service-account auth is explicitly discouraged.** *"A common desire is to use
+  a single 'service' account to authenticate the users. This is not a
+  recommended approach, because it does not allow you to apply data security or
+  to track usage on a per-user basis."* This is the exact inverse of Power BI,
+  where the service principal *is* the documented app-owns-data pattern. Tableau
+  wants per-user identity; anonymous website visitors do not have one.
+- **The playbook never addresses anonymous embedding at all.** No mention of
+  guest or unlicensed viewers in any chapter. (Tableau Server has a Guest User
+  feature, but it requires core-based licensing and is not a Tableau Cloud
+  capability.)
+
+Keep Tableau as a competency for clients already standardized on it — that is a
+real and billable skill. Do not build BaseBloom's embedded product on it.
+**Tableau Public is portfolio-only**: flat files only, no database connections,
+no scheduled refresh, everything public.
 
 **Ruled out for this segment:** Metabase (white-labeling, SSO, RLS and
 interactive embedding all sit behind a ~$575/mo tier), Preset (~$500/mo for 50
@@ -345,6 +389,11 @@ separate codebase, so nothing in this repo is edited to ship it.
 
 ## 3 · The 90-day plan
 
+> **The detailed week-by-week execution plan — with dates, tasks, hour budgets,
+> decision gates and a risk register — is in
+> [`basebloom-bi-90-day-plan.md`](./basebloom-bi-90-day-plan.md).** What follows
+> is the summary.
+
 Three 30-day phases. Effort assumes evenings and weekends around a full-time
 senior manager role — roughly 10–15 hrs/week. That constraint is why the plan
 front-loads reusable assets over bespoke client work.
@@ -368,17 +417,20 @@ public artifact proving dashboard capability. Nothing new is sold yet. Spend: ~$
 - **Week 3 — The showcase dashboard.** Power BI on BaseBloom's own real business
   data, published via publish-to-web, embedded below the fold on a dedicated
   route. $0. Lazy-load it so it cannot touch hero LCP.
-- **Week 4 — Legal and financial hygiene.** Three genuinely blocking items:
-  1. **Resolve the entity discrepancy.** The footer reads *"BaseBloom LLC ·
-     Atlanta, Georgia"* but the business is a sole proprietorship. Advertising an
-     LLC that does not exist is real exposure, and it gets worse the moment
-     contracts involve client production data. Form the LLC or correct the footer.
-  2. **Check the employment agreement.** Selling BI consulting while employed as
-     a senior BI manager can implicate non-compete, moonlighting, or
-     IP-assignment clauses. Targeting non-supply-chain SMBs helps but does not
-     settle it. Worth an attorney hour before the first BI invoice, not after.
-  3. **Data handling.** Client production data is a different liability class
+- **Week 4 — Legal and financial hygiene.** Two items; a third is closed.
+  1. **Stand up BaseBloom LLC in Georgia.** Decided: this operates as an LLC,
+     not a sole proprietorship. The site footer already says *"BaseBloom LLC ·
+     Atlanta, Georgia"*, so the filing closes a gap between the advertised and
+     actual entity — and the liability shield matters more once contracts
+     involve client production data. Sequence: Georgia SoS Articles of
+     Organization → EIN → business bank account → move invoicing onto the entity.
+     Until the filing is effective, the footer is claiming a legal status that
+     does not yet exist, so treat it as time-sensitive.
+  2. **Data handling.** Client production data is a different liability class
      than website photos. Need a confidentiality/DPA addendum; price E&O insurance.
+  3. ~~Employment agreement review.~~ **Closed** — David has confirmed this work
+     does not conflict with his employment agreement. The operational hygiene in
+     §4 ("Keep the day job clean") still applies as good practice.
 
 ### Days 31–60 — Productize and sell into the warm base
 
@@ -514,7 +566,7 @@ expensive to untangle later.
    hold. This is now the biggest unknown in the plan.
 3. **Day-90 target numbers** — David to set, in week 0.
 4. **Case study consent** from the existing BI client.
-5. **Entity status** — LLC or sole proprietorship, and the footer corrected to match.
+5. **BaseBloom LLC filing** — not yet effective; the footer already claims it.
 
 ### Resolved
 
@@ -523,6 +575,12 @@ expensive to untangle later.
   is sufficient and end users are unlicensed. The F64 threshold applies only to
   *Embed for your organization* and Microsoft 365 app embedding. Full quotes and
   citations in §2.2.
+- ~~**What does Tableau embedded actually cost?**~~ **Settled 2026-08-09: it is
+  not published, and Tableau is architecturally wrong for this use case
+  regardless.** Per-site multi-tenancy and discouraged service-account auth are
+  the disqualifiers, not the price. Details and quotes in §2.4.
+- ~~**Entity: LLC or sole proprietorship?**~~ **Decided: BaseBloom LLC.**
+- ~~**Employment agreement conflict?**~~ **Confirmed no conflict.**
 
 ## Sources
 
@@ -541,7 +599,23 @@ Rendered equivalents, for reference:
 [Capacity and SKUs in Power BI embedded analytics](https://learn.microsoft.com/en-us/power-bi/developer/embedded/embedded-capacity)
 · [Microsoft Fabric licenses](https://learn.microsoft.com/en-us/fabric/enterprise/licenses)
 
-**Secondary — pricing only, unverified.** Multiple independent summaries agree
+**Primary — Tableau, fetched 2026-08-09.** `tableau.com` and `help.tableau.com`
+are blocked here, but Tableau's embedding guidance is open source.
+
+- [`tableau/embedding-playbook`](https://github.com/tableau/embedding-playbook)
+  at `188fff0` (last commit 2026-06-02) — `pages/04_multitenancy_and_rls.md`
+  (one site per tenant; Document API workbook cloning) and
+  `pages/02_auth_and_sso.md` (service-account auth discouraged)
+
+**Tableau pricing — sourced to tableau.com, not directly fetched.** Cloud
+Standard list prices and the Analytical Impressions definition come from search
+results scoped to `tableau.com`/`salesforce.com`.
+[Tableau Cloud pricing](https://www.tableau.com/pricing/cloud)
+· [Usage-based licensing for embedded analytics](https://www.tableau.com/blog/usage-based-licensing-scale-embedded-analytics-more-flexibility)
+· [Understanding License Models](https://help.tableau.com/current/online/en-us/license_product_keys.htm)
+**No embedded price is published by Tableau at any URL found.**
+
+**Secondary — Fabric pricing only, unverified.** Multiple independent summaries agree
 on ~$0.36/hr PAYG and ~$156/mo 1-year reserved for F2 in US East, derived from a
 ~$0.18/CU-hour rate.
 [Solv Systems](https://solv-systems.com/resources/microsoft-fabric-pricing-2026)
