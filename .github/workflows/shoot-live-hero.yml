@@ -44,7 +44,7 @@ jobs:
           set -euo pipefail
           npm i --no-save --silent playwright-core
           mkdir -p .live-shots
-          cat > /tmp/shoot.mjs <<'JS'
+          cat > ./shoot-live.mjs <<'JS'
           import { chromium } from 'playwright-core';
           const URL = process.env.PAGE_URL;
           const b = await chromium.launch({
@@ -93,7 +93,7 @@ jobs:
           await b.close();
           console.log(JSON.stringify(out, null, 2));
           JS
-          node /tmp/shoot.mjs | tee .live-shots/report.json
+          node ./shoot-live.mjs | tee .live-shots/report.json
 
       - name: Commit shots
         run: |
