@@ -1,0 +1,1017 @@
+<title>Clipping Account Legal Risk Playbook</title>
+
+<style>
+  /* ─────────────────────────────────────────────────────────────
+     Tokens — bare :root carries the complete light palette.
+     Cool violet-biased neutrals (biased toward the magenta accent),
+     with the accent reserved for severity and links only.
+     ───────────────────────────────────────────────────────────── */
+  :root {
+    --ground:      #F6F5F8;
+    --surface:     #FFFFFF;
+    --surface-alt: #EFEDF3;
+    --ink:         #16151A;
+    --ink-soft:    #45424F;
+    --ink-mute:    #6E6B7B;
+    --hairline:    #DDDAE4;
+    --hairline-hi: #C7C2D2;
+
+    --accent:      #C31D53;
+    --accent-deep: #8E1039;
+    --accent-wash: #FBE9EF;
+
+    --sev-low:     #0E7A66;
+    --sev-mid:     #9A6206;
+    --sev-high:    #C0451B;
+    --sev-crit:    #C31D53;
+    --sev-none:    #6E6B7B;
+
+    --focus:       #2B5CE6;
+
+    --measure: 68ch;
+    --step--1: 0.8125rem;
+    --step-0:  1.0625rem;
+    --step-1:  1.25rem;
+    --step-2:  1.5rem;
+    --step-3:  2rem;
+    --step-4:  2.75rem;
+
+    --display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:      #131218;
+      --surface:     #1B1922;
+      --surface-alt: #23202C;
+      --ink:         #ECEAF2;
+      --ink-soft:    #C3BFCE;
+      --ink-mute:    #918CA0;
+      --hairline:    #2E2A38;
+      --hairline-hi: #423C50;
+
+      --accent:      #FF5C8A;
+      --accent-deep: #FF8FAE;
+      --accent-wash: #2C1620;
+
+      --sev-low:     #3FC0A6;
+      --sev-mid:     #DCA23A;
+      --sev-high:    #F2794C;
+      --sev-crit:    #FF5C8A;
+      --sev-none:    #918CA0;
+
+      --focus:       #7FA0FF;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground:      #131218;
+    --surface:     #1B1922;
+    --surface-alt: #23202C;
+    --ink:         #ECEAF2;
+    --ink-soft:    #C3BFCE;
+    --ink-mute:    #918CA0;
+    --hairline:    #2E2A38;
+    --hairline-hi: #423C50;
+
+    --accent:      #FF5C8A;
+    --accent-deep: #FF8FAE;
+    --accent-wash: #2C1620;
+
+    --sev-low:     #3FC0A6;
+    --sev-mid:     #DCA23A;
+    --sev-high:    #F2794C;
+    --sev-crit:    #FF5C8A;
+    --sev-none:    #918CA0;
+
+    --focus:       #7FA0FF;
+  }
+
+  /* ── Base ─────────────────────────────────────────────────── */
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: var(--step-0);
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 50rem;
+    margin: 0 auto;
+    padding: clamp(2rem, 5vw, 4.5rem) clamp(1.1rem, 4vw, 2rem) 6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3.25rem;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent);
+    text-underline-offset: 0.16em;
+  }
+  a:hover { text-decoration-color: var(--accent); }
+
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  p { margin: 0; max-width: var(--measure); }
+  strong { font-weight: 650; color: var(--ink); }
+
+  /* ── Masthead ─────────────────────────────────────────────── */
+  .masthead {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .docket {
+    font-family: var(--mono);
+    font-size: var(--step--1);
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.1rem;
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(2rem, 6.5vw, var(--step-4));
+    line-height: 1.06;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  .standfirst {
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: var(--ink-soft);
+    max-width: 42ch;
+  }
+
+  /* ── Notices ──────────────────────────────────────────────── */
+  .notice {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-left: 3px solid var(--ink-mute);
+    padding: 1rem 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+  .notice--flag { border-left-color: var(--accent); }
+
+  .notice__label {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .notice p { font-size: var(--step--1); line-height: 1.55; color: var(--ink-soft); }
+
+  /* ── Sections ─────────────────────────────────────────────── */
+  section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    scroll-margin-top: 1.5rem;
+  }
+
+  .sec-head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--hairline);
+  }
+
+  .sec-num {
+    font-family: var(--mono);
+    font-size: var(--step--1);
+    letter-spacing: 0.08em;
+    color: var(--accent);
+  }
+
+  h2 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(1.45rem, 4vw, var(--step-3));
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  h3 {
+    font-family: var(--body);
+    font-weight: 650;
+    font-size: var(--step-0);
+    letter-spacing: 0.005em;
+    margin: 0.5rem 0 0;
+    color: var(--ink);
+  }
+
+  /* ── Contents ─────────────────────────────────────────────── */
+  .toc {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 0.15rem 1.5rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  .toc a {
+    display: flex;
+    gap: 0.7rem;
+    padding: 0.32rem 0;
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+  .toc a:hover { color: var(--accent); border-bottom-color: var(--hairline); }
+  .toc span {
+    font-family: var(--mono);
+    color: var(--ink-mute);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ── Tables ───────────────────────────────────────────────── */
+  .scroller {
+    overflow-x: auto;
+    border: 1px solid var(--hairline);
+    background: var(--surface);
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 38rem;
+    font-size: var(--step--1);
+  }
+
+  thead th {
+    text-align: left;
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    padding: 0.75rem 0.9rem;
+    border-bottom: 1px solid var(--hairline-hi);
+    background: var(--surface-alt);
+    white-space: nowrap;
+  }
+
+  tbody td {
+    padding: 0.8rem 0.9rem;
+    border-bottom: 1px solid var(--hairline);
+    vertical-align: top;
+    color: var(--ink-soft);
+  }
+  tbody tr:last-child td { border-bottom: 0; }
+  tbody td:first-child { color: var(--ink); font-weight: 550; }
+
+  /* Severity encoded in form as well as word */
+  .sev {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .sev::before {
+    content: "";
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background: currentColor;
+    flex: none;
+  }
+  .sev--crit { color: var(--sev-crit); }
+  .sev--high { color: var(--sev-high); }
+  .sev--mid  { color: var(--sev-mid); }
+  .sev--low  { color: var(--sev-low); }
+  .sev--none { color: var(--sev-none); }
+
+  /* ── Lists ────────────────────────────────────────────────── */
+  ul.plain, ol.plain {
+    margin: 0;
+    padding-left: 1.15rem;
+    max-width: var(--measure);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  ul.plain li, ol.plain li { padding-left: 0.2rem; }
+  ul.plain li::marker { color: var(--accent); }
+  ol.plain li::marker { color: var(--ink-mute); font-family: var(--mono); font-size: 0.9em; }
+
+  /* ── Myth cards ───────────────────────────────────────────── */
+  .myths {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 0.9rem;
+  }
+  .myth {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    padding: 1rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .myth__claim {
+    font-family: var(--display);
+    font-size: var(--step-1);
+    line-height: 1.25;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+  .myth__claim::before,
+  .myth__claim::after { content: "\201C"; color: var(--ink-mute); }
+  .myth__claim::after { content: "\201D"; }
+  .myth p { font-size: var(--step--1); color: var(--ink-soft); line-height: 1.55; }
+  .myth__verdict {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  /* ── Case notes ───────────────────────────────────────────── */
+  .case {
+    border-left: 2px solid var(--hairline-hi);
+    padding-left: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    max-width: var(--measure);
+  }
+  .case__cite {
+    font-family: var(--mono);
+    font-size: var(--step--1);
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .case p { font-size: var(--step--1); color: var(--ink-soft); line-height: 1.55; }
+
+  /* ── Audit rubric ─────────────────────────────────────────── */
+  .rubric {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .rubric__row {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+    padding: 0.85rem 1.1rem;
+    border-bottom: 1px solid var(--hairline);
+    cursor: pointer;
+  }
+  .rubric__row:hover { background: var(--surface-alt); }
+  .rubric__row input { margin: 0.28rem 0 0; accent-color: var(--accent); flex: none; width: 1rem; height: 1rem; }
+  .rubric__row span { font-size: var(--step--1); line-height: 1.5; color: var(--ink-soft); }
+  .rubric__weight {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--ink-mute);
+    font-variant-numeric: tabular-nums;
+    flex: none;
+    padding-top: 0.15rem;
+  }
+
+  .rubric__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.9rem 1.4rem;
+    padding: 1.1rem;
+    background: var(--surface-alt);
+  }
+
+  .score {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+  }
+  .score__num { font-size: var(--step-3); line-height: 1; color: var(--ink); }
+  .score__den { font-size: var(--step--1); color: var(--ink-mute); }
+
+  #band {
+    font-family: var(--mono);
+    font-size: var(--step--1);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  #reset {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    background: transparent;
+    border: 1px solid var(--hairline-hi);
+    padding: 0.45rem 0.85rem;
+    cursor: pointer;
+  }
+  #reset:hover { border-color: var(--accent); color: var(--accent); }
+
+  .meter {
+    width: 100%;
+    height: 4px;
+    background: var(--hairline);
+    overflow: hidden;
+  }
+  .meter__fill {
+    height: 100%;
+    width: 0;
+    background: var(--sev-none);
+    transition: width 220ms ease, background-color 220ms ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+  }
+
+  /* ── Sources ──────────────────────────────────────────────── */
+  .sources {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    font-size: var(--step--1);
+  }
+  .sources dt {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 0.25rem;
+  }
+  .sources dd { margin: 0; color: var(--ink-soft); line-height: 1.7; }
+
+  footer {
+    border-top: 2px solid var(--ink);
+    padding-top: 1.25rem;
+    font-size: var(--step--1);
+    color: var(--ink-mute);
+    max-width: var(--measure);
+    line-height: 1.6;
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="docket">
+      <span>Risk Memorandum</span>
+      <span>Rev. August 2026</span>
+      <span>US Law</span>
+    </div>
+    <h1>Clipping Account Legal Risk Playbook</h1>
+    <p class="standfirst">What a pop-culture repost-and-commentary account is actually obliged by, where the genre is routinely infringing, and how to build one that survives both a demand letter and the recommendation engine.</p>
+  </header>
+
+  <div class="notice notice--flag">
+    <span class="notice__label">Subject</span>
+    <p><strong>@popcultureconnect</strong> — "Pop Culture Connect" · 625 posts · 180K followers · 57 following. Bio: <em>"Keeping you connected to pop culture 🏃 / DM for biz/credit/removal."</em> Assessed from a profile-grid capture of approximately 25 recent posts. Two factors could not be determined from a static grid and are marked <em>unknown</em> in <a href="#s8">§ 08</a>.</p>
+  </div>
+
+  <nav aria-label="Contents">
+    <ul class="toc">
+      <li><a href="#s0"><span>00</span> Findings</a></li>
+      <li><a href="#s1"><span>01</span> Five products in one feed</a></li>
+      <li><a href="#s2"><span>02</span> The copyright core</a></li>
+      <li><a href="#s3"><span>03</span> Fair use after <em>Warhol</em></a></li>
+      <li><a href="#s4"><span>04</span> Four myths worth nothing</a></li>
+      <li><a href="#s5"><span>05</span> The non-copyright tail</a></li>
+      <li><a href="#s6"><span>06</span> The April 2026 rule</a></li>
+      <li><a href="#s7"><span>07</span> Building it defensibly</a></li>
+      <li><a href="#s8"><span>08</span> Audit rubric</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── 00 ─────────────────────────────────────────────────── -->
+  <section id="s0">
+    <div class="sec-head">
+      <span class="sec-num">§ 00</span>
+      <h2>Findings</h2>
+    </div>
+    <p>The account scores <strong>15 of 20</strong> on the rubric in <a href="#s8">§ 08</a> — the <em>critical</em> band — with two further factors unresolved. It is infringing across every content class simultaneously, and two specific choices in how it is operated make its position materially worse than the genre baseline.</p>
+
+    <h3>The bio line is the most consequential thing on the page</h3>
+    <p><strong>"DM for biz/credit/removal"</strong> is the standard aggregator formula, and every clause of it cuts against the account:</p>
+    <ul class="plain">
+      <li><strong>"credit"</strong> — attribution offered <em>on request, after publication</em>. Attribution is not a license in either direction, and offering it retroactively concedes it wasn't obtained in advance.</li>
+      <li><strong>"removal"</strong> — an informal takedown desk. It buys real goodwill and probably resolves most complaints before they escalate, which is why the account is still up. It confers no legal protection whatsoever: <a href="#s2">§ 512 safe harbor is unavailable</a> to the party doing the posting.</li>
+      <li><strong>Both together</strong> — a written, public, permanent admission of a systematic practice of publishing other people's work first and resolving rights afterward. This is willfulness evidence under § 504(c)(2), and it will appear as an exhibit in any complaint. It is the difference between a $30,000 ceiling and a $150,000 one, per work.</li>
+      <li><strong>"biz"</strong> — establishes commerciality on the face of the profile, which is the first factor under <em>Warhol</em> and the trigger for FTC disclosure obligations on anything that results.</li>
+    </ul>
+
+    <h3>The branded card template creates a second, separate claim</h3>
+    <p>Posts are rebuilt inside a house template — a tweet-style card stamped <strong>Pop Culture Connect @PopCultureClips</strong>. Where the underlying material is someone else's photograph or post, that template substitutes the account's own identifying mark for the original's. That is not a copyright claim; it is a <a href="#cmi">§ 1202 copyright-management-information claim</a>, and it carries its own damages on top. The grid is inconsistent about it — several cards do preserve the original handle (@CatJova, @JeffDean, @BRICSinfo, @NotLikeRuss) while others carry only the house mark. That inconsistency is itself the tell that the choice is being made post by post.</p>
+
+    <h3>Highest-exposure material visible in the grid</h3>
+    <div class="scroller">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Observed</th>
+            <th scope="col">Likely rights holder</th>
+            <th scope="col">Risk</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Red-carpet step-and-repeat photos; Bieber/Grande concert shot</td>
+            <td>Photo agency (registered in bulk)</td>
+            <td><span class="sev sev--crit">Critical</span></td>
+          </tr>
+          <tr>
+            <td>Theatrical poster art — <em>Donnie Darko</em>, <em>Terminator</em>, <em>How to Lose a Guy</em></td>
+            <td>Studios; poster art is registered separately from the film</td>
+            <td><span class="sev sev--crit">Critical</span></td>
+          </tr>
+          <tr>
+            <td><em>Jerry Springer</em> and <em>To Catch a Predator</em> stills</td>
+            <td>NBCUniversal — an active enforcer on clip reuse</td>
+            <td><span class="sev sev--high">High</span></td>
+          </tr>
+          <tr>
+            <td>Third-party viral UGC — capybaras, the NYC ladybug release</td>
+            <td>Often assigned to Jukin/ViralHog, who acquire clips <em>in order to</em> enforce</td>
+            <td><span class="sev sev--high">High</span></td>
+          </tr>
+          <tr>
+            <td>"Today Now!" segment</td>
+            <td>The Onion — a rights holder that does enforce</td>
+            <td><span class="sev sev--mid">Medium</span></td>
+          </tr>
+          <tr>
+            <td>Named private individuals: the helicopter arrest, the AMG burn images</td>
+            <td>Photographer, plus the identifiable subject</td>
+            <td><span class="sev sev--mid">Medium</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The last row is a different kind of risk from the rest. Those posts state facts about named private people who did not choose public life — no actual-malice shield, and in the case of visible injury photographs, an independent privacy exposure alongside the copyright one. See <a href="#s5">§ 05</a>.</p>
+
+    <h3>What the account is doing right</h3>
+    <ul class="plain">
+      <li>The caption voice is genuinely its own, and it is the reason 180K people follow rather than following the sources directly. That voice is the only defensible asset on the page — and the seed of a lawful version of the same product.</li>
+      <li>Original handles are preserved on a meaningful share of the tweet screenshots.</li>
+      <li>The removal desk almost certainly resolves complaints quietly, which is why a 625-post account with this profile still exists.</li>
+    </ul>
+
+    <div class="notice">
+      <span class="notice__label">Scale changes the calculus</span>
+      <p>625 posts is 625 potential works. 180K followers means the account has enough commercial value to be worth suing — judgment-proof defendants generally aren't, accounts with brand-deal revenue are. And under <a href="#s6">§ 06</a>, this profile is the textbook target of Instagram's April 2026 aggregator rule: a caption plus a branded frame is precisely the transformation Instagram says is not enough.</p>
+    </div>
+  </section>
+
+  <!-- ── 01 ─────────────────────────────────────────────────── -->
+  <section id="s1">
+    <div class="sec-head">
+      <span class="sec-num">§ 01</span>
+      <h2>An account like this is five products in one feed</h2>
+    </div>
+    <p>The most useful move is to stop treating it as one thing. What looks like a single editorial voice is really five distinct legal products stacked in one grid, and they carry wildly different exposure. The uncomfortable part: the four classes you don't own are what drive the reach, and the one you do own is the only part you could defend.</p>
+
+    <div class="scroller">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Content class</th>
+            <th scope="col">Who owns it</th>
+            <th scope="col">Enforcement risk</th>
+            <th scope="col">Why</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Paparazzi &amp; agency stills</td>
+            <td>The photo agency — <em>not</em> the celebrity</td>
+            <td><span class="sev sev--crit">Critical</span></td>
+            <td>Bulk-registered works, professional plaintiffs, automated detection, established settlement pipeline</td>
+          </tr>
+          <tr>
+            <td>Broadcast &amp; film clips</td>
+            <td>Studio or network</td>
+            <td><span class="sev sev--high">High</span></td>
+            <td>Fingerprint matching at scale; tolerance varies by title and by quarter</td>
+          </tr>
+          <tr>
+            <td>Screenshots of celebrities' own posts</td>
+            <td>The celebrity, or <em>their</em> photographer</td>
+            <td><span class="sev sev--mid">Medium</span></td>
+            <td>Rarely registered, but well-lawyered and quick to escalate</td>
+          </tr>
+          <tr>
+            <td>Podcast, livestream &amp; interview clips</td>
+            <td>The show's production company</td>
+            <td><span class="sev sev--low">Low</span></td>
+            <td>Frequently <em>encouraged</em> — many shows run paid clipping programs</td>
+          </tr>
+          <tr>
+            <td>Your graphics, voiceover, captions</td>
+            <td>You</td>
+            <td><span class="sev sev--none">None</span></td>
+            <td>The only asset on the page you actually hold rights in</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── 02 ─────────────────────────────────────────────────── -->
+  <section id="s2">
+    <div class="sec-head">
+      <span class="sec-num">§ 02</span>
+      <h2>The copyright core is broader than people assume</h2>
+    </div>
+    <p>Downloading a post and re-uploading it touches at least three of the six exclusive rights in <a href="https://www.law.cornell.edu/uscode/text/17/106">17 U.S.C. § 106</a> at once: reproduction (the download), public display or performance (the re-upload), and — once you crop, caption, or cut it — the derivative work right. There is no "I only did one of them" defense.</p>
+
+    <h3>Safe harbor protects the platform, not you</h3>
+    <p>The DMCA's § 512 safe harbor shields <em>Instagram</em> from liability for what its users post. It does nothing for the account holder. Notice-and-takedown is a shield for the platform and a sword pointed at you.</p>
+
+    <h3>The takedown isn't the risk — the arithmetic is</h3>
+    <p>Statutory damages under <a href="https://www.law.cornell.edu/uscode/text/17/504">17 U.S.C. § 504</a> run <strong>$750 to $30,000 per work</strong>, rising to <strong>$150,000 per work</strong> where infringement is willful, plus attorney's fees. <em>Per work</em> is what ends clipping accounts: forty agency photos over a year is forty works. That arithmetic is the whole basis of the reported Backgrid claim against Lisa Rinna seeking $1.2M over eight photographs.</p>
+
+    <h3 id="cmi">The second claim nobody expects: § 1202</h3>
+    <p>Separate from infringement itself, <a href="https://uscode.house.gov/view.xhtml?req=granuleid%3AUSC-prelim-title17-section1202&amp;num=0&amp;edition=prelim">17 U.S.C. § 1202</a> makes it unlawful to knowingly remove or alter <strong>copyright management information</strong> — the title, the author, the terms of use, and the identifying marks that carry them. Photographer credits, watermarks, and embedded handles all qualify. Cropping a watermark out, or replacing an original poster's handle with your own branding, is the paradigm fact pattern.</p>
+    <p>It matters because the damages stack. A § 1202 violation carries its own statutory range of <strong>$2,500 to $25,000 per violation</strong> under § 1203(c)(3)(B), <em>in addition to</em> the § 504 award for the underlying infringement — and unlike § 504, it does not depend on the same registration timing.</p>
+    <p>The defense is real but narrow: the Second, Ninth, and Eleventh Circuits require <strong>double scienter</strong> — that the removal was intentional, <em>and</em> that the defendant knew it would induce, enable, facilitate, or conceal infringement. A house template that systematically replaces source attribution with your own mark is not an easy set of facts on which to argue the second prong.</p>
+
+    <div class="notice">
+      <span class="notice__label">The registration gate</span>
+      <p>Statutory damages and fee-shifting are only available if the work was registered <em>before</em> the infringement began, or within three months of first publication. Gigi Hadid beat a paparazzi suit largely on a registration defect rather than on the merits. But agencies now register in bulk batches specifically to close that gap — the "they probably never registered it" bet is materially worse in 2026 than it was in 2019.</p>
+    </div>
+  </section>
+
+  <!-- ── 03 ─────────────────────────────────────────────────── -->
+  <section id="s3">
+    <div class="sec-head">
+      <span class="sec-num">§ 03</span>
+      <h2>Fair use, and what it actually buys you</h2>
+    </div>
+    <p>Fair use is the doctrine everyone cites and almost nobody structures for. Three things matter more than the rest.</p>
+
+    <h3>It is a defense, not a permission</h3>
+    <p>You raise it <em>after</em> the takedown or the complaint. It doesn't prevent a strike, doesn't deter a demand letter, and doesn't cap the per-work exposure — it gives you an argument once you are already spending money to make it.</p>
+
+    <h3><em>Warhol</em> narrowed the ground under commentary accounts</h3>
+    <p>In <em>Andy Warhol Foundation v. Goldsmith</em> (2023) the Supreme Court held 7–2 that where a secondary use shares "the same or highly similar" purpose as the original <em>and</em> is commercial, the first factor weighs <strong>against</strong> fair use — even when the work has been visibly transformed. Added expression is no longer sufficient on its own.</p>
+    <p>Apply that honestly. An agency photograph's commercial purpose is to be published alongside celebrity news and commentary. That is precisely what a pop-culture page does with it. Same purpose, commercial context. Factor one is not friendly ground.</p>
+
+    <h3>The commentary has to be about the thing you copied</h3>
+    <p>This is the line separating the winners from the losers, and it predates <em>Warhol</em> by years.</p>
+
+    <div class="case">
+      <span class="case__cite">Hosseinzadeh v. Klein, 276 F. Supp. 3d 34 (S.D.N.Y. 2017)</span>
+      <p>The h3h3 reaction video was fair use because the Kleins <em>stopped the clip repeatedly to criticize it</em>. Judge Forrest expressly warned this was not a blanket rule for reaction content, distinguishing genuine critique from "a group viewing session without commentary."</p>
+    </div>
+
+    <div class="case">
+      <span class="case__cite">Equals Three, LLC v. Jukin Media, Inc., 139 F. Supp. 3d 1094 (C.D. Cal. 2015)</span>
+      <p>Nearly all episodes were highly transformative: the added jokes, narration, graphics, and editing gave the source videos a different purpose and character.</p>
+    </div>
+
+    <p>The pattern is consistent. <strong>Commentary that interrogates the source survives; commentary bolted onto a source still delivering its original entertainment value does not.</strong> A caption reading "not her doing this 😭" under an unedited thirty-second clip is the second thing.</p>
+    <p>Then factor four closes it. If someone can watch your clip <em>instead of</em> the awards show, the episode, or the licensed photograph, that is market substitution — and it is the factor courts weight hardest against clip accounts.</p>
+  </section>
+
+  <!-- ── 04 ─────────────────────────────────────────────────── -->
+  <section id="s4">
+    <div class="sec-head">
+      <span class="sec-num">§ 04</span>
+      <h2>Four beliefs that are worth nothing, and one that costs you</h2>
+    </div>
+
+    <div class="myths">
+      <div class="myth">
+        <span class="myth__claim">Credit to the original creator</span>
+        <span class="myth__verdict">No legal effect</span>
+        <p>Attribution is not a license. US copyright law has no attribution defense. Crediting is good manners and good platform hygiene — it is not a legal position.</p>
+      </div>
+      <div class="myth">
+        <span class="myth__claim">Under 30 seconds is fine</span>
+        <span class="myth__verdict">Not a rule anywhere</span>
+        <p>No duration or percentage threshold exists in the statute or the case law. <em>Harper &amp; Row</em> found infringement in roughly 300 words of a book-length manuscript, because those words were the heart of the work.</p>
+      </div>
+      <div class="myth">
+        <span class="myth__claim">I'm not monetizing it</span>
+        <span class="myth__verdict">One sub-factor of one factor</span>
+        <p>Courts look at the enterprise, not the individual post. A link in bio, inbound brand deals, or an audience being built toward monetization is commercial in substance.</p>
+      </div>
+      <div class="myth">
+        <span class="myth__claim">No copyright infringement intended</span>
+        <span class="myth__verdict">Actively harmful</span>
+        <p>Legally inert, and documentary evidence that you knew the material was someone else's — which is exactly what a plaintiff needs to argue <strong>willfulness</strong> and lift the ceiling from $30k to $150k per work.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 05 ─────────────────────────────────────────────────── -->
+  <section id="s5">
+    <div class="sec-head">
+      <span class="sec-num">§ 05</span>
+      <h2>The non-copyright tail risks</h2>
+    </div>
+    <p>Copyright is the volume risk. These are the ones that end accounts.</p>
+
+    <h3>Right of publicity</h3>
+    <p>Roughly 35 states recognize it. Commentary and reporting on public figures is protected by the newsworthiness exception — the First Amendment hierarchy gives the greatest protection to news, less to entertainment, and least to advertising. Where a pop-culture account crosses over is <strong>merchandise and sponsorship</strong>: put a celebrity's face or catchphrase on a hoodie, or feature them in a paid brand post, and you have moved from protected commentary into commercial appropriation. This is the single most common way a "safe" commentary page becomes a defendant.</p>
+
+    <h3>Defamation and false light</h3>
+    <p>Gossip commentary asserts facts about real people. Public figures must prove actual malice, which is a real shield — but limited-purpose public figures, and the partners, exes, and staff who appear in the story without choosing to, do not carry that burden. One favorable quirk: republishing another's statement is normally its own act of publication and its own liability, yet § 230 has been read to protect <em>users</em> who republish third-party content online. Genuinely helpful, genuinely unsettled — don't build the business on it.</p>
+
+    <h3>Music</h3>
+    <p>This one bites because of account <em>type</em>. Meta's label deals cover personal and creator use, not commercial use. Business-classified accounts are restricted to the roughly 14,000-track Meta Sound Collection; the trending catalog is off-limits. A monetized page pulling trending audio from a Business profile has a licensing gap entirely independent of the video content.</p>
+
+    <h3>FTC disclosure</h3>
+    <p>Any paid post, gifted product, affiliate link, or paid clipping-campaign submission requires a clear and conspicuous material-connection disclosure. Penalties reach roughly $50,120 per violation and both brand and clipper can be liable. A "#ad" buried in a caption tail is not reliably sufficient.</p>
+
+    <h3>Trademark</h3>
+    <p>Network logos, show wordmarks, and studio branding in your page identity or thumbnails can support a sponsorship-confusion claim. Nominative fair use lets you refer to a show by name; it does not let you look like the show's official account.</p>
+  </section>
+
+  <!-- ── 06 ─────────────────────────────────────────────────── -->
+  <section id="s6">
+    <div class="sec-head">
+      <span class="sec-num">§ 06</span>
+      <h2>The April 2026 rule that matters more than the case law</h2>
+    </div>
+    <p>Instagram extended its unoriginal-content policy platform-wide: accounts whose posts across a rolling 30-day window are mostly material they did not create or meaningfully transform are classed as aggregators and pulled from recommendations — Explore, feed suggestions, Discover. Existing followers still see you. Growth from non-followers is switched off.</p>
+
+    <div class="scroller">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Instagram counts as original</th>
+            <th scope="col">Instagram says is not enough</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Voiceover, unique text, creative edits</td>
+            <td>Changing playback speed</td>
+          </tr>
+          <tr>
+            <td>Humor, social commentary, cultural reference</td>
+            <td>A screenshot showing the original poster's handle</td>
+          </tr>
+          <tr>
+            <td>A perspective or context that wasn't there before</td>
+            <td>Re-uploading with a caption attached</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="notice notice--flag">
+      <span class="notice__label">The convergence</span>
+      <p>Read that beside <a href="#s3">§ 03</a> and notice what happened. Instagram's algorithmic requirement and the fair-use test — transformative, and <em>commenting on the source</em> — have landed on close to the same behavior. For the first time, the thing that keeps you out of court is also the thing that keeps you in the recommendation engine. That is the strategic center of gravity for anything you build here.</p>
+    </div>
+  </section>
+
+  <!-- ── 07 ─────────────────────────────────────────────────── -->
+  <section id="s7">
+    <div class="sec-head">
+      <span class="sec-num">§ 07</span>
+      <h2>Building one defensibly</h2>
+    </div>
+
+    <h3>Licensing paths, weakest to strongest</h3>
+    <ol class="plain">
+      <li><strong>Written permission by DM.</strong> Ask the creator, get a "yes" in writing, screenshot it, file it. Free, and it converts an infringement into a license.</li>
+      <li><strong>Studio press kits and EPKs.</strong> Distributed expressly for editorial use; trailers likewise.</li>
+      <li><strong>Public domain and federal government works</strong> (17 U.S.C. § 105).</li>
+      <li><strong>Stock and UGC licensors</strong> — Jukin, ViralHog, Storyful for viral clips; agency subscriptions for celebrity stills once you're at scale.</li>
+      <li><strong>Brand-authorized clipping programs</strong> — Whop Content Rewards, Lumina and similar hand you source material <em>with</em> permission, because the rights holder wants the distribution. This is the only structurally clean version of the model, and it is where the money in clipping actually sits now.</li>
+    </ol>
+
+    <h3>Format choices that lower risk without killing the product</h3>
+    <ul class="plain">
+      <li>Voiceover or on-screen commentary running <em>through</em> the clip rather than appended to it — this satisfies the <em>Hosseinzadeh</em> critique posture and Instagram's originality bar with one action.</li>
+      <li>Your own designed graphics carrying the news, with the source linked instead of re-uploaded.</li>
+      <li><strong>Embed, don't repost</strong>, on any website you run. <em>Hunley v. Instagram</em> (9th Cir. 2023) reaffirmed the server test: embedding a public post serves it from Meta's servers and is not direct infringement. Downloading and re-uploading the same image is. Identical visual result, categorically different legal posture.</li>
+      <li>Native Collab posts and the repost button, which preserve original authorship and are what Instagram is steering aggregators toward.</li>
+    </ul>
+
+    <h3>Operational hygiene</h3>
+    <ul class="plain">
+      <li><strong>Keep a source log</strong> — post, source URL, rights basis (license / permission / fair-use rationale), date. This is what makes a willfulness finding hard and the $150k tier unlikely.</li>
+      <li><strong>Form an LLC</strong> before you monetize; price <strong>media liability / E&amp;O insurance</strong> once revenue is real. It is the standard instrument for exactly this risk and cheap against a single defense.</li>
+      <li><strong>Treat every strike as a near-miss.</strong> Instagram does not publish a strike count; removals accumulate toward termination under the repeat-infringer policy. That is existential in a way one lawsuit isn't — the asset is the follower graph, and it isn't portable.</li>
+      <li><strong>Counter-notice only when you would genuinely defend it.</strong> A counter-notification is sworn under penalty of perjury and consents to federal court jurisdiction. It is how a free takedown becomes a lawsuit.</li>
+      <li><strong>Diversify off-platform</strong> — email list, second platform — before you need to.</li>
+    </ul>
+  </section>
+
+  <!-- ── 08 ─────────────────────────────────────────────────── -->
+  <section id="s8">
+    <div class="sec-head">
+      <span class="sec-num">§ 08</span>
+      <h2>Audit rubric</h2>
+    </div>
+    <p>Weights reflect how reliably each factor shows up in actual enforcement, not how bad it feels. <strong>Pre-filled with the findings for @popcultureconnect</strong> — the two unchecked rows could not be resolved from a static profile grid. Uncheck or add to run it against a different account; nothing is stored or transmitted.</p>
+
+    <div class="rubric">
+      <label class="rubric__row">
+        <input type="checkbox" data-w="3" checked>
+        <span>Source media is re-uploaded essentially unedited — no voiceover or on-screen text running through it</span>
+        <span class="rubric__weight">3</span>
+      </label>
+      <label class="rubric__row">
+        <input type="checkbox" data-w="3" checked>
+        <span>Agency watermarks or recognizable paparazzi stills appear in the feed</span>
+        <span class="rubric__weight">3</span>
+      </label>
+      <label class="rubric__row">
+        <input type="checkbox" data-w="3">
+        <span>Merchandise or sponsored posts feature a named, identifiable celebrity <em>— unresolved; "DM for biz" signals availability</em></span>
+        <span class="rubric__weight">3</span>
+      </label>
+      <label class="rubric__row">
+        <input type="checkbox" data-w="3" checked>
+        <span>No written permission or license appears to exist for any source material</span>
+        <span class="rubric__weight">3</span>
+      </label>
+      <label class="rubric__row">
+        <input type="checkbox" data-w="2" checked>
+        <span>Captions react <em>beside</em> the clip rather than discussing or critiquing it</span>
+        <span class="rubric__weight">2</span>
+      </label>
+      <label class="rubric__row">
+        <input type="checkbox" data-w="2">
+        <span>Profile is Business or Creator and posts use trending commercial audio <em>— unresolved; check the Reels tab</em></span>
+        <span class="rubric__weight">2</span>
+      </label>
+      <label class="rubric__row">
+        <input type="checkbox" data-w="2" checked>
+        <span>Content is downloaded and re-uploaded rather than shared via Collab or native repost</span>
+        <span class="rubric__weight">2</span>
+      </label>
+      <label class="rubric__row">
+        <input type="checkbox" data-w="2" checked>
+        <span>Almost nothing in the feed is an original graphic, voiceover, or asset of their own</span>
+        <span class="rubric__weight">2</span>
+      </label>
+
+      <div class="meter"><div class="meter__fill" id="fill"></div></div>
+
+      <div class="rubric__foot">
+        <div class="score">
+          <span class="score__num" id="score">0</span>
+          <span class="score__den">/ 20</span>
+        </div>
+        <span id="band">Nothing flagged</span>
+        <button type="button" id="reset">Reset</button>
+      </div>
+    </div>
+
+    <p>Bands: <strong>0–3</strong> defensible — the account is mostly making its own things. <strong>4–8</strong> elevated — typical of the genre, survives on non-enforcement. <strong>9–14</strong> high — a single agency sweep or rights-team mandate takes it down. <strong>15–20</strong> critical — infringing across every class simultaneously, with willfulness evidence in the feed.</p>
+  </section>
+
+  <!-- ── Sources ────────────────────────────────────────────── -->
+  <section id="sources">
+    <div class="sec-head">
+      <span class="sec-num">§ —</span>
+      <h2>Sources</h2>
+    </div>
+    <dl class="sources">
+      <div>
+        <dt>Fair use</dt>
+        <dd>
+          <a href="https://www.skadden.com/insights/publications/2023/05/supreme-court-addresses-copyright-fair-use-defense">Warhol v. Goldsmith — Skadden</a> ·
+          <a href="https://www.hklaw.com/en/insights/publications/2023/06/us-supreme-court-holds-that-first-factor-of-fair-use">Holland &amp; Knight</a> ·
+          <a href="https://blog.ericgoldman.org/archives/2017/08/reaction-video-protected-by-fair-use-hosseinzadeh-v-klein.htm">Hosseinzadeh v. Klein — Eric Goldman</a> ·
+          <a href="https://en.wikipedia.org/wiki/Equals_Three,_LLC_v._Jukin_Media,_Inc.">Equals Three v. Jukin Media</a>
+        </dd>
+      </div>
+      <div>
+        <dt>Statute &amp; damages</dt>
+        <dd>
+          <a href="https://www.law.cornell.edu/uscode/text/17/504">17 U.S.C. § 504</a> ·
+          <a href="https://accelerateip.com/statutory-damages-why-registration-timing-matters/">Registration timing — Accelerate IP</a> ·
+          <a href="https://uscode.house.gov/view.xhtml?req=granuleid%3AUSC-prelim-title17-section1202&amp;num=0&amp;edition=prelim">17 U.S.C. § 1202</a> ·
+          <a href="https://www.troutman.com/insights/copyright-management-information-the-intellectual-property-you-didnt-know-you-have/">CMI explained — Troutman Pepper Locke</a> ·
+          <a href="https://www.thowardlaw.com/2021/05/section-1202b-of-the-dmca-requires-scienter-for-cmi-claims">Double scienter</a>
+        </dd>
+      </div>
+      <div>
+        <dt>Paparazzi enforcement</dt>
+        <dd>
+          <a href="https://www.americanbar.org/groups/entertainment_sports/resources/entertainment-sports-lawyer/2021-winter/paparazzi-lawsuits-against-celebrities-ongoing-litigation/">ABA — ongoing litigation</a> ·
+          <a href="https://www.wakeforestlawreview.com/2022/03/a-social-media-picture-is-worth-a-thousand-words-or-1-2-million-the-right-of-publicity-and-social-media-copyright-infringement/">Wake Forest Law Review</a>
+        </dd>
+      </div>
+      <div>
+        <dt>Embedding</dt>
+        <dd><a href="https://www.dwt.com/insights/2023/08/server-test-instagram-case-ninth-circuit">Hunley v. Instagram — Davis Wright Tremaine</a></dd>
+      </div>
+      <div>
+        <dt>Platform policy</dt>
+        <dd>
+          <a href="https://help.instagram.com/1586774981367195">Instagram repeat-infringer policy</a> ·
+          <a href="https://www.tubefilter.com/2026/04/30/instagram-removes-algorithm-recommendations-repost-content-aggregator/">Aggregator penalty — Tubefilter</a> ·
+          <a href="https://petapixel.com/2026/04/30/new-instagram-policies-target-reposted-content/">PetaPixel</a> ·
+          <a href="https://www.tiktok.com/legal/page/global/copyright-policy/en">TikTok IP Policy</a>
+        </dd>
+      </div>
+      <div>
+        <dt>Music &amp; disclosure</dt>
+        <dd>
+          <a href="https://www.trymaas.com/blog/instagram-business-account-trending-music-risks/">Business accounts &amp; Reels audio</a> ·
+          <a href="https://sriplaw.com/blog/instagram-business-accounts-and-copyright/">SRIPLAW</a> ·
+          <a href="https://www.influencers-time.com/ugc-clipping-network-contracts-ftc-disclosure-revenue-share/">Clipping networks &amp; FTC disclosure</a> ·
+          <a href="https://www.whopreviews.com/guides/whop-clipping">Whop Content Rewards</a>
+        </dd>
+      </div>
+      <div>
+        <dt>Right of publicity</dt>
+        <dd><a href="https://firstamendment.mtsu.edu/article/right-of-publicity/">MTSU First Amendment Encyclopedia</a></dd>
+      </div>
+    </dl>
+  </section>
+
+  <footer>
+    <p>General legal information, not legal advice. No attorney–client relationship is created by this document. Right-of-publicity and defamation rules vary substantially between states, and fair use is decided case by case on facts this memo cannot know. Before monetizing, a two-hour consult with a media or IP attorney is the highest-return expense in the whole plan.</p>
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    var boxes = Array.prototype.slice.call(document.querySelectorAll('.rubric__row input'));
+    var scoreEl = document.getElementById('score');
+    var bandEl = document.getElementById('band');
+    var fillEl = document.getElementById('fill');
+    var resetEl = document.getElementById('reset');
+
+    var BANDS = [
+      { max: 0,  label: 'Nothing flagged',   token: '--sev-none' },
+      { max: 3,  label: 'Defensible',        token: '--sev-low'  },
+      { max: 8,  label: 'Elevated',          token: '--sev-mid'  },
+      { max: 14, label: 'High',              token: '--sev-high' },
+      { max: 20, label: 'Critical',          token: '--sev-crit' }
+    ];
+
+    function render() {
+      var total = boxes.reduce(function (sum, b) {
+        return sum + (b.checked ? Number(b.dataset.w) : 0);
+      }, 0);
+
+      var band = BANDS[BANDS.length - 1];
+      for (var i = 0; i < BANDS.length; i++) {
+        if (total <= BANDS[i].max) { band = BANDS[i]; break; }
+      }
+
+      scoreEl.textContent = String(total);
+      bandEl.textContent = band.label;
+      bandEl.style.color = 'var(' + band.token + ')';
+      fillEl.style.width = (total / 20 * 100) + '%';
+      fillEl.style.backgroundColor = 'var(' + band.token + ')';
+    }
+
+    boxes.forEach(function (b) { b.addEventListener('change', render); });
+
+    resetEl.addEventListener('click', function () {
+      boxes.forEach(function (b) { b.checked = false; });
+      render();
+    });
+
+    render();
+  }());
+</script>
