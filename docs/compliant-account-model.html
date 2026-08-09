@@ -1,0 +1,1135 @@
+<title>The Compliant Build — a pop culture account that owns what it posts</title>
+
+<style>
+  /* ─────────────────────────────────────────────────────────────
+     Sibling to the Risk Playbook: same type system, inverted
+     polarity. There the accent was tabloid magenta and it meant
+     danger. Here the accent is a deep teal that means cleared —
+     and magenta survives only inside the pre-flight gate, where
+     it still means stop.
+     ───────────────────────────────────────────────────────────── */
+  :root {
+    --ground:      #F4F7F6;
+    --surface:     #FFFFFF;
+    --surface-alt: #E8EEEC;
+    --ink:         #12181A;
+    --ink-soft:    #3E4A4C;
+    --ink-mute:    #677576;
+    --hairline:    #D7E0DD;
+    --hairline-hi: #BCC9C5;
+
+    --accent:      #056454;
+    --accent-deep: #023A31;
+    --accent-wash: #E2F1ED;
+
+    --ship:        #056454;
+    --fix:         #8F5B04;
+    --kill:        #C31D53;
+    --idle:        #677576;
+
+    --focus:       #1F5FD0;
+
+    --measure: 68ch;
+    --step--1: 0.8125rem;
+    --step-0:  1.0625rem;
+    --step-1:  1.25rem;
+    --step-2:  1.5rem;
+    --step-3:  2rem;
+    --step-4:  2.75rem;
+
+    --display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:      #101614;
+      --surface:     #18201E;
+      --surface-alt: #1F2926;
+      --ink:         #E8EFEC;
+      --ink-soft:    #BDCAC6;
+      --ink-mute:    #8A9A96;
+      --hairline:    #28332F;
+      --hairline-hi: #3A4844;
+
+      --accent:      #3FD1B0;
+      --accent-deep: #7EE6CD;
+      --accent-wash: #14261F;
+
+      --ship:        #3FD1B0;
+      --fix:         #DCA23A;
+      --kill:        #FF5C8A;
+      --idle:        #8A9A96;
+
+      --focus:       #7FA0FF;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground:      #101614;
+    --surface:     #18201E;
+    --surface-alt: #1F2926;
+    --ink:         #E8EFEC;
+    --ink-soft:    #BDCAC6;
+    --ink-mute:    #8A9A96;
+    --hairline:    #28332F;
+    --hairline-hi: #3A4844;
+
+    --accent:      #3FD1B0;
+    --accent-deep: #7EE6CD;
+    --accent-wash: #14261F;
+
+    --ship:        #3FD1B0;
+    --fix:         #DCA23A;
+    --kill:        #FF5C8A;
+    --idle:        #8A9A96;
+
+    --focus:       #7FA0FF;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: var(--step-0);
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 52rem;
+    margin: 0 auto;
+    padding: clamp(2rem, 5vw, 4.5rem) clamp(1.1rem, 4vw, 2rem) 6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3.25rem;
+  }
+
+  a { color: var(--accent); text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent); text-underline-offset: 0.16em; }
+  a:hover { text-decoration-color: var(--accent); }
+
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 2px; }
+
+  p { margin: 0; max-width: var(--measure); }
+  strong { font-weight: 650; color: var(--ink); }
+
+  /* ── Masthead ─────────────────────────────────────────────── */
+  .masthead {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid var(--ink);
+  }
+  .docket {
+    font-family: var(--mono);
+    font-size: var(--step--1);
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.1rem;
+  }
+  h1 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(2rem, 6.5vw, var(--step-4));
+    line-height: 1.06;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+    margin: 0;
+  }
+  .standfirst { font-size: var(--step-1); line-height: 1.5; color: var(--ink-soft); max-width: 44ch; }
+
+  /* ── Thesis ───────────────────────────────────────────────── */
+  .thesis {
+    background: var(--accent-wash);
+    border-left: 3px solid var(--accent);
+    padding: 1.4rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  .thesis p { font-size: var(--step-1); line-height: 1.5; color: var(--ink); max-width: 52ch; }
+  .thesis p + p { font-size: var(--step-0); color: var(--ink-soft); }
+
+  .notice {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-left: 3px solid var(--ink-mute);
+    padding: 1rem 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+  .notice--warn { border-left-color: var(--kill); }
+  .notice__label {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .notice p { font-size: var(--step--1); line-height: 1.55; color: var(--ink-soft); }
+
+  /* ── Sections ─────────────────────────────────────────────── */
+  section { display: flex; flex-direction: column; gap: 1.1rem; scroll-margin-top: 1.5rem; }
+  .sec-head { display: flex; flex-direction: column; gap: 0.35rem; padding-top: 1.25rem; border-top: 1px solid var(--hairline); }
+  .sec-num { font-family: var(--mono); font-size: var(--step--1); letter-spacing: 0.08em; color: var(--accent); }
+  h2 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(1.45rem, 4vw, var(--step-3));
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+    margin: 0;
+  }
+  h3 { font-family: var(--body); font-weight: 650; font-size: var(--step-0); margin: 0.5rem 0 0; color: var(--ink); }
+
+  ul.plain, ol.plain {
+    margin: 0; padding-left: 1.15rem; max-width: var(--measure);
+    display: flex; flex-direction: column; gap: 0.6rem;
+  }
+  ul.plain li::marker { color: var(--accent); }
+  ol.plain li::marker { color: var(--ink-mute); font-family: var(--mono); font-size: 0.9em; }
+
+  /* ── Format cards ─────────────────────────────────────────── */
+  .formats { display: flex; flex-direction: column; gap: 0.9rem; }
+  .fmt {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    display: grid;
+    grid-template-columns: 3.25rem 1fr;
+  }
+  .fmt__key {
+    font-family: var(--display);
+    font-size: var(--step-2);
+    color: var(--surface);
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+  .fmt__body { padding: 1.05rem 1.2rem; display: flex; flex-direction: column; gap: 0.6rem; }
+  .fmt__name { font-family: var(--display); font-size: var(--step-1); line-height: 1.2; color: var(--ink); }
+  .fmt p { font-size: var(--step--1); line-height: 1.55; color: var(--ink-soft); }
+  .fmt__meta { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; padding-top: 0.15rem; }
+  .tag {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .tag b { color: var(--accent); font-weight: 500; }
+  .rebuild {
+    border-top: 1px dashed var(--hairline-hi);
+    padding-top: 0.6rem;
+    margin-top: 0.15rem;
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+  .rebuild b { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-mute); display: block; margin-bottom: 0.2rem; }
+
+  /* ── Ladder ───────────────────────────────────────────────── */
+  .ladder { display: flex; flex-direction: column; }
+  .rung {
+    display: grid;
+    grid-template-columns: 2.6rem 1fr;
+    gap: 0 1rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--hairline);
+    align-items: start;
+  }
+  .rung:last-child { border-bottom: 0; }
+  .rung__n {
+    font-family: var(--mono);
+    font-size: var(--step--1);
+    color: var(--ink-mute);
+    font-variant-numeric: tabular-nums;
+    padding-top: 0.18rem;
+  }
+  .rung__t { font-weight: 600; color: var(--ink); font-size: var(--step-0); }
+  .rung__d { font-size: var(--step--1); color: var(--ink-soft); line-height: 1.55; margin-top: 0.15rem; }
+  .rung__d em { color: var(--ink-mute); font-style: normal; font-family: var(--mono); font-size: 0.92em; }
+
+  /* ── Tables ───────────────────────────────────────────────── */
+  .scroller { overflow-x: auto; border: 1px solid var(--hairline); background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; min-width: 36rem; font-size: var(--step--1); }
+  thead th {
+    text-align: left; font-family: var(--mono); font-weight: 500; font-size: 0.72rem;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-mute);
+    padding: 0.75rem 0.9rem; border-bottom: 1px solid var(--hairline-hi);
+    background: var(--surface-alt); white-space: nowrap;
+  }
+  tbody td { padding: 0.8rem 0.9rem; border-bottom: 1px solid var(--hairline); vertical-align: top; color: var(--ink-soft); }
+  tbody tr:last-child td { border-bottom: 0; }
+  tbody td:first-child { color: var(--ink); font-weight: 550; }
+  .yes { color: var(--ship); font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.05em; text-transform: uppercase; }
+  .no  { color: var(--kill); font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.05em; text-transform: uppercase; }
+
+  /* ── Copy blocks ──────────────────────────────────────────── */
+  .snippet { border: 1px solid var(--hairline); background: var(--surface); display: flex; flex-direction: column; }
+  .snippet__bar {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 0.6rem 0.9rem; background: var(--surface-alt);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .snippet__name { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-mute); }
+  .snippet pre {
+    margin: 0; padding: 1rem; overflow-x: auto;
+    font-family: var(--mono); font-size: 0.8rem; line-height: 1.6; color: var(--ink-soft);
+    white-space: pre-wrap;
+  }
+  .btn {
+    font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink-soft); background: transparent; border: 1px solid var(--hairline-hi);
+    padding: 0.4rem 0.75rem; cursor: pointer; white-space: nowrap;
+  }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn--go { border-color: var(--accent); color: var(--accent); }
+  .snippet__bar .btn { margin-left: auto; }
+
+  /* ── Pre-flight gate ──────────────────────────────────────── */
+  .gate { border: 1px solid var(--hairline); background: var(--surface); display: flex; flex-direction: column; }
+  .check {
+    padding: 0.9rem 1.1rem;
+    border-bottom: 1px solid var(--hairline);
+    display: flex; flex-wrap: wrap; gap: 0.5rem 1rem;
+    align-items: baseline; justify-content: space-between;
+  }
+  .check__q { font-size: var(--step--1); line-height: 1.5; color: var(--ink-soft); flex: 1 1 20rem; }
+  .opts { display: flex; gap: 0.4rem; flex: none; }
+  .opts label { position: relative; display: inline-flex; cursor: pointer; user-select: none; }
+  .opts input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+  .opts span {
+    font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase;
+    border: 1px solid var(--hairline-hi); padding: 0.3rem 0.6rem; color: var(--ink-mute);
+    white-space: nowrap;
+  }
+  .opts input:checked + span { background: var(--ink); border-color: var(--ink); color: var(--ground); }
+  .opts input:focus-visible + span { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  .verdict { padding: 1.2rem 1.1rem; background: var(--surface-alt); display: flex; flex-direction: column; gap: 0.75rem; }
+  .verdict__head { display: flex; align-items: baseline; gap: 0.9rem; flex-wrap: wrap; }
+  #stamp {
+    font-family: var(--mono); font-size: var(--step-2); letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--idle); line-height: 1;
+  }
+  #stampNote { font-size: var(--step--1); color: var(--ink-mute); }
+  #reasons { margin: 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.35rem; }
+  #reasons li { font-size: var(--step--1); line-height: 1.5; color: var(--ink-soft); }
+  #reasons li.kill::marker { color: var(--kill); }
+  #reasons li.fix::marker { color: var(--fix); }
+  #gateReset { align-self: flex-start; }
+
+  /* ── Source log ───────────────────────────────────────────── */
+  .log { border: 1px solid var(--hairline); background: var(--surface); display: flex; flex-direction: column; }
+  .log__form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    gap: 0.6rem;
+    padding: 1rem;
+    border-bottom: 1px solid var(--hairline);
+    background: var(--surface-alt);
+  }
+  .field { display: flex; flex-direction: column; gap: 0.28rem; }
+  .field label {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink-mute);
+  }
+  .field input, .field select {
+    font-family: var(--body); font-size: var(--step--1); color: var(--ink);
+    background: var(--surface); border: 1px solid var(--hairline-hi);
+    padding: 0.45rem 0.55rem; width: 100%;
+  }
+  .log__actions { display: flex; flex-wrap: wrap; gap: 0.6rem; padding: 0.85rem 1rem; align-items: center; }
+  #logCount { font-family: var(--mono); font-size: 0.72rem; color: var(--ink-mute); margin-left: auto; }
+  #logTable td:first-child { color: var(--ink-soft); font-weight: 400; }
+  .basis { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
+  .del {
+    background: transparent; border: 0; color: var(--ink-mute); cursor: pointer;
+    font-family: var(--mono); font-size: 0.9rem; line-height: 1; padding: 0.2rem 0.35rem;
+  }
+  .del:hover { color: var(--kill); }
+  .empty { padding: 1.5rem 1rem; text-align: center; color: var(--ink-mute); font-size: var(--step--1); }
+
+  /* ── Timeline ─────────────────────────────────────────────── */
+  .phase { display: grid; grid-template-columns: 6.5rem 1fr; gap: 0 1.1rem; padding: 0.9rem 0; border-bottom: 1px solid var(--hairline); }
+  .phase:last-child { border-bottom: 0; }
+  .phase__w { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); padding-top: 0.22rem; }
+  .phase__t { font-weight: 600; color: var(--ink); font-size: var(--step-0); }
+  .phase__d { font-size: var(--step--1); color: var(--ink-soft); line-height: 1.55; margin-top: 0.15rem; }
+
+  footer {
+    border-top: 2px solid var(--ink); padding-top: 1.25rem;
+    font-size: var(--step--1); color: var(--ink-mute); max-width: var(--measure); line-height: 1.6;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="docket">
+      <span>Build Specification</span>
+      <span>Companion to the Risk Playbook</span>
+      <span>Rev. August 2026</span>
+    </div>
+    <h1>The Compliant Build</h1>
+    <p class="standfirst">A pop culture account that delivers the same product as an aggregator — the voice, the curation, the speed — while owning or licensing every frame it publishes.</p>
+  </header>
+
+  <div class="thesis">
+    <p>In the aggregator model the borrowed media is <strong>load-bearing</strong>: remove it and there is no post. In this model the borrowed media is <strong>evidentiary</strong> — it illustrates a take that already stands on its own.</p>
+    <p>That single structural change is what satisfies the fair-use test, Instagram's April 2026 originality rule, and § 1202 simultaneously. Everything below is downstream of it.</p>
+  </div>
+
+  <div class="notice">
+    <span class="notice__label">The substitution test</span>
+    <p>Before anything ships, ask one question: <strong>could someone get the same value from the original source that they get from my post?</strong> If yes, you are substituting for the source and no amount of caption fixes it. If the post is only valuable <em>because of your framing</em>, you are commenting — and that is the whole ballgame, legally and algorithmically.</p>
+  </div>
+
+  <!-- ── 01 ─────────────────────────────────────────────────── -->
+  <section id="s1">
+    <div class="sec-head">
+      <span class="sec-num">§ 01</span>
+      <h2>Five post formats that carry the product legally</h2>
+    </div>
+    <p>These are the only shapes you need. A healthy feed runs roughly <strong>40% A, 25% C, 20% D, 10% B, 5% E</strong> — heavy on the two formats that cost nothing and carry no rights exposure, with the expensive formats reserved for the posts that deserve them.</p>
+
+    <div class="formats">
+
+      <article class="fmt">
+        <div class="fmt__key">A</div>
+        <div class="fmt__body">
+          <span class="fmt__name">The Take Card</span>
+          <p>You design the graphic. Typographic news card, list, ranking, poll, or bracket in your own brand system. No third-party image at all, or a link out to the source instead of an embed. This is already how the largest pop-culture accounts carry their news posts.</p>
+          <div class="fmt__meta">
+            <span class="tag">Rights <b>none needed</b></span>
+            <span class="tag">Cost <b>minutes</b></span>
+            <span class="tag">Originality <b>100%</b></span>
+          </div>
+          <div class="rebuild">
+            <b>Rebuilt from the audit</b>
+            "Jerry Springer was the comment section before social media existed" was a broadcast still plus a one-liner. The still is NBCU's; the joke is yours. Set the line as a card in your type system and you keep everything that made the post work, at zero exposure.
+          </div>
+        </div>
+      </article>
+
+      <article class="fmt">
+        <div class="fmt__key">B</div>
+        <div class="fmt__body">
+          <span class="fmt__name">Voiceover Commentary</span>
+          <p>Your voice runs <em>through</em> the clip, stopping it to react, contextualize, and argue. The <em>Hosseinzadeh</em> posture. Note carefully: voiceover strengthens a fair-use argument, it does not create a license — so pair it with a base clip sourced from § 02.</p>
+          <div class="fmt__meta">
+            <span class="tag">Rights <b>license the base</b></span>
+            <span class="tag">Cost <b>15–30 min</b></span>
+            <span class="tag">Originality <b>high</b></span>
+          </div>
+          <div class="rebuild">
+            <b>Rebuilt from the audit</b>
+            The Jim Lee drawing demo ran as a silent clip with "Stan Lee's voice is genuinely healing me" underneath. Same clip, licensed, with you talking over it about what he's actually doing with the pen — now it's a different work with a different purpose.
+          </div>
+        </div>
+      </article>
+
+      <article class="fmt">
+        <div class="fmt__key">C</div>
+        <div class="fmt__body">
+          <span class="fmt__name">Native Collab &amp; Repost</span>
+          <p>Instagram's own Collab post and repost button. Authorship stays with the creator, the post appears on both grids, and you add your caption. No download, no re-upload, no copy made, and no chance of substituting your mark for theirs.</p>
+          <div class="fmt__meta">
+            <span class="tag">Rights <b>platform-licensed</b></span>
+            <span class="tag">Cost <b>free</b></span>
+            <span class="tag">§ 1202 risk <b>zero</b></span>
+          </div>
+          <div class="rebuild">
+            <b>Rebuilt from the audit</b>
+            The capybara clip and the NYC ladybug video are both third-party UGC re-uploaded into a house-branded frame. Collab with the original poster instead: they get reach, you get the post, and the clip never leaves their account.
+          </div>
+        </div>
+      </article>
+
+      <article class="fmt">
+        <div class="fmt__key">D</div>
+        <div class="fmt__body">
+          <span class="fmt__name">The Permissioned Clip</span>
+          <p>Ask the owner, get a written yes, post it with the credit they asked for and your take on top. Free, per-item, and the single highest-leverage habit in the whole model — it converts an infringement into a license with one message.</p>
+          <div class="fmt__meta">
+            <span class="tag">Rights <b>express grant</b></span>
+            <span class="tag">Cost <b>one DM</b></span>
+            <span class="tag">Scales to <b>3–5 posts/day</b></span>
+          </div>
+          <div class="rebuild">
+            <b>Rebuilt from the audit</b>
+            Tweet screenshots are the easiest possible ask — creators almost always say yes to a pop-culture page with reach. Template in <a href="#s3">§ 03</a>.
+          </div>
+        </div>
+      </article>
+
+      <article class="fmt">
+        <div class="fmt__key">E</div>
+        <div class="fmt__body">
+          <span class="fmt__name">Owned Footage</span>
+          <p>Your own camera. Premieres and conventions issue press credentials to accounts your size; screenings, launches, pop-ups, and street interviews need nothing but showing up. Slowest to produce and the only content a competitor structurally cannot take from you.</p>
+          <div class="fmt__meta">
+            <span class="tag">Rights <b>you own it</b></span>
+            <span class="tag">Cost <b>time</b></span>
+            <span class="tag">Also <b>a licensable asset</b></span>
+          </div>
+          <div class="rebuild">
+            <b>Why it matters disproportionately</b>
+            Owned footage is the only format that makes <em>you</em> a rights holder. It converts the account from a cost center that borrows into a library that licenses out.
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ── 02 ─────────────────────────────────────────────────── -->
+  <section id="s2">
+    <div class="sec-head">
+      <span class="sec-num">§ 02</span>
+      <h2>The sourcing ladder</h2>
+    </div>
+    <p>Ranked by preference, not convenience. Work down it and stop at the first rung that yields the asset — the order genuinely matters, because each step down adds cost, latency, or residual risk.</p>
+
+    <div class="ladder">
+      <div class="rung">
+        <span class="rung__n">01</span>
+        <div>
+          <div class="rung__t">You shot it or made it</div>
+          <div class="rung__d">Free, perpetual, exclusive, and licensable to others. <em>no clearance</em></div>
+        </div>
+      </div>
+      <div class="rung">
+        <span class="rung__n">02</span>
+        <div>
+          <div class="rung__t">Native Collab or repost</div>
+          <div class="rung__d">The platform's own sharing mechanics. No copy is made, so no reproduction right is touched. <em>platform-licensed</em></div>
+        </div>
+      </div>
+      <div class="rung">
+        <span class="rung__n">03</span>
+        <div>
+          <div class="rung__t">Written permission from the actual owner</div>
+          <div class="rung__d">One message, kept forever. Trace to the real owner — a grant from someone who themselves reposted it is worth nothing. <em>express grant</em></div>
+        </div>
+      </div>
+      <div class="rung">
+        <span class="rung__n">04</span>
+        <div>
+          <div class="rung__t">Official press and EPK channels</div>
+          <div class="rung__d">Studio media sites, label and brand newsrooms, artist press kits, official trailers. Distributed expressly for editorial use — read the terms, they usually forbid alteration. <em>editorial licence</em></div>
+        </div>
+      </div>
+      <div class="rung">
+        <span class="rung__n">05</span>
+        <div>
+          <div class="rung__t">Public domain and US federal works</div>
+          <div class="rung__d">Federal government works are uncopyrightable under 17 U.S.C. § 105 — NASA, the Library of Congress, the National Archives. Deep archive value for anything retrospective. <em>free to use</em></div>
+        </div>
+      </div>
+      <div class="rung">
+        <span class="rung__n">06</span>
+        <div>
+          <div class="rung__t">Creative Commons</div>
+          <div class="rung__d">Wikimedia Commons, Flickr CC. Honour the licence exactly — attribution string, and check whether the variant permits commercial use, because your account is commercial. <em>conditional</em></div>
+        </div>
+      </div>
+      <div class="rung">
+        <span class="rung__n">07</span>
+        <div>
+          <div class="rung__t">Paid editorial libraries</div>
+          <div class="rung__d">Getty and AP editorial subscriptions for celebrity stills; Jukin, ViralHog and Storyful for viral clips. Real money, and the only way to run agency photography safely. <em>paid licence</em></div>
+        </div>
+      </div>
+      <div class="rung">
+        <span class="rung__n">08</span>
+        <div>
+          <div class="rung__t">Brand-authorized clipping programs</div>
+          <div class="rung__d">The source material arrives <em>with</em> permission because the rights holder wants the distribution — and often pays for it. Requires FTC disclosure. <em>licensed + paid</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="notice notice--warn">
+      <span class="notice__label">Chain of title</span>
+      <p>The most common way a careful account still gets caught: getting permission from the wrong person. The account that posted it is usually not the photographer, the production company, or the agency. Ask "did you shoot this?" before you ask "can I use this?" — and if the answer is vague, treat it as a no.</p>
+    </div>
+  </section>
+
+  <!-- ── 03 ─────────────────────────────────────────────────── -->
+  <section id="s3">
+    <div class="sec-head">
+      <span class="sec-num">§ 03</span>
+      <h2>The permission workflow</h2>
+    </div>
+    <p>A grant is only useful if it covers what you actually do. Six elements make one durable — anything missing is a gap you will not notice until it matters.</p>
+
+    <div class="scroller">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Element</th>
+            <th scope="col">Why it has to be explicit</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Who is granting</td><td>They must be the owner, not a reposter. This is the element people skip.</td></tr>
+          <tr><td>Exactly what</td><td>Identify the specific asset by link. "Your stuff" is not a licence.</td></tr>
+          <tr><td>Which platforms</td><td>Instagram <em>and</em> TikTok <em>and</em> anywhere else you cross-post.</td></tr>
+          <tr><td>For how long</td><td>Perpetual, or you inherit a deletion obligation you will forget.</td></tr>
+          <tr><td>Commercial use</td><td>Your account is commercial. A grant for "personal use" does not cover you.</td></tr>
+          <tr><td>Credit format</td><td>Their preferred handle, spelled their way, in the place they want it.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="snippet">
+      <div class="snippet__bar">
+        <span class="snippet__name">DM template — first contact</span>
+        <button class="btn" type="button" data-copy="dm">Copy</button>
+      </div>
+      <pre id="dm">Hey — I run [@handle], a pop culture page with [X] followers. I'd love to
+feature your [post/clip] here: [link]
+
+Quick check first: did you shoot/create it yourself?
+
+If so, are you okay with me posting it on Instagram and TikTok, permanently,
+crediting you as [@theirhandle]? My page is monetized, so I want to be clear
+this would be commercial use.
+
+A "yes" here is all I need. Happy to run the caption past you first.</pre>
+    </div>
+
+    <div class="snippet">
+      <div class="snippet__bar">
+        <span class="snippet__name">Email template — agencies and production companies</span>
+        <button class="btn" type="button" data-copy="em">Copy</button>
+      </div>
+      <pre id="em">Subject: Licence request — [asset description], [@handle]
+
+Hi [name],
+
+I run [@handle] ([X] followers), a pop culture commentary account. I'd like to
+license the following for editorial use:
+
+  Asset:      [description + link or reference number]
+  Use:        Social editorial with original commentary
+  Platforms:  Instagram, TikTok [+ others]
+  Term:       Perpetual
+  Territory:  Worldwide
+  Credit:     As you specify
+
+The account is commercial (brand partnerships and affiliate revenue), so
+please quote on that basis. If you have a standard social editorial rate card
+or a subscription tier that fits, I'm glad to work from it.
+
+Thanks,
+[name]</pre>
+    </div>
+
+    <div class="notice">
+      <span class="notice__label">Storing it</span>
+      <p>Screenshot every yes, including the handle and the date, and file it under the asset. A grant you cannot produce two years later is, evidentially, a grant you never had.</p>
+    </div>
+  </section>
+
+  <!-- ── 04 ─────────────────────────────────────────────────── -->
+  <section id="s4">
+    <div class="sec-head">
+      <span class="sec-num">§ 04</span>
+      <h2>Pre-flight gate</h2>
+    </div>
+    <p>Run every post through this before it ships. Two answers are hard stops; the rest are correctable. Nothing here is stored or transmitted.</p>
+
+    <div class="gate" id="gate">
+      <div class="check" data-id="rights" data-kind="kill">
+        <span class="check__q">Do I own, or hold written permission for, every visual asset in this post — or is it a native Collab, repost, public-domain, CC, or EPK asset?</span>
+        <span class="opts">
+          <label><input type="radio" name="rights" value="ok"><span>Yes</span></label>
+          <label><input type="radio" name="rights" value="bad"><span>No</span></label>
+        </span>
+      </div>
+
+      <div class="check" data-id="cmi" data-kind="kill">
+        <span class="check__q">Have I preserved the original creator's mark or handle, rather than replacing it with my own branding?</span>
+        <span class="opts">
+          <label><input type="radio" name="cmi" value="ok"><span>Preserved</span></label>
+          <label><input type="radio" name="cmi" value="bad"><span>Replaced</span></label>
+        </span>
+      </div>
+
+      <div class="check" data-id="subst" data-kind="fix">
+        <span class="check__q">Would this post still be worth posting if the third-party asset were removed?</span>
+        <span class="opts">
+          <label><input type="radio" name="subst" value="ok"><span>Yes</span></label>
+          <label><input type="radio" name="subst" value="bad"><span>No</span></label>
+        </span>
+      </div>
+
+      <div class="check" data-id="comment" data-kind="fix">
+        <span class="check__q">Does my commentary discuss the source itself, rather than sitting beside it?</span>
+        <span class="opts">
+          <label><input type="radio" name="comment" value="ok"><span>Discusses</span></label>
+          <label><input type="radio" name="comment" value="bad"><span>Sits beside</span></label>
+        </span>
+      </div>
+
+      <div class="check" data-id="private" data-kind="hold">
+        <span class="check__q">Is an identifiable private individual named, shown in distress, or the subject of a factual claim?</span>
+        <span class="opts">
+          <label><input type="radio" name="private" value="ok"><span>No</span></label>
+          <label><input type="radio" name="private" value="bad"><span>Yes</span></label>
+        </span>
+      </div>
+
+      <div class="check" data-id="ftc" data-kind="fix">
+        <span class="check__q">If anything was paid, gifted, affiliate-linked, or campaign-submitted — is the disclosure clear and conspicuous <em>in</em> the post?</span>
+        <span class="opts">
+          <label><input type="radio" name="ftc" value="ok"><span>Yes / N&nbsp;A</span></label>
+          <label><input type="radio" name="ftc" value="bad"><span>No</span></label>
+        </span>
+      </div>
+
+      <div class="check" data-id="audio" data-kind="fix">
+        <span class="check__q">Is the audio from the Meta Sound Collection, separately licensed, or original?</span>
+        <span class="opts">
+          <label><input type="radio" name="audio" value="ok"><span>Yes</span></label>
+          <label><input type="radio" name="audio" value="bad"><span>Trending</span></label>
+        </span>
+      </div>
+
+      <div class="check" data-id="logged" data-kind="fix">
+        <span class="check__q">Is every asset in this post recorded in the source log?</span>
+        <span class="opts">
+          <label><input type="radio" name="logged" value="ok"><span>Logged</span></label>
+          <label><input type="radio" name="logged" value="bad"><span>Not yet</span></label>
+        </span>
+      </div>
+
+      <div class="verdict">
+        <div class="verdict__head">
+          <span id="stamp">Awaiting</span>
+          <span id="stampNote">Answer all eight to get a verdict.</span>
+        </div>
+        <ul id="reasons"></ul>
+        <button class="btn" type="button" id="gateReset">Reset gate</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 05 ─────────────────────────────────────────────────── -->
+  <section id="s5">
+    <div class="sec-head">
+      <span class="sec-num">§ 05</span>
+      <h2>Source log</h2>
+    </div>
+    <p>This is the single artifact that defeats a willfulness finding. An account that can produce a dated rights basis for every asset is not the account a plaintiff wants to take to a jury. Entries are kept in this browser only — export the CSV and keep it somewhere real.</p>
+
+    <div class="log">
+      <div class="log__form">
+        <div class="field">
+          <label for="f-date">Date</label>
+          <input type="date" id="f-date">
+        </div>
+        <div class="field">
+          <label for="f-post">Post reference</label>
+          <input type="text" id="f-post" placeholder="e.g. 08-09 Springer card">
+        </div>
+        <div class="field">
+          <label for="f-asset">Asset</label>
+          <input type="text" id="f-asset" placeholder="What was used">
+        </div>
+        <div class="field">
+          <label for="f-src">Source URL</label>
+          <input type="text" id="f-src" placeholder="https://">
+        </div>
+        <div class="field">
+          <label for="f-basis">Rights basis</label>
+          <select id="f-basis">
+            <option>Self-created</option>
+            <option>Native Collab / repost</option>
+            <option>Written permission</option>
+            <option>Press / EPK</option>
+            <option>Public domain</option>
+            <option>Creative Commons</option>
+            <option>Paid licence</option>
+            <option>Clipping programme</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-ref">Permission ref</label>
+          <input type="text" id="f-ref" placeholder="Screenshot file, invoice no.">
+        </div>
+      </div>
+
+      <div class="log__actions">
+        <button class="btn btn--go" type="button" id="logAdd">Add entry</button>
+        <button class="btn" type="button" id="logCsv">Export CSV</button>
+        <button class="btn" type="button" id="logClear">Clear all</button>
+        <span id="logCount">0 entries</span>
+      </div>
+
+      <div class="scroller">
+        <table id="logTable">
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Post</th>
+              <th scope="col">Asset</th>
+              <th scope="col">Basis</th>
+              <th scope="col">Ref</th>
+              <th scope="col"><span class="tag">Del</span></th>
+            </tr>
+          </thead>
+          <tbody id="logBody"></tbody>
+        </table>
+      </div>
+      <div class="empty" id="logEmpty">No entries yet. The habit is worth more than the tool.</div>
+    </div>
+  </section>
+
+  <!-- ── 06 ─────────────────────────────────────────────────── -->
+  <section id="s6">
+    <div class="sec-head">
+      <span class="sec-num">§ 06</span>
+      <h2>Monetizing without unwinding it</h2>
+    </div>
+    <p>Right of publicity is where compliant accounts still get caught, because the exposure appears at the moment you start earning. The line is not about the celebrity — it is about whether their identity is <em>selling something</em>.</p>
+
+    <div class="scroller">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Revenue</th>
+            <th scope="col">Safe</th>
+            <th scope="col">Condition</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Brand partnership, celebrity not featured</td><td><span class="yes">Yes</span></td><td>Clear and conspicuous disclosure in the post</td></tr>
+          <tr><td>Affiliate links</td><td><span class="yes">Yes</span></td><td>Disclose the material connection, every time</td></tr>
+          <tr><td>Newsletter and paid subscription</td><td><span class="yes">Yes</span></td><td>Same rights rules apply to the content inside it</td></tr>
+          <tr><td>Merch using <em>your</em> brand or your own catchphrases</td><td><span class="yes">Yes</span></td><td>Must be your original IP, not a lifted line</td></tr>
+          <tr><td>Licensing out your own footage</td><td><span class="yes">Yes</span></td><td>Register it — that is what makes it enforceable</td></tr>
+          <tr><td>Merch with a celebrity's face, name, or catchphrase</td><td><span class="no">No</span></td><td>Right of publicity; no newsworthiness defence for goods</td></tr>
+          <tr><td>Sponsored post where a celebrity appears to endorse</td><td><span class="no">No</span></td><td>Advertising gets the least First Amendment protection</td></tr>
+          <tr><td>Selling prints or edits of third-party photos</td><td><span class="no">No</span></td><td>Straight infringement, plus the publicity claim</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── 07 ─────────────────────────────────────────────────── -->
+  <section id="s7">
+    <div class="sec-head">
+      <span class="sec-num">§ 07</span>
+      <h2>The bio</h2>
+    </div>
+    <p>The audited account's bio — <em>"DM for biz/credit/removal"</em> — is a written confession that rights are resolved after publication. Do not carry that formula over. What you want instead says the same operational thing without conceding anything:</p>
+
+    <div class="snippet">
+      <div class="snippet__bar">
+        <span class="snippet__name">Replacement bio</span>
+        <button class="btn" type="button" data-copy="bio">Copy</button>
+      </div>
+      <pre id="bio">[Name] — pop culture, with a take
+Original commentary · licensed &amp; permissioned media
+Partnerships and rights: [email]</pre>
+    </div>
+
+    <p>Three deliberate changes. <strong>"Original commentary"</strong> states the thing Instagram's April 2026 rule is scanning for. <strong>"Licensed &amp; permissioned"</strong> asserts a rights posture instead of apologising for the absence of one. And routing rights contact to <strong>email rather than DMs</strong> gives you a record, a place to attach the licence file, and — critically — stops you advertising removal-on-demand as a standing offer.</p>
+  </section>
+
+  <!-- ── 08 ─────────────────────────────────────────────────── -->
+  <section id="s8">
+    <div class="sec-head">
+      <span class="sec-num">§ 08</span>
+      <h2>Appendix — migrating an account that already exists</h2>
+    </div>
+    <p>If you are fixing a live account rather than starting clean, order matters. The cheapest changes stop new exposure immediately; the back catalogue can be worked in parallel.</p>
+
+    <div>
+      <div class="phase">
+        <span class="phase__w">Day 1</span>
+        <div>
+          <div class="phase__t">Bio and template</div>
+          <div class="phase__d">Rewrite the bio per § 07. Strip your own handle out of the post template wherever the underlying asset is someone else's — that one change stops new § 1202 exposure accruing, at zero cost.</div>
+        </div>
+      </div>
+      <div class="phase">
+        <span class="phase__w">Week 1–4</span>
+        <div>
+          <div class="phase__t">Shift the mix</div>
+          <div class="phase__d">Move new posts onto formats A and C. Target 60% original inside a month — that is also the window Instagram's rolling 30-day aggregator assessment runs on, so reach should respond.</div>
+        </div>
+      </div>
+      <div class="phase">
+        <span class="phase__w">Week 2–8</span>
+        <div>
+          <div class="phase__t">Triage the back catalogue</div>
+          <div class="phase__d">Sort by risk class and work top-down: agency and paparazzi stills first, then studio poster art, then broadcast stills. Delete or replace. Leave the tweet screenshots that preserved original handles for last — they are the least exposed.</div>
+        </div>
+      </div>
+      <div class="phase">
+        <span class="phase__w">Week 4–12</span>
+        <div>
+          <div class="phase__t">Build the pipeline</div>
+          <div class="phase__d">Permission templates into a saved-replies list, source log running from day one, and a standing habit of shooting your own footage at anything you attend.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="notice notice--warn">
+      <span class="notice__label">What deletion does and doesn't do</span>
+      <p>Removing an infringing post stops ongoing distribution and helps on the equities. It does not erase liability that has already accrued — the claim exists from the moment of publication, and the limitations period runs three years from discovery, not from posting. Clean up because it reduces future exposure and improves your posture, not because it makes the past disappear.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>General legal information, not legal advice. No attorney–client relationship is created by this document. Right-of-publicity, defamation, and privacy rules vary substantially between states, and fair use is decided case by case on facts this document cannot know. Treat the gate and the log as operational discipline, not as a legal opinion — and get one before you monetize.</p>
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    /* ── Copy buttons ─────────────────────────────────────── */
+    document.querySelectorAll('[data-copy]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var el = document.getElementById(btn.dataset.copy);
+        if (!el) return;
+        var text = el.textContent;
+        var done = function () {
+          var was = btn.textContent;
+          btn.textContent = 'Copied';
+          setTimeout(function () { btn.textContent = was; }, 1400);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, fallback);
+        } else { fallback(); }
+        function fallback() {
+          var ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          try { document.execCommand('copy'); done(); } catch (e) { btn.textContent = 'Select manually'; }
+          document.body.removeChild(ta);
+        }
+      });
+    });
+
+    /* ── Pre-flight gate ──────────────────────────────────── */
+    var REASONS = {
+      rights:  { kill: 'No rights basis for at least one asset. Nothing else on this list can rescue that — source it from § 02 or cut the asset.' },
+      cmi:     { kill: 'Your mark replaces the original creator’s. That is a § 1202 claim in its own right, separate from infringement.' },
+      subst:   { fix:  'The post has no value without the borrowed asset — that is substitution. Rebuild it as a Take Card or add a real argument.' },
+      comment: { fix:  'Commentary sits beside the source rather than engaging it. Say something about the clip, not next to it.' },
+      private: { hold: 'An identifiable private individual is involved. No actual-malice shield here — verify the facts and consider whether the post is worth it.' },
+      ftc:     { fix:  'Material connection undisclosed. Put it in the post, up front, not in a caption tail.' },
+      audio:   { fix:  'Trending audio on a commercial account. Swap to the Meta Sound Collection or licensed music.' },
+      logged:  { fix:  'Not in the source log. Log it before it ships — the log is only worth anything if it is complete.' }
+    };
+
+    var checks = Array.prototype.slice.call(document.querySelectorAll('#gate .check'));
+    var stamp = document.getElementById('stamp');
+    var note = document.getElementById('stampNote');
+    var reasons = document.getElementById('reasons');
+
+    function evaluate() {
+      var answered = 0, kills = [], holds = [], fixes = [];
+
+      checks.forEach(function (c) {
+        var picked = c.querySelector('input:checked');
+        if (!picked) return;
+        answered++;
+        if (picked.value !== 'bad') return;
+        var id = c.dataset.id, kind = c.dataset.kind;
+        var text = REASONS[id][kind];
+        if (kind === 'kill') kills.push(text);
+        else if (kind === 'hold') holds.push(text);
+        else fixes.push(text);
+      });
+
+      reasons.textContent = '';
+      var all = kills.map(function (t) { return ['kill', t]; })
+        .concat(holds.map(function (t) { return ['fix', t]; }))
+        .concat(fixes.map(function (t) { return ['fix', t]; }));
+
+      all.forEach(function (pair) {
+        var li = document.createElement('li');
+        li.className = pair[0];
+        li.textContent = pair[1];
+        reasons.appendChild(li);
+      });
+
+      if (answered < checks.length) {
+        stamp.textContent = 'Awaiting';
+        stamp.style.color = 'var(--idle)';
+        note.textContent = (checks.length - answered) + ' of ' + checks.length + ' still unanswered.';
+        return;
+      }
+      if (kills.length) {
+        stamp.textContent = 'Do not ship';
+        stamp.style.color = 'var(--kill)';
+        note.textContent = 'A hard stop. This is not a caption problem.';
+      } else if (holds.length) {
+        stamp.textContent = 'Hold';
+        stamp.style.color = 'var(--fix)';
+        note.textContent = 'Rights are fine. Someone needs to look at this before it goes out.';
+      } else if (fixes.length) {
+        stamp.textContent = 'Fix first';
+        stamp.style.color = 'var(--fix)';
+        note.textContent = fixes.length + (fixes.length === 1 ? ' correctable issue.' : ' correctable issues.');
+      } else {
+        stamp.textContent = 'Ship';
+        stamp.style.color = 'var(--ship)';
+        note.textContent = 'Cleared on all eight. Log it and go.';
+      }
+    }
+
+    document.getElementById('gate').addEventListener('change', evaluate);
+    document.getElementById('gateReset').addEventListener('click', function () {
+      checks.forEach(function (c) {
+        var picked = c.querySelector('input:checked');
+        if (picked) picked.checked = false;
+      });
+      evaluate();
+    });
+
+    /* ── Source log ───────────────────────────────────────── */
+    var KEY = 'pcc-source-log-v1';
+    var rows = [];
+    var store = (function () {
+      try {
+        var t = '__t';
+        window.localStorage.setItem(t, t);
+        window.localStorage.removeItem(t);
+        return window.localStorage;
+      } catch (e) { return null; }
+    }());
+
+    function load() {
+      if (!store) return;
+      try { rows = JSON.parse(store.getItem(KEY)) || []; } catch (e) { rows = []; }
+    }
+    function save() {
+      if (!store) return;
+      try { store.setItem(KEY, JSON.stringify(rows)); } catch (e) { /* quota — in-memory only */ }
+    }
+
+    var body = document.getElementById('logBody');
+    var empty = document.getElementById('logEmpty');
+    var count = document.getElementById('logCount');
+
+    function draw() {
+      body.textContent = '';
+      rows.forEach(function (r, i) {
+        var tr = document.createElement('tr');
+        [r.date, r.post, r.asset].forEach(function (v) {
+          var td = document.createElement('td');
+          td.textContent = v || '—';
+          tr.appendChild(td);
+        });
+
+        var tdB = document.createElement('td');
+        var sp = document.createElement('span');
+        sp.className = 'basis';
+        sp.textContent = r.basis;
+        tdB.appendChild(sp);
+        tr.appendChild(tdB);
+
+        var tdR = document.createElement('td');
+        if (r.src) {
+          var a = document.createElement('a');
+          a.href = r.src;
+          a.textContent = r.ref || 'source';
+          a.rel = 'noreferrer';
+          a.target = '_blank';
+          tdR.appendChild(a);
+        } else {
+          tdR.textContent = r.ref || '—';
+        }
+        tr.appendChild(tdR);
+
+        var tdD = document.createElement('td');
+        var b = document.createElement('button');
+        b.className = 'del';
+        b.type = 'button';
+        b.textContent = '✕';
+        b.setAttribute('aria-label', 'Delete entry ' + (i + 1));
+        b.addEventListener('click', function () { rows.splice(i, 1); save(); draw(); });
+        tdD.appendChild(b);
+        tr.appendChild(tdD);
+
+        body.appendChild(tr);
+      });
+
+      empty.style.display = rows.length ? 'none' : 'block';
+      count.textContent = rows.length + (rows.length === 1 ? ' entry' : ' entries') + (store ? '' : ' · not saved');
+    }
+
+    document.getElementById('logAdd').addEventListener('click', function () {
+      var get = function (id) { return document.getElementById(id).value.trim(); };
+      var entry = {
+        date: get('f-date'),
+        post: get('f-post'),
+        asset: get('f-asset'),
+        src: get('f-src'),
+        basis: document.getElementById('f-basis').value,
+        ref: get('f-ref')
+      };
+      if (!entry.post && !entry.asset) {
+        document.getElementById('f-asset').focus();
+        return;
+      }
+      rows.unshift(entry);
+      save();
+      draw();
+      ['f-post', 'f-asset', 'f-src', 'f-ref'].forEach(function (id) { document.getElementById(id).value = ''; });
+    });
+
+    document.getElementById('logClear').addEventListener('click', function () {
+      if (!rows.length) return;
+      rows = [];
+      save();
+      draw();
+    });
+
+    document.getElementById('logCsv').addEventListener('click', function () {
+      var head = ['Date', 'Post', 'Asset', 'Source URL', 'Rights basis', 'Permission ref'];
+      var esc = function (v) { return '"' + String(v || '').replace(/"/g, '""') + '"'; };
+      var lines = [head.map(esc).join(',')];
+      rows.forEach(function (r) {
+        lines.push([r.date, r.post, r.asset, r.src, r.basis, r.ref].map(esc).join(','));
+      });
+      var a = document.createElement('a');
+      a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(lines.join('\n'));
+      a.download = 'source-log.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    });
+
+    load();
+    draw();
+    evaluate();
+  }());
+</script>
