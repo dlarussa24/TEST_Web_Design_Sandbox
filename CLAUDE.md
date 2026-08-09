@@ -45,10 +45,34 @@ anything in this repo. Two consequences:
   Its `outDir` was repointed from `../public/basebloom` to a local `dist/`
   precisely so a build cannot clobber the mirror.
 
-The only edit applied on top of the mirror: relative links to the nine demo
-sub-sites (`./slate-and-storm/` etc.) and to `/work` are absolutised to
-`https://basebloomdesign.com/...`, because the page is served under
-`/basebloom/` here and those directories are deliberately not mirrored.
+Edits applied on top of the mirror — a re-sync must re-apply these:
+
+1. **Demo links.** Relative links to the nine demo sub-sites
+   (`./slate-and-storm/` etc.) and to `/work` are absolutised to
+   `https://basebloomdesign.com/...`, because the page is served under
+   `/basebloom/` here and those directories are deliberately not mirrored.
+
+2. **The full hero loop.** The live site ships `trades-hero-loop.mp4`, a
+   6.13 s exterior-only montage. That is the *second half* of a two-part
+   sequence — the first half, a pull-back from an electrician steadying a
+   glowing Edison pendant bulb out through the bay window, was generated but
+   never deployed. Both files are still in `public/basebloom/`; the page now
+   points at the reassembled version:
+
+   - `trades-hero-loop-full.mp4` — 10.54 s, 1920×1080, 2624 kb/s, 3 379 KB.
+     Higgsfield take `378656c3` (the one clean of the door artifact that
+     spoils takes `8841252d` and `c7f7b1ec`) joined to the live montage from
+     its frame 6, where the two align. 0.4 s crossfade hides a bay-window
+     content swap at the join; 0.35 s fade from black at the head so the
+     loop closes black-to-black (first and last frame both luma 0).
+   - `trades-hero-poster-full.jpg` — pulled from 0.55 s so the poster matches
+     the video's opening rather than jumping from the old exterior still.
+
+   Open question: mobile never plays the video (deliberate `saveData` gate),
+   so the poster is all a phone ever sees. The bulb close-up is consistent
+   with the video; the old exterior crew shot arguably sells the multi-trade
+   offer better on a phone. A mobile-specific poster is a one-line change if
+   that trade is worth making.
 
 An audit of the live hero, with routes to a 9 on eight dimensions, is in
 `docs/basebloom-hero-audit.md`.
