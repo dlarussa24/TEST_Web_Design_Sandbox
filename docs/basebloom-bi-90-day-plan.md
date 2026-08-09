@@ -298,7 +298,26 @@ are already in the codebase.
    split. This is the worst visible defect on the site.
 7. **Add `:focus-visible` rings.** Currently zero occurrences; the one real
    accessibility gap.
-8. **Stop fetching JetBrains Mono before the fold** (~60 KB).
+8. **Deduplicate the fonts — ~128 KB of pure waste, fixable in CSS.** The site
+   declares nine `@font-face` rules against nine URLs, but `public/basebloom/fonts/`
+   contains only **four distinct files**:
+
+   | Family | URLs declared | Distinct files | Reality |
+   |---|---|---|---|
+   | Inter | 3 (400/500/600) | 1 | Variable font, `wght` axis 100–900 |
+   | JetBrains Mono | 2 (400/500) | 1 | Variable font, `wght` axis 400–800 |
+   | Space Grotesk | 3 (500/600/700) | 1 | Declared but never used |
+   | Prata | 1 | 1 | Static, correct as-is |
+
+   Each URL is a separate cache entry, so a browser using Inter 400, 500 and 600
+   downloads the *same 48,256-byte file three times*. Same for JetBrains Mono at
+   two weights — which is the ~60 KB the hero audit noticed but attributed to the
+   font being heavy rather than duplicated.
+
+   Fix: collapse each family to one rule with a weight range, e.g.
+   `@font-face{font-family:'Inter';font-weight:100 900;src:url('fonts/inter-400.woff2') format('woff2')}`.
+   **Saves ~96 KB (Inter) + ~31 KB (JetBrains Mono) ≈ 128 KB** with no visual
+   change. Drop the three Space Grotesk declarations entirely.
 9. **Fix the `og:image` path** — it points at `hero-poster.jpg`; the actual file
    is `trades-hero-poster.jpg`, and the URL is relative, which most scrapers
    won't resolve. Every share of this site is currently rendering without an
