@@ -1,0 +1,748 @@
+<title>Five Formats — visual samples</title>
+
+<style>
+  /* ─────────────────────────────────────────────────────────────
+     Third in the set. Inherits the Compliant Build's type system
+     and teal chrome, but the page is a gallery: the samples lead
+     and the prose annotates. The demo brand inside the mockups
+     runs its own palette (ink + bone + burnt orange) so it reads
+     as an account shown *within* a document, not as the document.
+     ───────────────────────────────────────────────────────────── */
+  :root {
+    --ground:      #F4F7F6;
+    --surface:     #FFFFFF;
+    --surface-alt: #E8EEEC;
+    --ink:         #12181A;
+    --ink-soft:    #3E4A4C;
+    --ink-mute:    #677576;
+    --hairline:    #D7E0DD;
+    --hairline-hi: #BCC9C5;
+
+    --accent:      #056454;
+    --accent-wash: #E2F1ED;
+    --warn:        #8F5B04;
+    --stop:        #C31D53;
+
+    --focus:       #1F5FD0;
+
+    /* demo brand — constant across themes, it's a brand not chrome */
+    --b-ink:    #16130F;
+    --b-bone:   #F2EDE3;
+    --b-accent: #D2521B;
+    --b-mute:   #8C8375;
+
+    --measure: 66ch;
+    --step--2: 0.72rem;
+    --step--1: 0.8125rem;
+    --step-0:  1.0625rem;
+    --step-1:  1.25rem;
+    --step-2:  1.5rem;
+    --step-3:  2rem;
+    --step-4:  2.75rem;
+
+    --display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:      #101614;
+      --surface:     #18201E;
+      --surface-alt: #1F2926;
+      --ink:         #E8EFEC;
+      --ink-soft:    #BDCAC6;
+      --ink-mute:    #8A9A96;
+      --hairline:    #28332F;
+      --hairline-hi: #3A4844;
+
+      --accent:      #3FD1B0;
+      --accent-wash: #14261F;
+      --warn:        #DCA23A;
+      --stop:        #FF5C8A;
+
+      --focus:       #7FA0FF;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground:      #101614;
+    --surface:     #18201E;
+    --surface-alt: #1F2926;
+    --ink:         #E8EFEC;
+    --ink-soft:    #BDCAC6;
+    --ink-mute:    #8A9A96;
+    --hairline:    #28332F;
+    --hairline-hi: #3A4844;
+
+    --accent:      #3FD1B0;
+    --accent-wash: #14261F;
+    --warn:        #DCA23A;
+    --stop:        #FF5C8A;
+
+    --focus:       #7FA0FF;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: var(--step-0);
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 62rem;
+    margin: 0 auto;
+    padding: clamp(2rem, 5vw, 4.5rem) clamp(1.1rem, 4vw, 2rem) 6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  a { color: var(--accent); text-underline-offset: 0.16em; }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 2px; }
+  p { margin: 0; max-width: var(--measure); }
+  strong { font-weight: 650; color: var(--ink); }
+
+  /* ── Masthead ─────────────────────────────────────────────── */
+  .masthead {
+    display: flex; flex-direction: column; gap: 1.1rem;
+    padding-bottom: 2rem; border-bottom: 2px solid var(--ink);
+  }
+  .docket {
+    font-family: var(--mono); font-size: var(--step--1); letter-spacing: 0.09em;
+    text-transform: uppercase; color: var(--ink-mute);
+    display: flex; flex-wrap: wrap; gap: 0.4rem 1.1rem;
+  }
+  h1 {
+    font-family: var(--display); font-weight: 600;
+    font-size: clamp(2rem, 6.5vw, var(--step-4));
+    line-height: 1.06; letter-spacing: -0.015em; text-wrap: balance; margin: 0;
+  }
+  .standfirst { font-size: var(--step-1); line-height: 1.5; color: var(--ink-soft); max-width: 46ch; }
+
+  /* ── Legend ───────────────────────────────────────────────── */
+  .legend {
+    background: var(--surface); border: 1px solid var(--hairline);
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  }
+  .legend__item {
+    padding: 1.1rem 1.2rem; display: flex; flex-direction: column; gap: 0.55rem;
+    border-right: 1px solid var(--hairline);
+  }
+  .legend__item:last-child { border-right: 0; }
+  .legend__swatch { height: 2.5rem; border: 1px solid var(--hairline-hi); }
+  .legend__t {
+    font-family: var(--mono); font-size: var(--step--2); letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink-mute);
+  }
+  .legend__d { font-size: var(--step--1); line-height: 1.5; color: var(--ink-soft); }
+
+  .sw-own { background: var(--b-ink); }
+  .sw-borrow {
+    background:
+      repeating-linear-gradient(45deg,
+        var(--hairline) 0 6px,
+        var(--surface-alt) 6px 12px);
+  }
+
+  .notice {
+    background: var(--accent-wash); border-left: 3px solid var(--accent);
+    padding: 1.1rem 1.3rem; display: flex; flex-direction: column; gap: 0.5rem;
+  }
+  .notice__label {
+    font-family: var(--mono); font-size: var(--step--2); letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--ink-mute);
+  }
+  .notice p { font-size: var(--step--1); line-height: 1.6; color: var(--ink-soft); }
+
+  /* ── Sample layout ────────────────────────────────────────── */
+  .sample {
+    display: grid; grid-template-columns: minmax(0, 21rem) minmax(0, 1fr);
+    gap: 1.75rem 2.25rem; align-items: start;
+    padding-top: 1.5rem; border-top: 1px solid var(--hairline);
+    scroll-margin-top: 1.5rem;
+  }
+  @media (max-width: 46rem) { .sample { grid-template-columns: minmax(0, 1fr); } }
+
+  .sample__notes { display: flex; flex-direction: column; gap: 0.9rem; }
+  .sample__eyebrow {
+    font-family: var(--mono); font-size: var(--step--1); letter-spacing: 0.08em; color: var(--accent);
+  }
+  h2 {
+    font-family: var(--display); font-weight: 600;
+    font-size: clamp(1.4rem, 3.6vw, var(--step-3));
+    line-height: 1.14; letter-spacing: -0.01em; margin: 0; text-wrap: balance;
+  }
+  .sample__notes p { font-size: var(--step--1); line-height: 1.6; color: var(--ink-soft); }
+
+  .fact {
+    display: grid; grid-template-columns: 7.5rem 1fr; gap: 0.3rem 0.9rem;
+    padding-top: 0.5rem; border-top: 1px solid var(--hairline);
+  }
+  .fact dt {
+    font-family: var(--mono); font-size: var(--step--2); letter-spacing: 0.07em;
+    text-transform: uppercase; color: var(--ink-mute); padding-top: 0.12rem;
+  }
+  .fact dd { margin: 0; font-size: var(--step--1); color: var(--ink-soft); line-height: 1.5; }
+  .fact dd b { color: var(--accent); font-weight: 600; }
+
+  /* ── The post mockup ──────────────────────────────────────── */
+  .post {
+    background: var(--surface); border: 1px solid var(--hairline-hi);
+    display: flex; flex-direction: column; max-width: 21rem; width: 100%;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 24px -12px rgba(0,0,0,0.18);
+  }
+  .post__bar {
+    display: flex; align-items: center; gap: 0.55rem;
+    padding: 0.6rem 0.7rem; border-bottom: 1px solid var(--hairline);
+  }
+  .avatar {
+    width: 1.75rem; height: 1.75rem; border-radius: 50%; flex: none;
+    background: var(--b-ink); color: var(--b-bone);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--display); font-size: 0.66rem; letter-spacing: 0.02em;
+  }
+  .avatar--alt { background: var(--b-accent); color: var(--b-bone); }
+  .avatar--stack { margin-left: -0.7rem; border: 2px solid var(--surface); }
+  .post__who { display: flex; flex-direction: column; line-height: 1.25; min-width: 0; }
+  .post__handle { font-size: 0.8rem; font-weight: 650; color: var(--ink); }
+  .post__handle--collab { font-size: 0.7rem; line-height: 1.3; }
+  .post__sub { font-size: 0.68rem; color: var(--ink-mute); }
+  .post__dots { margin-left: auto; color: var(--ink-mute); letter-spacing: 0.1em; font-size: 0.8rem; }
+
+  .post__media { position: relative; aspect-ratio: 4 / 5; overflow: hidden; }
+
+  .post__acts { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.7rem 0.35rem; }
+  .post__acts svg { width: 1.15rem; height: 1.15rem; stroke: var(--ink); fill: none; stroke-width: 1.6; }
+  .post__acts .spacer { margin-left: auto; }
+
+  .post__cap { padding: 0 0.7rem 0.8rem; font-size: 0.78rem; line-height: 1.5; color: var(--ink-soft); }
+  .post__cap b { color: var(--ink); font-weight: 650; }
+  .post__cap .h { color: var(--accent); }
+  .post__meta {
+    padding: 0 0.7rem 0.7rem; font-family: var(--mono);
+    font-size: 0.6rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-mute);
+  }
+
+  /* ── Media: owned (fully rendered) ────────────────────────── */
+  .take {
+    height: 100%; background: var(--b-ink); color: var(--b-bone);
+    padding: 1.5rem 1.35rem; display: flex; flex-direction: column; gap: 0.9rem;
+  }
+  .take__eyebrow {
+    font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--b-accent);
+    display: flex; justify-content: space-between; gap: 1rem;
+  }
+  .take__line {
+    font-family: var(--display); font-size: 1.42rem; line-height: 1.16;
+    letter-spacing: -0.012em; text-wrap: balance; margin-top: auto;
+  }
+  .take__rule { height: 2px; background: var(--b-accent); width: 2.5rem; }
+  .take__mark {
+    font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--b-mute);
+  }
+
+  /* Owned photograph — abstract premiere backdrop, all CSS */
+  .shot { height: 100%; position: relative; background: #2A2334; overflow: hidden; }
+  .shot__wall {
+    position: absolute; inset: 0;
+    background:
+      repeating-linear-gradient(90deg, transparent 0 3.2rem, rgba(242,237,227,0.07) 3.2rem 3.25rem),
+      repeating-linear-gradient(0deg, transparent 0 2.6rem, rgba(242,237,227,0.07) 2.6rem 2.65rem),
+      linear-gradient(160deg, #4A3D5C 0%, #241E31 72%);
+  }
+  .shot__tiles {
+    position: absolute; inset: 7% 6% 44% 6%;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.55rem;
+  }
+  .shot__tile {
+    border: 1px solid rgba(242,237,227,0.26);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 0.44rem; letter-spacing: 0.14em;
+    color: rgba(242,237,227,0.5);
+  }
+  .shot__flare {
+    position: absolute; width: 11rem; height: 11rem; border-radius: 50%;
+    right: -2.5rem; top: -2rem;
+    background: radial-gradient(circle, rgba(255,220,165,0.55) 0%, rgba(255,220,165,0) 68%);
+  }
+  .shot__crowd {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 46%;
+    background: linear-gradient(180deg, rgba(14,11,20,0) 0%, rgba(14,11,20,0.88) 70%);
+  }
+  /* the subject: a lit figure against the backdrop, giving the frame a focal point */
+  .shot__subject {
+    position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
+    width: 26%; height: 48%;
+    background: linear-gradient(180deg, #F3D9B8 0%, #B98F63 40%, #4A3524 100%);
+    border-radius: 46% 46% 0 0 / 20% 20% 0 0;
+    box-shadow: 0 0 2.2rem rgba(255,220,165,0.28);
+  }
+  .shot__figs { position: absolute; left: 0; right: 0; bottom: 0; height: 32%; display: flex; align-items: flex-end; gap: 4%; padding: 0 5%; }
+  .shot__fig {
+    flex: 1; background: #0B0912;
+    border-radius: 42% 42% 0 0 / 22% 22% 0 0;
+    box-shadow: inset 0 2px 0 rgba(255,220,165,0.22);
+  }
+  .shot__bug {
+    position: absolute; left: 0.6rem; bottom: 0.55rem;
+    font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.1em;
+    color: rgba(242,237,227,0.62); text-transform: uppercase;
+  }
+
+  /* ── Media: borrowed (placeholder) ────────────────────────── */
+  .borrowed { height: 100%; position: relative; display: flex; flex-direction: column; }
+  .borrowed__hatch {
+    position: absolute; inset: 0;
+    background:
+      repeating-linear-gradient(45deg,
+        var(--hairline) 0 7px,
+        var(--surface-alt) 7px 14px);
+  }
+  .borrowed__stamp {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 0.4rem; text-align: center; padding: 1.25rem;
+  }
+  .borrowed__stamp span {
+    font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--ink-mute);
+    background: var(--surface); padding: 0.3rem 0.55rem; border: 1px solid var(--hairline-hi);
+  }
+  .borrowed__stamp em {
+    font-style: normal; font-size: 0.66rem; color: var(--ink-mute); line-height: 1.45; max-width: 15rem;
+  }
+
+  /* Burned-in caption + waveform for the voiceover format */
+  .vo__cap {
+    position: absolute; left: 0.7rem; right: 0.7rem; bottom: 2.1rem;
+    text-align: center; font-weight: 700; font-size: 0.82rem; line-height: 1.3;
+    color: #FFF; text-shadow: 0 1px 3px rgba(0,0,0,0.85), 0 0 12px rgba(0,0,0,0.5);
+  }
+  .vo__cap i { font-style: normal; color: #FFD84D; }
+  .wave {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 1.6rem;
+    display: flex; align-items: flex-end; gap: 1.5px; padding: 0 0.35rem 0.35rem;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 60%);
+  }
+  .wave i { flex: 1; background: #FFD84D; min-height: 2px; border-radius: 1px; }
+
+  /* Preserved credit bug for the permissioned format */
+  .credit-bug {
+    position: absolute; left: 0.55rem; bottom: 0.55rem;
+    font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.06em;
+    color: #FFF; background: rgba(0,0,0,0.62); padding: 0.22rem 0.45rem;
+    display: flex; align-items: center; gap: 0.3rem;
+  }
+  .credit-bug::before { content: ""; width: 0.4rem; height: 0.4rem; border-radius: 50%; background: #4ADE9B; }
+
+  .collab-bar {
+    position: absolute; top: 0.55rem; left: 0.55rem;
+    font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink-soft);
+    background: var(--surface); border: 1px solid var(--hairline-hi); padding: 0.25rem 0.45rem;
+  }
+
+  /* ── Verdict chips ────────────────────────────────────────── */
+  .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .chip {
+    font-family: var(--mono); font-size: var(--step--2); letter-spacing: 0.06em;
+    text-transform: uppercase; padding: 0.28rem 0.55rem; border: 1px solid currentColor;
+  }
+  .chip--ok { color: var(--accent); }
+  .chip--care { color: var(--warn); }
+
+  /* ── Brand kit ────────────────────────────────────────────── */
+  .kit { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 0.9rem; }
+  .kit__card {
+    background: var(--surface); border: 1px solid var(--hairline);
+    padding: 1rem 1.1rem; display: flex; flex-direction: column; gap: 0.6rem;
+  }
+  .kit__label {
+    font-family: var(--mono); font-size: var(--step--2); letter-spacing: 0.09em;
+    text-transform: uppercase; color: var(--ink-mute);
+  }
+  .kit__row { display: flex; gap: 0.35rem; }
+  .kit__chip { flex: 1; height: 2.2rem; border: 1px solid var(--hairline-hi); }
+  .kit p { font-size: var(--step--1); line-height: 1.5; color: var(--ink-soft); }
+  .kit__spec { font-family: var(--mono); font-size: var(--step--2); color: var(--ink-soft); line-height: 1.8; }
+
+  .sec-head { display: flex; flex-direction: column; gap: 0.35rem; padding-top: 1.25rem; border-top: 1px solid var(--hairline); }
+  .sec-num { font-family: var(--mono); font-size: var(--step--1); letter-spacing: 0.08em; color: var(--accent); }
+
+  footer {
+    border-top: 2px solid var(--ink); padding-top: 1.25rem;
+    font-size: var(--step--1); color: var(--ink-mute); max-width: var(--measure); line-height: 1.6;
+  }
+
+  @media (prefers-reduced-motion: reduce) { * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; } }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="docket">
+      <span>Visual Samples</span>
+      <span>Companion to the Compliant Build</span>
+      <span>Rev. August 2026</span>
+    </div>
+    <h1>Five Formats, Rendered</h1>
+    <p class="standfirst">The same five post shapes from the build spec, drawn as actual posts — so you can see what you are trading away, and what you are not, at each rung of the sourcing ladder.</p>
+  </header>
+
+  <div class="legend">
+    <div class="legend__item">
+      <div class="legend__swatch sw-own"></div>
+      <span class="legend__t">Solid — you own it</span>
+      <span class="legend__d">Rendered completely, because every pixel is yours to make. No clearance, no expiry, no counterparty.</span>
+    </div>
+    <div class="legend__item">
+      <div class="legend__swatch sw-borrow"></div>
+      <span class="legend__t">Hatched — someone else's frame</span>
+      <span class="legend__d">Left as a placeholder, because it is not mine to draw. The label states the rights basis that puts it there.</span>
+    </div>
+  </div>
+
+  <div class="notice">
+    <span class="notice__label">Read the hatching as the thesis</span>
+    <p>The proportion of each sample I can actually render is exactly the proportion of that post you would own. Format A and Format E render completely. B, C and D carry a hatched rectangle where another party's work sits — and the whole discipline in the build spec is about making sure that rectangle is <em>illustrating</em> your post rather than <em>being</em> it. The demo brand below is a placeholder; swap it for yours.</p>
+  </div>
+
+  <!-- ── A ──────────────────────────────────────────────────── -->
+  <article class="sample" id="a">
+    <div class="post">
+      <div class="post__bar">
+        <div class="avatar">PD</div>
+        <div class="post__who">
+          <span class="post__handle">popdesk</span>
+          <span class="post__sub">Original commentary</span>
+        </div>
+        <span class="post__dots">•••</span>
+      </div>
+      <div class="post__media">
+        <div class="take">
+          <div class="take__eyebrow"><span>Take</span><span>08.09</span></div>
+          <div class="take__line">Jerry Springer was the comment section before social media existed.</div>
+          <div class="take__rule"></div>
+          <div class="take__mark">popdesk</div>
+        </div>
+      </div>
+      <div class="post__acts">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-9a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 4.6-7 9-7 9z"/></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-5.2A8 8 0 1 1 21 12z"/></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 3 3 10.5l7 2.6 2.6 7L21 3z"/></svg>
+        <span class="spacer"></span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4.5L6 21V3z"/></svg>
+      </div>
+      <div class="post__cap"><b>popdesk</b> the chair throw was the original quote tweet <span class="h">#popculture</span></div>
+      <div class="post__meta">Format A · self-created</div>
+    </div>
+
+    <div class="sample__notes">
+      <span class="sample__eyebrow">Format A</span>
+      <h2>The Take Card</h2>
+      <p>The whole post is typography you set. There is no third-party asset to clear, no rectangle to hatch, and nothing that expires. This is the format that should carry roughly 40% of the feed, and it is the one people skip because it feels like less work than it is.</p>
+      <p><strong>What makes it work:</strong> the line has to be strong enough to survive without a picture propping it up. That is a real constraint and it is also the point — it forces the writing to do the job the borrowed still used to do. The eyebrow and date give it recurring-column authority; the rule and wordmark make it recognizable at thumbnail size in a grid.</p>
+      <div class="chips">
+        <span class="chip chip--ok">No clearance</span>
+        <span class="chip chip--ok">§ 1202 safe</span>
+        <span class="chip chip--ok">100% original</span>
+      </div>
+      <dl class="fact">
+        <dt>Rights basis</dt><dd><b>Self-created</b> — ladder rung 01</dd>
+        <dt>Cost</dt><dd>Minutes, once the template exists</dd>
+        <dt>Rebuilt from</dt><dd>An NBCU broadcast still plus a one-liner. The still was theirs; the joke was not.</dd>
+      </dl>
+    </div>
+  </article>
+
+  <!-- ── B ──────────────────────────────────────────────────── -->
+  <article class="sample" id="b">
+    <div class="post">
+      <div class="post__bar">
+        <div class="avatar">PD</div>
+        <div class="post__who">
+          <span class="post__handle">popdesk</span>
+          <span class="post__sub">Original audio</span>
+        </div>
+        <span class="post__dots">•••</span>
+      </div>
+      <div class="post__media">
+        <div class="borrowed">
+          <div class="borrowed__hatch"></div>
+          <div class="borrowed__stamp">
+            <span>Licensed base clip</span>
+            <em>Third-party footage, cleared. Not mine to draw here.</em>
+          </div>
+          <div class="vo__cap">watch what he does with the <i>wrist</i> —</div>
+          <div class="wave" id="wave" aria-hidden="true"></div>
+        </div>
+      </div>
+      <div class="post__acts">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-9a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 4.6-7 9-7 9z"/></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-5.2A8 8 0 1 1 21 12z"/></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 3 3 10.5l7 2.6 2.6 7L21 3z"/></svg>
+        <span class="spacer"></span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4.5L6 21V3z"/></svg>
+      </div>
+      <div class="post__cap"><b>popdesk</b> he's drawing with his whole arm and nobody talks about it — full breakdown in the audio</div>
+      <div class="post__meta">Format B · licensed base + original commentary</div>
+    </div>
+
+    <div class="sample__notes">
+      <span class="sample__eyebrow">Format B</span>
+      <h2>Voiceover Commentary</h2>
+      <p>The clip is someone else's; the argument over the top is yours. The waveform is the load-bearing detail — it runs edge to edge, unbroken, because your voice is present for the whole duration rather than bookending a silent replay.</p>
+      <p><strong>What makes it work:</strong> burned-in captions from your own voiceover, not auto-captions of the source. Look at the difference that makes — the on-screen words are <em>your</em> words directing attention at a specific thing in the frame. That is the <em>Hosseinzadeh</em> posture rendered visually, and it is also what Instagram's originality check is scanning for. A silent stretch in that waveform is the tell that you have slipped back into reposting.</p>
+      <div class="chips">
+        <span class="chip chip--ok">Commentary targets the source</span>
+        <span class="chip chip--care">Base must be licensed</span>
+      </div>
+      <dl class="fact">
+        <dt>Rights basis</dt><dd><b>Licence or permission</b> on the base — rungs 03–07</dd>
+        <dt>Watch out</dt><dd>Voiceover strengthens a fair-use argument; it does not create a licence</dd>
+        <dt>Audio</dt><dd>Your voice is original audio, which also sidesteps the trending-music problem entirely</dd>
+      </dl>
+    </div>
+  </article>
+
+  <!-- ── C ──────────────────────────────────────────────────── -->
+  <article class="sample" id="c">
+    <div class="post">
+      <div class="post__bar">
+        <div class="avatar">PD</div>
+        <div class="avatar avatar--alt avatar--stack">WB</div>
+        <div class="post__who">
+          <span class="post__handle post__handle--collab">popdesk <span style="font-weight:400;color:var(--ink-mute)">and</span> wildlifebrasil</span>
+          <span class="post__sub">Collaborative post</span>
+        </div>
+        <span class="post__dots">•••</span>
+      </div>
+      <div class="post__media">
+        <div class="borrowed">
+          <div class="borrowed__hatch"></div>
+          <span class="collab-bar">Hosted on @wildlifebrasil</span>
+          <div class="borrowed__stamp">
+            <span>No copy made</span>
+            <em>The file never leaves the original account. It appears on both grids from one upload.</em>
+          </div>
+        </div>
+      </div>
+      <div class="post__acts">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-9a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 4.6-7 9-7 9z"/></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-5.2A8 8 0 1 1 21 12z"/></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 3 3 10.5l7 2.6 2.6 7L21 3z"/></svg>
+        <span class="spacer"></span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4.5L6 21V3z"/></svg>
+      </div>
+      <div class="post__cap"><b>popdesk</b> the third capybara waiting outside is the most organized thing i've seen all week</div>
+      <div class="post__meta">Format C · native collab, authorship shared</div>
+    </div>
+
+    <div class="sample__notes">
+      <span class="sample__eyebrow">Format C</span>
+      <h2>Native Collab &amp; Repost</h2>
+      <p>Two avatars in the header instead of one, and both handles on the byline. That header is the entire legal argument: authorship is shared rather than transferred, so no reproduction happens and there is no mark of yours sitting where theirs should be.</p>
+      <p><strong>What makes it work:</strong> it is a trade, not a taking. The original creator gets your reach, you get the post and your caption sits on it. Compare that to the audited account's house-branded card — same content, but one version makes a copy and swaps the attribution, and the other does neither. This should carry about 25% of the feed and it costs nothing.</p>
+      <div class="chips">
+        <span class="chip chip--ok">No copy made</span>
+        <span class="chip chip--ok">§ 1202 risk zero</span>
+        <span class="chip chip--ok">Free</span>
+      </div>
+      <dl class="fact">
+        <dt>Rights basis</dt><dd><b>Platform-licensed</b> — ladder rung 02</dd>
+        <dt>Trade-off</dt><dd>Engagement is shared, and the creator can delete the post out from under you</dd>
+        <dt>Rebuilt from</dt><dd>Third-party UGC re-uploaded into a house-branded frame</dd>
+      </dl>
+    </div>
+  </article>
+
+  <!-- ── D ──────────────────────────────────────────────────── -->
+  <article class="sample" id="d">
+    <div class="post">
+      <div class="post__bar">
+        <div class="avatar">PD</div>
+        <div class="post__who">
+          <span class="post__handle">popdesk</span>
+          <span class="post__sub">Shared with permission</span>
+        </div>
+        <span class="post__dots">•••</span>
+      </div>
+      <div class="post__media">
+        <div class="borrowed">
+          <div class="borrowed__hatch"></div>
+          <div class="borrowed__stamp">
+            <span>Permissioned asset</span>
+            <em>Written grant on file, dated. Their mark stays where they put it.</em>
+          </div>
+          <div class="credit-bug">@mayaokonkwo</div>
+        </div>
+      </div>
+      <div class="post__acts">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-9a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 4.6-7 9-7 9z"/></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-5.2A8 8 0 1 1 21 12z"/></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 3 3 10.5l7 2.6 2.6 7L21 3z"/></svg>
+        <span class="spacer"></span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4.5L6 21V3z"/></svg>
+      </div>
+      <div class="post__cap"><b>popdesk</b> via <span class="h">@mayaokonkwo</span>, used with permission — and she's right, the second half is the whole joke</div>
+      <div class="post__meta">Format D · express grant, credit preserved</div>
+    </div>
+
+    <div class="sample__notes">
+      <span class="sample__eyebrow">Format D</span>
+      <h2>The Permissioned Clip</h2>
+      <p>The green dot and the handle sitting in the corner of the frame are not decoration. That is the creator's mark, preserved in the position they put it — the single visual difference between this and a § 1202 claim.</p>
+      <p><strong>What makes it work:</strong> the credit appears twice, in the frame and in the caption, and the caption credits before it comments. That ordering matters more than it looks: it signals to the creator community that permission is how you operate, which is what makes the next twenty asks land. One DM converts an infringement into a licence — this format is the highest-leverage habit in the whole system.</p>
+      <div class="chips">
+        <span class="chip chip--ok">Express grant</span>
+        <span class="chip chip--ok">CMI preserved</span>
+        <span class="chip chip--care">Trace chain of title</span>
+      </div>
+      <dl class="fact">
+        <dt>Rights basis</dt><dd><b>Written permission</b> — ladder rung 03</dd>
+        <dt>Watch out</dt><dd>A grant from someone who themselves reposted it is worth nothing. Ask "did you shoot this?" first.</dd>
+        <dt>File it</dt><dd>Screenshot the yes with handle and date, log it before the post ships</dd>
+      </dl>
+    </div>
+  </article>
+
+  <!-- ── E ──────────────────────────────────────────────────── -->
+  <article class="sample" id="e">
+    <div class="post">
+      <div class="post__bar">
+        <div class="avatar">PD</div>
+        <div class="post__who">
+          <span class="post__handle">popdesk</span>
+          <span class="post__sub">Original photography</span>
+        </div>
+        <span class="post__dots">•••</span>
+      </div>
+      <div class="post__media">
+        <div class="shot">
+          <div class="shot__wall"></div>
+          <div class="shot__flare"></div>
+          <div class="shot__tiles">
+            <div class="shot__tile">PREMIERE</div>
+            <div class="shot__tile">PREMIERE</div>
+            <div class="shot__tile">PREMIERE</div>
+            <div class="shot__tile">PREMIERE</div>
+            <div class="shot__tile">PREMIERE</div>
+            <div class="shot__tile">PREMIERE</div>
+          </div>
+          <div class="shot__subject"></div>
+          <div class="shot__crowd"></div>
+          <div class="shot__figs">
+            <div class="shot__fig" style="height:52%"></div>
+            <div class="shot__fig" style="height:74%"></div>
+            <div class="shot__fig" style="height:61%"></div>
+            <div class="shot__fig" style="height:83%"></div>
+            <div class="shot__fig" style="height:58%"></div>
+          </div>
+          <div class="shot__bug">© popdesk</div>
+        </div>
+      </div>
+      <div class="post__acts">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-9a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 4.6-7 9-7 9z"/></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-5.2A8 8 0 1 1 21 12z"/></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 3 3 10.5l7 2.6 2.6 7L21 3z"/></svg>
+        <span class="spacer"></span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4.5L6 21V3z"/></svg>
+      </div>
+      <div class="post__cap"><b>popdesk</b> shot this from the press pen last night — nobody else got this angle</div>
+      <div class="post__meta">Format E · owned, registrable, licensable</div>
+    </div>
+
+    <div class="sample__notes">
+      <span class="sample__eyebrow">Format E</span>
+      <h2>Owned Footage</h2>
+      <p>Rendered completely again — because like Format A, there is nothing in it that belongs to anyone else. The abstraction here is mine as an illustrator, not a rights placeholder.</p>
+      <p><strong>What makes it work:</strong> the copyright bug in the corner is doing something the other four formats cannot. Every other format on this page is about not being sued. This one is about being the party who <em>could</em> sue — register it and the exact statutory-damages machinery that threatens an aggregator starts working for you instead. It is also the only content a competitor structurally cannot take, and the reason press credentials are worth chasing at your size.</p>
+      <div class="chips">
+        <span class="chip chip--ok">You own it</span>
+        <span class="chip chip--ok">Registrable</span>
+        <span class="chip chip--ok">Licensable out</span>
+      </div>
+      <dl class="fact">
+        <dt>Rights basis</dt><dd><b>Self-created</b> — ladder rung 01</dd>
+        <dt>Cost</dt><dd>Time and access, which is why it is only 5% of the mix</dd>
+        <dt>Upside</dt><dd>Converts the account from a borrower into a library</dd>
+      </dl>
+    </div>
+  </article>
+
+  <!-- ── Brand kit ──────────────────────────────────────────── -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">§ —</span>
+      <h2>The kit that makes Format A repeatable</h2>
+    </div>
+    <p>Formats A and E are the ones you fully own, and A is the one you will post three times a day. That only works if the card is a template rather than a design decision each time. Four things fix it in place:</p>
+
+    <div class="kit">
+      <div class="kit__card">
+        <span class="kit__label">Palette — three values</span>
+        <div class="kit__row">
+          <div class="kit__chip" style="background:#16130F"></div>
+          <div class="kit__chip" style="background:#F2EDE3"></div>
+          <div class="kit__chip" style="background:#D2521B"></div>
+        </div>
+        <p>Ground, type, and one accent that only ever appears as a rule, an eyebrow, or a single emphasized word. Three is enough; a fourth invites a decision.</p>
+      </div>
+      <div class="kit__card">
+        <span class="kit__label">Type — two roles</span>
+        <div class="kit__spec">
+          Display · serif · 600<br>
+          1.42rem @ 1.16 line-height<br>
+          −0.012em tracking<br>
+          ——<br>
+          Utility · mono · 0.58rem<br>
+          0.16em tracking · uppercase
+        </div>
+        <p>One face carries the take, one carries the furniture. No third face, ever.</p>
+      </div>
+      <div class="kit__card">
+        <span class="kit__label">Anatomy — fixed slots</span>
+        <p><b>Eyebrow</b> — column name, left. <b>Date</b> — right. <b>The line</b> — bottom-anchored so length varies upward and the baseline never moves. <b>Rule</b> — 2px accent, 2.5rem. <b>Wordmark</b> — last.</p>
+      </div>
+      <div class="kit__card">
+        <span class="kit__label">The grid test</span>
+        <p>Shrink the card to 120px. If the eyebrow colour and the rule still identify it as yours with the words illegible, the template works. If it reads as a generic quote card, it does not.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Mockups, not screenshots. Every frame here is drawn in CSS — no third-party photographs, stills, or footage are reproduced, including in the placeholders, which is both the honest way to illustrate a document about other people's rights and a demonstration of the point it argues. "popdesk" and the handles shown are invented for the samples; substitute your own. General information, not legal advice.</p>
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    /* Continuous waveform — deterministic, so the render is stable.
+       The shape matters: unbroken from edge to edge, because a silent
+       stretch is exactly what this format must not have. */
+    var wave = document.getElementById('wave');
+    if (!wave) return;
+    var BARS = 56;
+    for (var i = 0; i < BARS; i++) {
+      var t = i / BARS;
+      var env = 0.55
+        + 0.30 * Math.sin(t * Math.PI * 7.3)
+        + 0.18 * Math.sin(t * Math.PI * 17.1 + 1.2)
+        + 0.10 * Math.sin(t * Math.PI * 31.7 + 2.6);
+      var h = Math.max(0.12, Math.min(1, env));
+      var bar = document.createElement('i');
+      bar.style.height = (h * 100).toFixed(1) + '%';
+      wave.appendChild(bar);
+    }
+  }());
+</script>
