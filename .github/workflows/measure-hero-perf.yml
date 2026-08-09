@@ -1,0 +1,99 @@
+name: Measure live hero performance
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Find real Chrome
+        id: c
+        run: |
+          set -euo pipefail
+          for b in /usr/bin/google-chrome /usr/bin/google-chrome-stable /opt/google/chrome/chrome; do
+            if [ -x "$b" ]; then echo "bin=$b" >> "$GITHUB_OUTPUT"; "$b" --version; exit 0; fi
+          done
+          echo "no chrome on runner" >&2; exit 1
+
+      - name: Measure
+        env:
+          CHROME_BIN: ${{ steps.c.outputs.bin }}
+        run: |
+          set -euo pipefail
+          npm i --no-save --silent playwright-core
+          mkdir -p .perf
+          cat > ./measure.mjs <<'JS'
+          import { chromium } from 'playwright-core';
+          const b = await chromium.launch({ executablePath: process.env.CHROME_BIN, args: ['--no-sandbox'] });
+          const out = [];
+          const cases = [
+            ['desktop-unthrottled', { width: 1440, height: 900 }, null],
+            ['mobile-4g-cpu4x', { width: 390, height: 844 }, { d: 1.6 * 1024 * 1024 / 8, u: 750 * 1024 / 8, l: 150, cpu: 4 }],
+          ];
+          for (const [label, vp, thr] of cases) {
+            const ctx = await b.newContext({ viewport: vp, deviceScaleFactor: 2 });
+            const p = await ctx.newPage();
+            const cdp = await ctx.newCDPSession(p);
+            await cdp.send('Network.enable');
+            if (thr) {
+              await cdp.send('Network.emulateNetworkConditions',
+                { offline: false, downloadThroughput: thr.d, uploadThroughput: thr.u, latency: thr.l });
+              await cdp.send('Emulation.setCPUThrottlingRate', { rate: thr.cpu });
+            }
+            await p.addInitScript(() => {
+              window.__lcp = null; window.__cls = 0;
+              new PerformanceObserver((l) => {
+                const e = l.getEntries().at(-1);
+                window.__lcp = { t: e.startTime, tag: e.element?.tagName, cls: e.element?.className, url: e.url };
+              }).observe({ type: 'largest-contentful-paint', buffered: true });
+              new PerformanceObserver((l) => {
+                for (const e of l.getEntries()) if (!e.hadRecentInput) window.__cls += e.value;
+              }).observe({ type: 'layout-shift', buffered: true });
+            });
+            await p.goto('https://basebloomdesign.com/', { waitUntil: 'load', timeout: 120000 });
+            await p.waitForTimeout(thr ? 9000 : 4000);
+            const r = await p.evaluate(() => {
+              const res = performance.getEntriesByType('resource');
+              const h1 = document.querySelector('h1');
+              let lines = null;
+              if (h1) { const rg = document.createRange(); rg.selectNodeContents(h1); lines = rg.getClientRects().length; }
+              const v = document.querySelector('video');
+              return {
+                lcp: window.__lcp,
+                cls: +window.__cls.toFixed(4),
+                fcp: performance.getEntriesByName('first-contentful-paint')[0]?.startTime,
+                bytes: res.reduce((t, e) => t + (e.transferSize || 0), 0),
+                fonts: res.filter((e) => /\.woff2/.test(e.name)).map((e) => e.name.split('/').pop()),
+                videoSrc: v ? (v.currentSrc || '(none assigned)') : '(no element)',
+                h1Rects: lines,
+                h1Text: h1 ? h1.innerText.replace(/\n/g, ' / ') : null,
+              };
+            });
+            out.push({ label, ...r });
+            await ctx.close();
+          }
+          await b.close();
+          console.log(JSON.stringify(out, null, 2));
+          JS
+          node ./measure.mjs | tee .perf/report.json
+
+      - name: Commit
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f .perf
+          git diff --cached --quiet && { echo "no change"; exit 0; }
+          git commit -m "Live hero perf measurement (temp)"
+          git push origin HEAD:${{ github.ref_name }}
