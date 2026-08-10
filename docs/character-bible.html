@@ -361,6 +361,32 @@
       <p>They are a matched pair, and each only works in its own mode. <em>Ask for Rufus</em> is what you say at a service desk — sincere on its face, a mild threat once you know him. <em>It wasn't Rufus</em> is a flat denial published directly beneath photographic evidence to the contrary, which only lands once he is actually committing things. Both are distinctive phrases rather than bare first names, which is what makes them protectable, and running both doubles your merch surface off one character.</p>
     </div>
 
+    <h3>The trigger: TROPIKO</h3>
+    <p>What catnip is to a cat, a foil pouch of cheap orange drink is to Rufus. He finds them in bins. One pouch and the community man is gone.</p>
+
+    <div class="scroller">
+      <table>
+        <thead><tr><th>Mode</th><th>The pouch in frame</th><th>What the viewer learns</th></tr></thead>
+        <tbody>
+          <tr><td>Rufus the Raccoon</td><td>Unopened, somewhere in shot, ignored</td><td>Foreshadowing. They start scanning for it</td></tr>
+          <tr><td>The pivot</td><td>He is drinking it. Straw in</td><td>The one image that explains the whole account</td></tr>
+          <tr><td>Rufus Gone Rogue</td><td>Crushed and empty, always in frame</td><td>Which Rufus this is, before reading a word</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note note--key">
+      <span class="note__k">Why a prop, and why an invented one</span>
+      <p><strong>It solves the identity problem the ear could not.</strong> Objects render reliably where anatomy does not, so the pouch carries continuity that the notch failed to. It is also the mode indicator, the transformation mechanic, and a third protectable mark all at once.</p>
+      <p><strong>Invent the brand; never use a real one.</strong> Capri-Sun, Sunny D and Fanta are live trademarks. Building your character's core mechanic on someone else's mark — on a commercial account, with merchandise — is not nominative fair use, it invites a cease-and-desist from a company obliged to police its mark, and you can never sell the merch. A fictional off-brand gives you a mark you own, a visual you control across generations, and a joke that is funnier than the real thing.</p>
+      <p><strong>Foil pouch, not a can.</strong> More distinctive in silhouette, readable at thumbnail size, absurd in raccoon paws — and a crushed pouch is instantly distinguishable from a full one, which is what makes it work as a mode signal.</p>
+    </div>
+
+    <div class="note note--warn">
+      <span class="note__k">Not alcohol, and not a drug analogue</span>
+      <p>Three reasons, in ascending order of importance. It is an advertiser exclusion and an age-gating risk, which permanently forfeits the brand-safety position. You cannot merchandise a character whose defining trait is drinking to cope. And most of all — <strong>it is less funny.</strong> Alcohol is a <em>plausible</em> cause of a personality change, and plausibility is fatal here. Catnip works because it is absurd and benign: a joke about cats being strange, not about cats having a problem. "He had one juice pouch and now he owns the cash machine" is comedy. "He drinks because he is sad" is a different show, and a sadder one.</p>
+    </div>
+
     <h3>The pivot is your tentpole</h3>
     <p>Somewhere around post thirty, Rufus realizes. That single image — the moment the confidence drops out of the face — is the most important post the account will ever make, and everything before it becomes setup in retrospect. Plan it, do not stumble into it. Afterwards the two modes alternate rather than replacing each other: the community man still turns up, and the question of which Rufus you are getting becomes the thing people follow for.</p>
 
@@ -447,11 +473,17 @@ multiple raccoons</pre>
       <p><strong>And edit passes are not free.</strong> Three stacked edits turned a convincing photograph into something visibly painterly — smeared surfaces, fur stripped of micro-detail. Generation loss compounds fast.</p>
     </div>
 
+    <div class="note note--warn">
+      <span class="note__k">The ear notch is abandoned — four attempts, four failures</span>
+      <p>Stated mid-prompt: invisible. Stated first and in capitals: ignored. Requested subtly in an edit pass: invisible. Requested boldly in an edit pass: rendered as flat torn paper on one frame and a hallucinated wire loop floating beside the ear on another. There is no setting between "not there" and "obviously broken."</p>
+      <p><strong>The generalisable finding: props render reliably, anatomy does not.</strong> Across every generation the models rendered cash machines, leaflets, noticeboards, keypads and a pair of spectacles flawlessly — and refused, every time, to modify the animal's body. They hold a strong prior for what a raccoon ear looks like and snap back to it. Identity must therefore be carried by <strong>something Rufus has, not something he is.</strong> See § 03.</p>
+    </div>
+
     <div class="note note--key">
-      <span class="note__k">The validated pipeline — two steps, never three</span>
-      <p><strong>1. Generate the scene clean.</strong> Text-to-image, no marker instruction at all. Let the model make a convincing photograph, which it does well.<br>
-      <strong>2. One single-purpose edit pass for the notch.</strong> Change nothing else, and ask for it big: a deep V-shaped wedge, a quarter of the ear, obvious in a thumbnail. One instruction, one change.<br>
-      <strong>3. Stop.</strong> If the notch did not land, go back to step one with a new scene rather than editing again. A second corrective pass costs more realism than the marker is worth.</p>
+      <span class="note__k">The working pipeline</span>
+      <p><strong>1. Generate the scene clean</strong> — text-to-image, mode-appropriate camera block, no anatomical marker instruction at all. This works reliably.<br>
+      <strong>2. One edit pass only, for props and defects</strong> — adding or crushing the pouch, repairing an artifact. Object-level edits succeed where body-level edits fail; the flank repair in frame 1 worked first time.<br>
+      <strong>3. Never a third pass.</strong> Three stacked edits turn a photograph into an oil painting.</p>
     </div>
 
     <div class="note note--key">
