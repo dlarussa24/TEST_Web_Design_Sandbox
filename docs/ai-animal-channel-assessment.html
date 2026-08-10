@@ -1,0 +1,442 @@
+<title>AI Satirical Animal Channel — viability assessment</title>
+
+<style>
+  :root {
+    --ground:#F4F7F6; --surface:#FFFFFF; --surface-alt:#E8EEEC;
+    --ink:#12181A; --ink-soft:#3E4A4C; --ink-mute:#677576;
+    --hairline:#D7E0DD; --hairline-hi:#BCC9C5;
+    --accent:#056454; --accent-wash:#E2F1ED;
+    --good:#056454; --mid:#8F5B04; --bad:#C31D53; --idle:#677576;
+    --focus:#1F5FD0;
+
+    --measure:66ch;
+    --step--2:0.72rem; --step--1:0.8125rem; --step-0:1.0625rem;
+    --step-1:1.25rem; --step-2:1.5rem; --step-3:2rem; --step-4:2.75rem;
+
+    --display:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --body:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:#101614; --surface:#18201E; --surface-alt:#1F2926;
+      --ink:#E8EFEC; --ink-soft:#BDCAC6; --ink-mute:#8A9A96;
+      --hairline:#28332F; --hairline-hi:#3A4844;
+      --accent:#3FD1B0; --accent-wash:#14261F;
+      --good:#3FD1B0; --mid:#DCA23A; --bad:#FF5C8A; --idle:#8A9A96;
+      --focus:#7FA0FF;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:#101614; --surface:#18201E; --surface-alt:#1F2926;
+    --ink:#E8EFEC; --ink-soft:#BDCAC6; --ink-mute:#8A9A96;
+    --hairline:#28332F; --hairline-hi:#3A4844;
+    --accent:#3FD1B0; --accent-wash:#14261F;
+    --good:#3FD1B0; --mid:#DCA23A; --bad:#FF5C8A; --idle:#8A9A96;
+    --focus:#7FA0FF;
+  }
+
+  * { box-sizing:border-box; }
+  body {
+    margin:0; background:var(--ground); color:var(--ink);
+    font-family:var(--body); font-size:var(--step-0); line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap {
+    max-width:56rem; margin:0 auto;
+    padding:clamp(2rem,5vw,4.5rem) clamp(1.1rem,4vw,2rem) 6rem;
+    display:flex; flex-direction:column; gap:3rem;
+  }
+  a { color:var(--accent); text-underline-offset:0.16em; }
+  :focus-visible { outline:2px solid var(--focus); outline-offset:2px; border-radius:2px; }
+  p { margin:0; max-width:var(--measure); }
+  strong { font-weight:650; color:var(--ink); }
+
+  .masthead { display:flex; flex-direction:column; gap:1.1rem; padding-bottom:2rem; border-bottom:2px solid var(--ink); }
+  .docket {
+    font-family:var(--mono); font-size:var(--step--1); letter-spacing:0.09em;
+    text-transform:uppercase; color:var(--ink-mute); display:flex; flex-wrap:wrap; gap:0.4rem 1.1rem;
+  }
+  h1 {
+    font-family:var(--display); font-weight:600; font-size:clamp(2rem,6.5vw,var(--step-4));
+    line-height:1.06; letter-spacing:-0.015em; text-wrap:balance; margin:0;
+  }
+  .standfirst { font-size:var(--step-1); line-height:1.5; color:var(--ink-soft); max-width:46ch; }
+
+  section { display:flex; flex-direction:column; gap:1.1rem; scroll-margin-top:1.5rem; }
+  .sec-head { display:flex; flex-direction:column; gap:0.35rem; padding-top:1.25rem; border-top:1px solid var(--hairline); }
+  .sec-num { font-family:var(--mono); font-size:var(--step--1); letter-spacing:0.08em; color:var(--accent); }
+  h2 {
+    font-family:var(--display); font-weight:600; font-size:clamp(1.45rem,4vw,var(--step-3));
+    line-height:1.15; letter-spacing:-0.01em; text-wrap:balance; margin:0;
+  }
+  h3 { font-family:var(--body); font-weight:650; font-size:var(--step-0); margin:0.55rem 0 0; color:var(--ink); }
+
+  ul.plain, ol.plain { margin:0; padding-left:1.15rem; max-width:var(--measure); display:flex; flex-direction:column; gap:0.6rem; }
+  ul.plain li::marker { color:var(--accent); }
+  ol.plain li::marker { color:var(--ink-mute); font-family:var(--mono); font-size:0.9em; }
+
+  .notice {
+    background:var(--surface); border:1px solid var(--hairline);
+    border-left:3px solid var(--ink-mute); padding:1rem 1.2rem;
+    display:flex; flex-direction:column; gap:0.55rem;
+  }
+  .notice--key { background:var(--accent-wash); border:0; border-left:3px solid var(--accent); }
+  .notice--warn { border-left-color:var(--bad); }
+  .notice__label { font-family:var(--mono); font-size:var(--step--2); letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-mute); }
+  .notice p { font-size:var(--step--1); line-height:1.6; color:var(--ink-soft); }
+
+  .scroller { overflow-x:auto; border:1px solid var(--hairline); background:var(--surface); }
+  table { border-collapse:collapse; width:100%; min-width:34rem; font-size:var(--step--1); }
+  thead th {
+    text-align:left; font-family:var(--mono); font-weight:500; font-size:var(--step--2);
+    letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-mute);
+    padding:0.7rem 0.85rem; border-bottom:1px solid var(--hairline-hi);
+    background:var(--surface-alt); white-space:nowrap;
+  }
+  tbody td { padding:0.75rem 0.85rem; border-bottom:1px solid var(--hairline); vertical-align:top; color:var(--ink-soft); }
+  tbody tr:last-child td { border-bottom:0; }
+  tbody td:first-child { color:var(--ink); font-weight:550; }
+  .num { font-variant-numeric:tabular-nums; font-family:var(--mono); }
+
+  /* ── Case study cards ─────────────────────────────────────── */
+  .cases { display:grid; grid-template-columns:repeat(auto-fit,minmax(15rem,1fr)); gap:0.9rem; }
+  .case { background:var(--surface); border:1px solid var(--hairline); display:flex; flex-direction:column; }
+  .case__head { padding:0.8rem 0.95rem; border-bottom:1px solid var(--hairline); display:flex; flex-direction:column; gap:0.15rem; }
+  .case__handle { font-weight:650; font-size:var(--step--1); color:var(--ink); }
+  .case__desc { font-size:var(--step--2); color:var(--ink-mute); line-height:1.45; }
+  .case__stats { display:grid; grid-template-columns:1fr 1fr; }
+  .stat { padding:0.6rem 0.95rem; border-bottom:1px solid var(--hairline); border-right:1px solid var(--hairline); }
+  .stat:nth-child(even) { border-right:0; }
+  .stat__k { font-family:var(--mono); font-size:0.6rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-mute); }
+  .stat__v { font-family:var(--mono); font-size:var(--step-0); color:var(--ink); font-variant-numeric:tabular-nums; }
+  .case__ratio { padding:0.75rem 0.95rem; display:flex; flex-direction:column; gap:0.5rem; background:var(--surface-alt); }
+  .ratio__row { display:flex; align-items:baseline; gap:0.5rem; font-family:var(--mono); font-size:0.68rem; }
+  .ratio__k { color:var(--ink-mute); letter-spacing:0.05em; text-transform:uppercase; }
+  .ratio__v { margin-left:auto; font-variant-numeric:tabular-nums; }
+  .ratio__v--hi { color:var(--good); font-weight:600; }
+  .ratio__v--lo { color:var(--bad); font-weight:600; }
+  .bar { height:3px; background:var(--hairline); overflow:hidden; }
+  .bar i { display:block; height:100%; background:var(--good); }
+  .bar--lo i { background:var(--bad); }
+
+  /* ── Scorecard ────────────────────────────────────────────── */
+  .score { border:1px solid var(--hairline); background:var(--surface); }
+  .score__row { display:grid; grid-template-columns:minmax(0,1fr) 5.5rem 8rem; gap:0.75rem 1rem; padding:0.85rem 1rem; border-bottom:1px solid var(--hairline); align-items:center; }
+  .score__row:last-child { border-bottom:0; }
+  @media (max-width:38rem) { .score__row { grid-template-columns:minmax(0,1fr) 5rem; } .score__meter { grid-column:1 / -1; } }
+  .score__k { font-size:var(--step--1); color:var(--ink); font-weight:550; }
+  .score__k span { display:block; font-weight:400; color:var(--ink-mute); font-size:var(--step--2); line-height:1.45; margin-top:0.1rem; }
+  .score__v { font-family:var(--mono); font-size:var(--step--1); letter-spacing:0.05em; text-transform:uppercase; font-variant-numeric:tabular-nums; }
+  .score__meter { height:5px; background:var(--hairline); overflow:hidden; }
+  .score__meter i { display:block; height:100%; }
+  .v-hi { color:var(--good); } .m-hi i { background:var(--good); }
+  .v-md { color:var(--mid); }  .m-md i { background:var(--mid); }
+  .v-lo { color:var(--bad); }  .m-lo i { background:var(--bad); }
+
+  .trap { display:grid; grid-template-columns:2.2rem 1fr; gap:0 0.9rem; padding:0.9rem 0; border-bottom:1px solid var(--hairline); }
+  .trap:last-child { border-bottom:0; }
+  .trap__n { font-family:var(--mono); font-size:var(--step--1); color:var(--bad); padding-top:0.14rem; }
+  .trap__t { font-weight:650; color:var(--ink); font-size:var(--step--1); }
+  .trap__d { font-size:var(--step--1); color:var(--ink-soft); line-height:1.55; margin-top:0.15rem; }
+
+  .fix { display:grid; grid-template-columns:2.2rem 1fr; gap:0 0.9rem; padding:0.9rem 0; border-bottom:1px solid var(--hairline); }
+  .fix:last-child { border-bottom:0; }
+  .fix__n { font-family:var(--mono); font-size:var(--step--1); color:var(--accent); padding-top:0.14rem; }
+  .fix__t { font-weight:650; color:var(--ink); font-size:var(--step--1); }
+  .fix__d { font-size:var(--step--1); color:var(--ink-soft); line-height:1.55; margin-top:0.15rem; }
+
+  footer {
+    border-top:2px solid var(--ink); padding-top:1.25rem;
+    font-size:var(--step--1); color:var(--ink-mute); max-width:var(--measure); line-height:1.6;
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition-duration:0.01ms !important; animation-duration:0.01ms !important; } }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="docket">
+      <span>Viability Assessment</span>
+      <span>AI Satirical Animal Channel</span>
+      <span>Rev. August 2026</span>
+    </div>
+    <h1>Maximum Distribution, Minimum Attachment</h1>
+    <p class="standfirst">An honest read on the AI-animal-doing-human-things format: why it travels further than anything else in this project, why that is not the same as it working, and the four changes that decide which one you get.</p>
+  </header>
+
+  <div class="notice notice--key">
+    <span class="notice__label">Headline finding</span>
+    <p>On sourcing this is the <strong>cleanest format assessed in this whole project</strong> — rung 01, self-created, zero copyright exposure on the subject, faceless and voiceless by nature. It also has the <strong>weakest moat and the highest platform risk</strong>, and the thing that endangers it is not the AI. It is the formula.</p>
+  </div>
+
+  <!-- ── 01 ─────────────────────────────────────────────────── -->
+  <section id="s1">
+    <div class="sec-head">
+      <span class="sec-num">§ 01</span>
+      <h2>What the three reference posts actually say</h2>
+    </div>
+    <p>The images are not the interesting part. The engagement shape is — and all three examples share an identical, very unusual signature.</p>
+
+    <div class="cases">
+
+      <div class="case">
+        <div class="case__head">
+          <span class="case__handle">@numanuk</span>
+          <span class="case__desc">Verified · bipedal pigeon, armed, NYC storefront · caption is one emoji</span>
+        </div>
+        <div class="case__stats">
+          <div class="stat"><span class="stat__k">Likes</span><span class="stat__v">1.9M</span></div>
+          <div class="stat"><span class="stat__k">Shares</span><span class="stat__v">1.2M</span></div>
+          <div class="stat"><span class="stat__k">Reposts</span><span class="stat__v">144K</span></div>
+          <div class="stat"><span class="stat__k">Comments</span><span class="stat__v">6,318</span></div>
+        </div>
+        <div class="case__ratio">
+          <div class="ratio__row"><span class="ratio__k">Share : like</span><span class="ratio__v ratio__v--hi">0.63</span></div>
+          <div class="bar"><i style="width:63%"></i></div>
+          <div class="ratio__row"><span class="ratio__k">Comment : like</span><span class="ratio__v ratio__v--lo">0.003</span></div>
+          <div class="bar bar--lo"><i style="width:2%"></i></div>
+        </div>
+      </div>
+
+      <div class="case">
+        <div class="case__head">
+          <span class="case__handle">@nare3ka</span>
+          <span class="case__desc">Collab with @nare3ka.mini · bipedal mini-horse against a wall · caption: "5 interesting facts about horses"</span>
+        </div>
+        <div class="case__stats">
+          <div class="stat"><span class="stat__k">Likes</span><span class="stat__v">569K</span></div>
+          <div class="stat"><span class="stat__k">Shares</span><span class="stat__v">355K</span></div>
+          <div class="stat"><span class="stat__k">Reposts</span><span class="stat__v">31.8K</span></div>
+          <div class="stat"><span class="stat__k">Comments</span><span class="stat__v">1,009</span></div>
+        </div>
+        <div class="case__ratio">
+          <div class="ratio__row"><span class="ratio__k">Share : like</span><span class="ratio__v ratio__v--hi">0.62</span></div>
+          <div class="bar"><i style="width:62%"></i></div>
+          <div class="ratio__row"><span class="ratio__k">Comment : like</span><span class="ratio__v ratio__v--lo">0.002</span></div>
+          <div class="bar bar--lo"><i style="width:2%"></i></div>
+        </div>
+      </div>
+
+      <div class="case">
+        <div class="case__head">
+          <span class="case__handle">@nare3ka</span>
+          <span class="case__desc">Same account, same joke · horse fleeing with a lollipop · identical caption to the post above</span>
+        </div>
+        <div class="case__stats">
+          <div class="stat"><span class="stat__k">Likes</span><span class="stat__v">291K</span></div>
+          <div class="stat"><span class="stat__k">Shares</span><span class="stat__v">257K</span></div>
+          <div class="stat"><span class="stat__k">Reposts</span><span class="stat__v">16.3K</span></div>
+          <div class="stat"><span class="stat__k">Comments</span><span class="stat__v">567</span></div>
+        </div>
+        <div class="case__ratio">
+          <div class="ratio__row"><span class="ratio__k">Share : like</span><span class="ratio__v ratio__v--hi">0.88</span></div>
+          <div class="bar"><i style="width:88%"></i></div>
+          <div class="ratio__row"><span class="ratio__k">Comment : like</span><span class="ratio__v ratio__v--lo">0.002</span></div>
+          <div class="bar bar--lo"><i style="width:2%"></i></div>
+        </div>
+      </div>
+
+    </div>
+
+    <h3>Three readings, in order of importance</h3>
+
+    <p><strong>1. This is send-not-say content.</strong> A share-to-like ratio of 0.6–0.9 is extraordinary; most accounts run one to five percent. Sends and shares are the most heavily weighted distribution signals Instagram has, which is the entire mechanical explanation for why this format reaches millions from a standing start. People do not engage with it — they forward it and close the app.</p>
+
+    <p><strong>2. The comment rate is near zero, and that is the problem.</strong> Two to three comments per thousand likes means there is no conversation, no community, and no reason to follow the account rather than enjoy the post. Compare a franchise like a weekly "you decide" poll, which exists specifically to manufacture the thing this format cannot produce. <strong>Reach without attachment is the defining economic fact of this genre.</strong></p>
+
+    <p><strong>3. Two unrelated accounts are running the same joke.</strong> A quadruped standing upright, leaning against a wall, in a European or American street scene. That is not coincidence — it is a template propagating. Which tells you the barrier to entry is a prompt, and so is the barrier to being replaced.</p>
+
+    <div class="notice">
+      <span class="notice__label">The caption tell</span>
+      <p>Both @nare3ka posts carry the same caption — "Here are 5 interesting facts about horses" — with no relationship to the image at all. That is dwell-bait and keyword filler bolted onto a visual. It works today. It is also, almost word for word, the "low-context output" and "repeating a formula" that current platform guidance names as the thing that weakens recommendation and monetization pathways. See <a href="#s4">§ 04</a>.</p>
+    </div>
+  </section>
+
+  <!-- ── 02 ─────────────────────────────────────────────────── -->
+  <section id="s2">
+    <div class="sec-head">
+      <span class="sec-num">§ 02</span>
+      <h2>Scorecard</h2>
+    </div>
+
+    <div class="score">
+      <div class="score__row">
+        <span class="score__k">Reach ceiling<span>Can it get in front of millions?</span></span>
+        <span class="score__v v-hi">Very high</span>
+        <span class="score__meter m-hi"><i style="width:92%"></i></span>
+      </div>
+      <div class="score__row">
+        <span class="score__k">Copyright exposure on subject<span>The risk that ended the aggregator model</span></span>
+        <span class="score__v v-hi">Very low</span>
+        <span class="score__meter m-hi"><i style="width:90%"></i></span>
+      </div>
+      <div class="score__row">
+        <span class="score__k">Cost to produce<span>Per post, at volume</span></span>
+        <span class="score__v v-hi">Very low</span>
+        <span class="score__meter m-hi"><i style="width:88%"></i></span>
+      </div>
+      <div class="score__row">
+        <span class="score__k">Faceless &amp; voiceless<span>Your stated constraint</span></span>
+        <span class="score__v v-hi">Complete</span>
+        <span class="score__meter m-hi"><i style="width:100%"></i></span>
+      </div>
+      <div class="score__row">
+        <span class="score__k">Audience attachment<span>Do they follow you, or just forward the post?</span></span>
+        <span class="score__v v-lo">Very low</span>
+        <span class="score__meter m-lo"><i style="width:12%"></i></span>
+      </div>
+      <div class="score__row">
+        <span class="score__k">Defensibility<span>Can a stranger reproduce your output this week?</span></span>
+        <span class="score__v v-lo">Very low</span>
+        <span class="score__meter m-lo"><i style="width:10%"></i></span>
+      </div>
+      <div class="score__row">
+        <span class="score__k">Brand-deal suitability<span>Advertiser comfort with the content</span></span>
+        <span class="score__v v-md">Mixed</span>
+        <span class="score__meter m-md"><i style="width:42%"></i></span>
+      </div>
+      <div class="score__row">
+        <span class="score__k">Platform / distribution risk<span>Recommendation and monetization pathways</span></span>
+        <span class="score__v v-md">Elevated</span>
+        <span class="score__meter m-md"><i style="width:55%"></i></span>
+      </div>
+      <div class="score__row">
+        <span class="score__k">Probability of large reach<span>Six months, consistent output</span></span>
+        <span class="score__v v-hi">High</span>
+        <span class="score__meter m-hi"><i style="width:75%"></i></span>
+      </div>
+      <div class="score__row">
+        <span class="score__k">Probability of real revenue<span>Meaningful monthly income</span></span>
+        <span class="score__v v-md">Moderate</span>
+        <span class="score__meter m-md"><i style="width:45%"></i></span>
+      </div>
+      <div class="score__row">
+        <span class="score__k">Probability of a durable asset<span>Something still worth owning in two years — unless you apply § 05</span></span>
+        <span class="score__v v-lo">Low</span>
+        <span class="score__meter m-lo"><i style="width:22%"></i></span>
+      </div>
+    </div>
+
+    <p>The spread between rows nine and eleven is the whole assessment. <strong>Reach is close to a given. A durable business is not, and the gap between them is entirely made of decisions you control.</strong></p>
+  </section>
+
+  <!-- ── 03 ─────────────────────────────────────────────────── -->
+  <section id="s3">
+    <div class="sec-head">
+      <span class="sec-num">§ 03</span>
+      <h2>Legal — much better than reposting, with four specific traps</h2>
+    </div>
+    <p>Generating your subject removes the entire risk class that dominates every other format in this project. There is no photographer, no agency, no registration gate, no § 1202 claim. What replaces it is smaller but sharper.</p>
+
+    <div>
+      <div class="trap">
+        <span class="trap__n">01</span>
+        <div>
+          <div class="trap__t">The background may not be generated</div>
+          <div class="trap__d">This is the blind spot in the genre. A named deli with a legible phone number, a real Lidl sign, specific street furniture — that level of incidental detail is characteristic of image-to-image or inpainting work over a <em>real photograph</em>. If the plate underneath is someone else's picture, your output is a derivative work of it and every protection you thought you had evaporates. Generate the whole frame, or shoot your own plates.</div>
+        </div>
+      </div>
+      <div class="trap">
+        <span class="trap__n">02</span>
+        <div>
+          <div class="trap__t">You get no copyright in return</div>
+          <div class="trap__d">The Copyright Office's position is that copyright protects human authorship and does not extend to material wholly generated by AI; works containing AI material are registrable only for the human contribution, which must be disclosed and the AI parts disclaimed. Practical consequence: <strong>a competitor can lift your images and you have limited recourse.</strong> No copyright exposure and no copyright protection are the same coin.</div>
+        </div>
+      </div>
+      <div class="trap">
+        <span class="trap__n">03</span>
+        <div>
+          <div class="trap__t">Real marks, real premises, real people</div>
+          <div class="trap__d">Brand signage in frame is usually fine for satire and generally survives on nominative and expressive-use grounds, but it stops being fine when the image implies endorsement or is used in advertising. Generating a recognizable person raises right of publicity — and placing a real, identifiable business into a false criminal or disparaging scene is a defamation and false-light question, not a copyright one.</div>
+        </div>
+      </div>
+      <div class="trap">
+        <span class="trap__n">04</span>
+        <div>
+          <div class="trap__t">Weapons and disclosure</div>
+          <div class="trap__d">An animal holding a firearm is a brand-safety exclusion at most advertisers regardless of how obviously it is a joke, and it draws automated review. Separately, synthetic-media disclosure obligations now apply across major platforms and in advertising contexts — labelling is cheap, and the label itself carries no ranking penalty.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="notice notice--key">
+      <span class="notice__label">Net legal read</span>
+      <p>Substantially safer than everything else assessed here. The aggregator model risks statutory damages per work across hundreds of works; this model risks a derivative-work problem you can design out entirely and a publicity or defamation question you can avoid by not generating real people into false scenes. <strong>Fix trap 01 and you are in the safest position of any format in this project.</strong></p>
+    </div>
+  </section>
+
+  <!-- ── 04 ─────────────────────────────────────────────────── -->
+  <section id="s4">
+    <div class="sec-head">
+      <span class="sec-num">§ 04</span>
+      <h2>Shadowban risk — and the widespread misreading of it</h2>
+    </div>
+
+    <div class="notice notice--warn">
+      <span class="notice__label">The load-bearing correction</span>
+      <p>Current guidance is that <strong>the AI label is not itself a ranking penalty</strong> on Instagram, TikTok, or Meta, and properly labelled AI content stays eligible for monetization. Meta formalized its position in March 2026, following the crackdown announced in July 2025. What actually degrades recommendation and monetization is <strong>mass-produced repetition, minimally altered output, and low-context posting</strong> — and the stated remedy is to add original insight and vary between uploads rather than repeat a formula.</p>
+    </div>
+
+    <p>Read that against § 01 and the diagnosis is uncomfortable but precise. The risk to this channel is not that it uses AI. It is that the reference accounts are running a <strong>single repeated visual formula with a recycled, unrelated caption</strong> — which is close to a literal description of the behaviour the policy targets. The thing that makes the format cheap to produce is the same thing that makes it flag.</p>
+
+    <h3>What that means practically</h3>
+    <ul class="plain">
+      <li><strong>Label every post.</strong> Free, no penalty, and it removes any argument that you were concealing anything. Add the label at upload even when your tool embeds provenance metadata.</li>
+      <li><strong>Deliberate variance is a compliance control, not just a creative one.</strong> Rotating subject, setting, framing, and joke structure is what separates "a body of work" from "mass-produced."</li>
+      <li><strong>Captions must relate to the image.</strong> The recycled horse-facts caption is exactly the low-context pattern named in guidance. Write to the picture.</li>
+      <li><strong>Monetization turns on originality and human authorship, not on tool use.</strong> Your compositing, editing, sequencing, and writing are the human contribution — do enough of it that the claim is true.</li>
+      <li><strong>Assume enforcement tightens, not loosens.</strong> Every policy movement in this space over the past eighteen months has been in one direction. Build for the stricter version.</li>
+    </ul>
+  </section>
+
+  <!-- ── 05 ─────────────────────────────────────────────────── -->
+  <section id="s5">
+    <div class="sec-head">
+      <span class="sec-num">§ 05</span>
+      <h2>The four changes that decide the outcome</h2>
+    </div>
+    <p>Run the format as the reference accounts run it and you get a spike, a plateau, and a slow decay as the novelty prices in and the formula flags. These are the changes that convert it into something ownable.</p>
+
+    <div>
+      <div class="fix">
+        <span class="fix__n">01</span>
+        <div>
+          <div class="fix__t">Build a character, not a feed</div>
+          <div class="fix__d">This is the whole assessment in one move. A recurring protagonist with a name, a personality, and continuity across posts converts disposable images into an <strong>IP property</strong> — and a character name and visual identity are protectable as <em>trademark</em>, which is exactly the protection copyright refuses to give AI output. It also fixes the comment-rate problem: people argue about a character, they do not argue about a picture. Merch, licensing, and a sale all become available the moment there is a character to sell.</div>
+        </div>
+      </div>
+      <div class="fix">
+        <span class="fix__n">02</span>
+        <div>
+          <div class="fix__t">Own the plate</div>
+          <div class="fix__d">Generate the full frame, or shoot your own backgrounds and composite into them. This closes trap 01, and shooting your own plates adds genuine human authorship — which is what makes the composite registrable and gives you something to enforce with.</div>
+        </div>
+      </div>
+      <div class="fix">
+        <span class="fix__n">03</span>
+        <div>
+          <div class="fix__t">Engineer for comments, not just shares</div>
+          <div class="fix__d">Shares give you reach you cannot bank. Comments give you a community you can. Serialize: cliffhangers, recurring foils, a decision the audience votes on, callbacks to earlier posts. A "you decide" mechanic is the cheapest known fix and it is fully compatible with a faceless account.</div>
+        </div>
+      </div>
+      <div class="fix">
+        <span class="fix__n">04</span>
+        <div>
+          <div class="fix__t">Move revenue off-platform early</div>
+          <div class="fix__d">Given low attachment and elevated platform risk, do not build the business on in-app payouts. A named character supports merch on your own IP, licensing, and eventually a clean sale — a faceless brand transfers, and this genre produces very large follower counts. Treat platform bonuses as a bonus.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="notice notice--key">
+      <span class="notice__label">Verdict</span>
+      <p><strong>High probability of reach. Moderate probability of revenue. Low probability of a durable asset — unless you make it a character.</strong> As a format it is the safest and cheapest thing assessed in this project, and the most replaceable. The distance between a disposable AI-slop feed and an ownable property is one creative decision, and it costs nothing to make it on day one and nearly everything to retrofit at post four hundred.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>The three reference posts are analysed here as metrics and structure rather than reproduced as images — partly because the source files were not available to embed, and partly for the reason the rest of this project argues: they are other creators' work, and a document about rights should not casually republish them. Engagement figures are as displayed in the supplied captures at a single point in time. Ratios are computed from those figures. General information, not legal advice — copyrightability of AI output, publicity rights, and synthetic-media disclosure are all moving quickly, and the AI-specific questions here are worth an hour with a media/IP attorney before you scale.</p>
+  </footer>
+
+</div>
