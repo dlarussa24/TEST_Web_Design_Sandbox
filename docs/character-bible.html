@@ -1,0 +1,493 @@
+<title>DUANE — character bible (photoreal)</title>
+
+<style>
+  /* ─────────────────────────────────────────────────────────────
+     Nocturnal, urban, sodium-vapour. The subject is photoreal and
+     works at night under streetlight, so the document lives in
+     that world: warm concrete, bone, and a single amber accent.
+     ───────────────────────────────────────────────────────────── */
+  :root {
+    --ground:      #F2F0EC;
+    --surface:     #FFFFFF;
+    --surface-alt: #E6E2DB;
+    --ink:         #17161A;
+    --ink-soft:    #46434C;
+    --ink-mute:    #726E79;
+    --hairline:    #D8D3CB;
+    --hairline-hi: #BEB8AE;
+
+    --amber:       #B36414;
+    --amber-wash:  #F7EBDC;
+    --stop:        #A82036;
+    --go:          #29694A;
+
+    --measure: 66ch;
+    --step--2: 0.72rem;
+    --step--1: 0.8125rem;
+    --step-0:  1.0625rem;
+    --step-1:  1.25rem;
+    --step-2:  1.5rem;
+    --step-3:  2rem;
+    --step-4:  2.9rem;
+
+    --display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:      #15141A;
+      --surface:     #1D1B23;
+      --surface-alt: #26232D;
+      --ink:         #EDEAE4;
+      --ink-soft:    #C4BFBA;
+      --ink-mute:    #8E8992;
+      --hairline:    #2E2A36;
+      --hairline-hi: #423D4C;
+      --amber:       #E39B4A;
+      --amber-wash:  #2A1D12;
+      --stop:        #FF6E82;
+      --go:          #5CC08E;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:      #15141A;
+    --surface:     #1D1B23;
+    --surface-alt: #26232D;
+    --ink:         #EDEAE4;
+    --ink-soft:    #C4BFBA;
+    --ink-mute:    #8E8992;
+    --hairline:    #2E2A36;
+    --hairline-hi: #423D4C;
+    --amber:       #E39B4A;
+    --amber-wash:  #2A1D12;
+    --stop:        #FF6E82;
+    --go:          #5CC08E;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--ground); color: var(--ink);
+    font-family: var(--body); font-size: var(--step-0); line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 58rem; margin: 0 auto;
+    padding: clamp(2rem,5vw,4rem) clamp(1.1rem,4vw,2rem) 6rem;
+    display: flex; flex-direction: column; gap: 2.75rem;
+  }
+  a { color: var(--amber); text-underline-offset: 0.16em; }
+  :focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+  p { margin: 0; max-width: var(--measure); }
+  strong { font-weight: 650; color: var(--ink); }
+
+  .masthead { display:flex; flex-direction:column; gap:1rem; padding-bottom:1.75rem; border-bottom:3px solid var(--ink); }
+  .docket {
+    font-family: var(--mono); font-size: var(--step--1); letter-spacing:0.1em;
+    text-transform: uppercase; color: var(--ink-mute); display:flex; flex-wrap:wrap; gap:0.4rem 1.1rem;
+  }
+  h1 {
+    font-family: var(--display); font-weight:600;
+    font-size: clamp(2.2rem,7.5vw,var(--step-4)); line-height:1.02;
+    letter-spacing:-0.02em; margin:0; text-wrap:balance;
+  }
+  .standfirst { font-size: var(--step-1); line-height:1.5; color: var(--ink-soft); max-width:46ch; }
+
+  section { display:flex; flex-direction:column; gap:1rem; scroll-margin-top:1.5rem; }
+  .sec-head { display:flex; align-items:baseline; gap:0.9rem; padding-top:1.1rem; border-top:1px solid var(--hairline); flex-wrap:wrap; }
+  .sec-num {
+    font-family: var(--mono); font-size: var(--step--2); letter-spacing:0.1em;
+    background: var(--ink); color: var(--ground); padding:0.2rem 0.45rem;
+  }
+  h2 {
+    font-family: var(--display); font-weight:600;
+    font-size: clamp(1.35rem,3.8vw,var(--step-3)); line-height:1.14;
+    letter-spacing:-0.01em; margin:0; text-wrap:balance;
+  }
+  h3 { font-weight:700; font-size: var(--step-0); margin:0.5rem 0 0; color: var(--ink); }
+
+  ul.plain, ol.plain { margin:0; padding-left:1.15rem; max-width:var(--measure); display:flex; flex-direction:column; gap:0.55rem; }
+  ul.plain li::marker { color: var(--amber); }
+  ol.plain li::marker { color: var(--ink-mute); font-family: var(--mono); font-size:0.9em; }
+
+  .note {
+    background: var(--surface); border:1px solid var(--hairline);
+    border-left:4px solid var(--ink-mute); padding:1rem 1.2rem;
+    display:flex; flex-direction:column; gap:0.5rem;
+  }
+  .note--key { background: var(--amber-wash); border:0; border-left:4px solid var(--amber); }
+  .note--warn { border-left-color: var(--stop); }
+  .note__k { font-family:var(--mono); font-size:var(--step--2); letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-mute); }
+  .note p { font-size: var(--step--1); line-height:1.6; color: var(--ink-soft); }
+
+  .scroller { overflow-x:auto; border:1px solid var(--hairline); background:var(--surface); }
+  table { border-collapse:collapse; width:100%; min-width:34rem; font-size:var(--step--1); }
+  thead th {
+    text-align:left; font-family:var(--mono); font-weight:500; font-size:var(--step--2);
+    letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-mute);
+    padding:0.65rem 0.8rem; border-bottom:1px solid var(--hairline-hi); background:var(--surface-alt); white-space:nowrap;
+  }
+  tbody td { padding:0.7rem 0.8rem; border-bottom:1px solid var(--hairline); vertical-align:top; color:var(--ink-soft); }
+  tbody tr:last-child td { border-bottom:0; }
+  tbody td:first-child { color:var(--ink); font-weight:550; }
+  .win { color:var(--go); font-family:var(--mono); font-size:0.74rem; text-transform:uppercase; letter-spacing:0.05em; }
+  .lose { color:var(--stop); font-family:var(--mono); font-size:0.74rem; text-transform:uppercase; letter-spacing:0.05em; }
+
+  /* ── Marker diagram ───────────────────────────────────────── */
+  .sheet { display:grid; grid-template-columns:minmax(0,19rem) minmax(0,1fr); gap:1.5rem; align-items:start; }
+  @media (max-width:46rem) { .sheet { grid-template-columns:minmax(0,1fr); } }
+  .figure { background:var(--surface); border:1px solid var(--hairline); padding:1rem; display:flex; flex-direction:column; gap:0.7rem; }
+  .figure svg { width:100%; height:auto; display:block; }
+  .figure__cap { font-family:var(--mono); font-size:var(--step--2); letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-mute); text-align:center; }
+
+  .locks { display:flex; flex-direction:column; }
+  .lock { display:grid; grid-template-columns:8.5rem 1fr; gap:0.25rem 1rem; padding:0.65rem 0; border-bottom:1px solid var(--hairline); }
+  .lock:last-child { border-bottom:0; }
+  @media (max-width:30rem) { .lock { grid-template-columns:1fr; } }
+  .lock__k { font-family:var(--mono); font-size:var(--step--2); letter-spacing:0.07em; text-transform:uppercase; color:var(--ink-mute); padding-top:0.12rem; }
+  .lock__v { font-size:var(--step--1); color:var(--ink-soft); line-height:1.5; }
+  .lock__v b { color:var(--ink); font-weight:650; }
+
+  /* ── Snippets ─────────────────────────────────────────────── */
+  .snippet { border:1px solid var(--hairline); background:var(--surface); display:flex; flex-direction:column; }
+  .snippet__bar { display:flex; align-items:center; gap:1rem; padding:0.55rem 0.85rem; background:var(--surface-alt); border-bottom:1px solid var(--hairline); }
+  .snippet__n { font-family:var(--mono); font-size:var(--step--2); letter-spacing:0.09em; text-transform:uppercase; color:var(--ink-mute); }
+  .snippet pre {
+    margin:0; padding:0.95rem; overflow-x:auto;
+    font-family:var(--mono); font-size:0.76rem; line-height:1.65; color:var(--ink-soft); white-space:pre-wrap;
+  }
+  .btn {
+    font-family:var(--mono); font-size:0.66rem; letter-spacing:0.09em; text-transform:uppercase;
+    color:var(--ink-soft); background:transparent; border:1px solid var(--hairline-hi);
+    padding:0.35rem 0.7rem; cursor:pointer; white-space:nowrap; margin-left:auto;
+  }
+  .btn:hover { background:var(--amber); border-color:var(--amber); color:#FFF; }
+
+  /* ── Episodes ─────────────────────────────────────────────── */
+  .eps { display:grid; grid-template-columns:repeat(auto-fill,minmax(16rem,1fr)); gap:0.6rem; }
+  .ep { background:var(--surface); border:1px solid var(--hairline); padding:0.7rem 0.85rem; display:flex; gap:0.7rem; }
+  .ep__n { font-family:var(--mono); font-size:var(--step--2); color:var(--amber); flex:none; padding-top:0.14rem; font-variant-numeric:tabular-nums; }
+  .ep__b { display:flex; flex-direction:column; gap:0.15rem; min-width:0; }
+  .ep__t { font-weight:650; font-size:var(--step--1); color:var(--ink); }
+  .ep__d { font-size:var(--step--2); color:var(--ink-soft); line-height:1.5; }
+  .ep--arc { border-left:3px solid var(--amber); }
+
+  footer {
+    border-top:3px solid var(--ink); padding-top:1.1rem;
+    font-size:var(--step--1); color:var(--ink-mute); max-width:var(--measure); line-height:1.6;
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition-duration:0.01ms !important; } }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="docket">
+      <span>Character Bible v2</span>
+      <span>Photoreal</span>
+      <span>Supersedes the goose</span>
+    </div>
+    <h1>It Wasn't Duane</h1>
+    <p class="standfirst">A photographically real raccoon, caught mid-act in a real place, entirely unbothered that you are filming. No costume, no styling, no mascot — the animal is exactly as it is, and the situation is the only thing that is wrong.</p>
+  </header>
+
+  <div class="note note--key">
+    <span class="note__k">What changed and why</span>
+    <p>Under an ultra-realistic brief the ranking inverts. I previously scored raccoon <em>down</em> on impossibility, because raccoons already grasp things — but that reasoning optimized for conceptual absurdity while ignoring what actually determines whether a photoreal image succeeds. <strong>Render fidelity dominates.</strong> A goose cannot grasp, so every prompt asking one to hold an object forces the model to invent anatomy it has no reference for — and the gap gets filled with human-hand artifacts, the single most recognizable AI tell there is. Raccoon paws are genuinely hand-like and abundantly photographed doing exactly that. You get impossibility <em>of behaviour</em> without ever asking for impossibility <em>of anatomy</em>.</p>
+  </div>
+
+  <!-- ── 01 ─────────────────────────────────────────────────── -->
+  <section id="s1">
+    <div class="sec-head"><span class="sec-num">01</span><h2>Reassessment under the photoreal constraint</h2></div>
+
+    <div class="scroller">
+      <table>
+        <thead>
+          <tr><th>Criterion</th><th>Goose</th><th>Raccoon</th><th>Why it matters now</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Grasping renders cleanly</td>
+            <td><span class="lose">Fails</span></td>
+            <td><span class="win">Wins</span></td>
+            <td>Wings have no grip reference. The model substitutes human hands — fatal to realism</td>
+          </tr>
+          <tr>
+            <td>Bipedal stance has real reference</td>
+            <td><span class="win">Native</span></td>
+            <td><span class="win">Real, brief</span></td>
+            <td>Both fine; raccoons genuinely stand to inspect things</td>
+          </tr>
+          <tr>
+            <td>Facial expressiveness</td>
+            <td><span class="lose">Near zero</span></td>
+            <td><span class="win">High</span></td>
+            <td>With no costume, the face has to carry the whole performance</td>
+          </tr>
+          <tr>
+            <td>Thumbnail silhouette</td>
+            <td><span class="win">Strong</span></td>
+            <td><span class="win">Strongest</span></td>
+            <td>Mask plus ringed tail is the most identifiable marking of any candidate</td>
+          </tr>
+          <tr>
+            <td>Urban settings are plausible</td>
+            <td><span class="lose">Park / suburb</span></td>
+            <td><span class="win">Native</span></td>
+            <td>Alleys, dumpsters, fire escapes, bodegas — the environment stops fighting the subject</td>
+          </tr>
+          <tr>
+            <td>Coding supports plot</td>
+            <td><span class="win">Menace</span></td>
+            <td><span class="win">Thief</span></td>
+            <td>Both generate story. Raccoon coding is also literally a burglar mask</td>
+          </tr>
+          <tr>
+            <td>Night shooting is in-character</td>
+            <td><span class="lose">No</span></td>
+            <td><span class="win">Yes</span></td>
+            <td>Nocturnal by nature — unlocks streetlight, security-camera and flash aesthetics</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>Raccoon, decisively.</strong> The goose was the better answer to the question I was asking; the raccoon is the better answer to the question you are actually asking.</p>
+
+    <div class="note note--warn">
+      <span class="note__k">What is lost, and the replacement</span>
+      <p>The badge is gone — a costume prop cannot survive a photoreal brief. It was solving three real problems, so each needs a native replacement: continuity now comes from a <strong>permanent physical marking</strong>, the wordmark moves <strong>out of the artwork</strong> into the handle, caption and merch, and the per-episode premise engine becomes <strong>the act he is caught performing</strong>. See § 02 and § 03.</p>
+    </div>
+  </section>
+
+  <!-- ── 02 ─────────────────────────────────────────────────── -->
+  <section id="s2">
+    <div class="sec-head"><span class="sec-num">02</span><h2>The canon — identity without costume</h2></div>
+    <p>Everything below is fixed forever. The markers are the only way a viewer knows one photoreal raccoon from another, so they matter more here than any design decision in the previous version.</p>
+
+    <div class="sheet">
+      <div class="figure">
+        <svg viewBox="0 0 260 260" role="img" aria-label="Marker diagram: raccoon head showing the notched left ear, mask break, and pale right brow">
+          <!-- ears -->
+          <path d="M76 74c-7-19-3-32 8-34 10-2 18 7 21 20z" fill="#6E6A62"/>
+          <path d="M164 74c7-19 3-32-8-34-10-2-18 7-21 20z" fill="#6E6A62"/>
+          <!-- marker 01: a clean wedge missing from the upper LEFT ear -->
+          <path d="M79 50l-13-9 1-13z" fill="var(--surface)" stroke="var(--surface)" stroke-width="2"/>
+
+          <!-- head -->
+          <ellipse cx="120" cy="112" rx="53" ry="45" fill="#7A756C"/>
+          <!-- muzzle -->
+          <ellipse cx="120" cy="140" rx="24" ry="21" fill="#DCD6C8"/>
+          <!-- mask patches -->
+          <path d="M80 100c9-10 23-12 30-4 5 5 6 13 2 20-5 8-18 12-27 7-7-5-10-16-5-23z" fill="#23201F"/>
+          <path d="M160 100c-9-10-23-12-30-4-5 5-6 13-2 20 5 8 18 12 27 7 7-5 10-16 5-23z" fill="#23201F"/>
+          <!-- marker 02: bridge present on the RIGHT only, leaving a visible gap on the left -->
+          <path d="M122 104h13v10h-13z" fill="#23201F"/>
+          <!-- marker 03: pale streak over the right brow -->
+          <path d="M138 88c9-3 18-2 23 3l-4 7c-5-4-12-5-18-3z" fill="#E8E2D6"/>
+          <!-- eyes -->
+          <circle cx="99" cy="108" r="7.5" fill="#0E0C0B"/>
+          <circle cx="101" cy="105" r="2.4" fill="#FFF" opacity="0.9"/>
+          <circle cx="141" cy="108" r="7.5" fill="#0E0C0B"/>
+          <circle cx="143" cy="105" r="2.4" fill="#FFF" opacity="0.9"/>
+          <!-- nose -->
+          <ellipse cx="120" cy="132" rx="9" ry="6" fill="#14100F"/>
+          <path d="M120 138v8" stroke="#14100F" stroke-width="2.5"/>
+
+          <!-- tail, laid out horizontally so all six rings are countable -->
+          <path d="M78 216h124" stroke="#7A756C" stroke-width="26" fill="none" stroke-linecap="round"/>
+          <g stroke="#23201F" stroke-width="7" stroke-linecap="butt">
+            <path d="M90 205v22"/><path d="M110 205v22"/><path d="M130 205v22"/>
+            <path d="M150 205v22"/><path d="M170 205v22"/><path d="M190 205v22"/>
+          </g>
+
+          <!-- callouts drawn last so they sit above the artwork -->
+          <g stroke="var(--amber)" stroke-width="1.5" fill="none">
+            <path d="M74 46 L30 34"/>
+            <path d="M116 109 L44 158"/>
+            <path d="M156 90 L214 72"/>
+            <path d="M140 216 L140 250"/>
+          </g>
+          <g fill="var(--amber)" font-family="ui-monospace,monospace" font-size="9" letter-spacing="0.6">
+            <text x="6" y="30">01 NOTCHED EAR</text>
+            <text x="6" y="172">02 MASK BREAK</text>
+            <text x="166" y="66">03 PALE BROW</text>
+            <text x="82" y="256">04 SIX TAIL RINGS</text>
+          </g>
+        </svg>
+        <span class="figure__cap">Marker diagram · not artwork</span>
+      </div>
+
+      <div class="locks">
+        <div class="lock"><span class="lock__k">Marker 01</span><span class="lock__v"><b>Notched left ear.</b> A clean wedge missing from the upper-left ear. Highest-contrast marker, reads in silhouette, survives any lighting, and is easy for a model to hold. This is the primary identifier.</span></div>
+        <div class="lock"><span class="lock__k">Marker 02</span><span class="lock__v"><b>Broken mask bridge.</b> The dark mask does not connect across the nose on the left side. Subtle, but it is what makes close-ups verifiably him.</span></div>
+        <div class="lock"><span class="lock__k">Marker 03</span><span class="lock__v"><b>Pale streak over the right brow.</b> A small patch of near-white fur. Reads best in flash and streetlight.</span></div>
+        <div class="lock"><span class="lock__k">Marker 04</span><span class="lock__v"><b>Six tail rings.</b> Always six. Nobody counts consciously; everybody notices when it changes.</span></div>
+        <div class="lock"><span class="lock__k">Anatomy</span><span class="lock__v"><b>A real raccoon. Full stop.</b> Correct proportions, correct fur, correct paws. Never anthropomorphised limbs, never human hands, never a humanoid torso.</span></div>
+        <div class="lock"><span class="lock__k">The act</span><span class="lock__v">He stands on his hind legs and manipulates objects with his front paws — <b>both of which real raccoons do.</b> The impossibility is the <em>behaviour and the context</em>, never the body.</span></div>
+        <div class="lock"><span class="lock__k">Signature</span><span class="lock__v"><b>Direct eye contact with the lens, every single image.</b> He has seen you. He has not stopped. This is the replacement for the badge and it is the whole joke.</span></div>
+        <div class="lock"><span class="lock__k">Never</span><span class="lock__v">No clothing. No accessories worn. No weapons. No speech bubbles. No cartoon proportions. No studio lighting. No smiling.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 03 ─────────────────────────────────────────────────── -->
+  <section id="s3">
+    <div class="sec-head"><span class="sec-num">03</span><h2>Premise, name and mark</h2></div>
+
+    <p><strong>The premise: caught mid-act, completely unbothered by being caught.</strong> Not a criminal mastermind — the comedy is the nonchalance. Every image is a "someone photographed this" moment, which is why the premise and the aesthetic are the same decision: a caught-in-the-act photo <em>should</em> look like a hurried phone snap, so the format's constraints become its credibility.</p>
+
+    <p><strong>The name: DUANE. The mark: <em>IT WASN'T DUANE</em>.</strong> A bare common first name is a weak trademark and hard to protect; a distinctive phrase is not. It closes every caption as a flat denial published directly beneath photographic evidence to the contrary — the joke and the mark are the same object. It also works as the handle, the merch line, and the thing your audience starts commenting before you post it.</p>
+
+    <div class="note">
+      <span class="note__k">Where the mark lives now</span>
+      <p>With the badge gone the wordmark cannot sit inside the artwork, and it should not — a watermark on a photoreal image reads as stock. It lives in the <strong>handle, the caption sign-off, and merchandise</strong>, which is how essentially all character IP works. Trademark rights build from use in commerce, not from the mark appearing in the picture. Over time the notched ear itself becomes the visual identifier, and a consistently used distinctive marking is the kind of thing that can mature into protectable trade dress.</p>
+    </div>
+  </section>
+
+  <!-- ── 04 ─────────────────────────────────────────────────── -->
+  <section id="s4">
+    <div class="sec-head"><span class="sec-num">04</span><h2>Prompt scaffold</h2></div>
+    <p>Four blocks. Only Block B changes. Block C is doing more work than any other part of this document — under a photoreal brief, the <em>camera</em> is what separates a convincing snapshot from an obvious render.</p>
+
+    <div class="snippet">
+      <div class="snippet__bar"><span class="snippet__n">Block A — subject · never edit</span><button class="btn" type="button" data-copy="pA">Copy</button></div>
+      <pre id="pA">A real North American raccoon, photographed, anatomically accurate, normal
+raccoon proportions and size. Dense grey-brown fur, black facial mask, pale
+muzzle, ringed bushy tail with six dark rings. A distinctive clean wedge
+notch missing from the upper part of its LEFT ear. The dark mask does not
+connect across the bridge of its nose on the left side. A small pale, almost
+white streak of fur above its right brow. It is standing up on its hind legs
+and using its front paws, as raccoons naturally do. It is looking directly
+into the camera lens.</pre>
+    </div>
+
+    <div class="snippet">
+      <div class="snippet__bar"><span class="snippet__n">Block B — the act · the only part you change</span><button class="btn" type="button" data-copy="pB">Copy</button></div>
+      <pre id="pB">It is standing at an outdoor ATM at night, front paws on the keypad, mid-
+transaction, turning its head to look at the camera. A queue of two people
+waits behind it.</pre>
+    </div>
+
+    <div class="snippet">
+      <div class="snippet__bar"><span class="snippet__n">Block C — camera · never edit · does the heavy lifting</span><button class="btn" type="button" data-copy="pC">Copy</button></div>
+      <pre id="pC">Candid smartphone photograph, handheld, slightly crooked framing, taken in
+a hurry. Available light only — sodium streetlight, shop signage, or harsh
+on-camera flash at night. Mild motion blur, visible sensor noise and grain
+in the shadows, slight lens smear, mixed colour temperature. Shallow but
+imperfect focus. 4:5 vertical. Documentary realism. Looks like a photo a
+passer-by actually took and posted, not a considered composition.</pre>
+    </div>
+
+    <div class="snippet">
+      <div class="snippet__bar"><span class="snippet__n">Block D — negative · never edit</span><button class="btn" type="button" data-copy="pD">Copy</button></div>
+      <pre id="pD">human hands, fingers, anthropomorphic, humanoid body, cartoon, illustration,
+3D render, CGI, plush toy, clothing, hat, vest, accessories, weapons,
+smiling, teeth, studio lighting, softbox, professional photography, sharp
+clean image, symmetrical framing, text, watermark, logo, oversized raccoon,
+multiple raccoons</pre>
+    </div>
+
+    <div class="note note--key">
+      <span class="note__k">The three failure modes to watch for</span>
+      <p><strong>Human hands</strong> — the instant tell; reject the generation, never retouch it. <strong>Scale drift</strong> — models inflate him toward human size; he is a normal raccoon, roughly knee height. <strong>Over-polish</strong> — if it looks like a good photograph, it has failed. The reference posts in this genre succeed partly <em>because</em> they look slightly bad.</p>
+    </div>
+
+    <div class="note note--warn">
+      <span class="note__k">The one rule with legal weight</span>
+      <p>Block C asks for a <strong>generated</strong> scene, not an edit of a real photograph. Never feed a real street photo in as a base — that makes your output a derivative work of someone else's picture and forfeits every advantage this format has. If you want genuine locations, <strong>shoot the plates yourself</strong> and composite; that also creates real human authorship in the finished image, which is the only thing you can claim, since AI output alone carries no copyright.</p>
+    </div>
+  </section>
+
+  <!-- ── 05 ─────────────────────────────────────────────────── -->
+  <section id="s5">
+    <div class="sec-head"><span class="sec-num">05</span><h2>Twenty acts</h2></div>
+    <p>Each is a thing he is caught doing. Nocturnal and urban by default. Marked entries are arc beats — post them in order.</p>
+
+    <div class="eps">
+      <div class="ep"><span class="ep__n">01</span><div class="ep__b"><span class="ep__t">The ATM</span><span class="ep__d">Front paws on the keypad, mid-transaction, two people queuing behind him.</span></div></div>
+      <div class="ep"><span class="ep__n">02</span><div class="ep__b"><span class="ep__t">Bodega, 3am</span><span class="ep__d">Standing in the crisp aisle under fluorescent light, one bag already open.</span></div></div>
+      <div class="ep"><span class="ep__n">03</span><div class="ep__b"><span class="ep__t">Parked car</span><span class="ep__d">Sitting upright in the driver's seat at a red light, paws on the wheel.</span></div></div>
+      <div class="ep"><span class="ep__n">04</span><div class="ep__b"><span class="ep__t">Laundromat</span><span class="ep__d">Loading a machine at night. A full basket beside him. He is not finished.</span></div></div>
+      <div class="ep"><span class="ep__n">05</span><div class="ep__b"><span class="ep__t">The fire escape</span><span class="ep__d">Two floors up, holding a slice, watching the street below through the railing.</span></div></div>
+      <div class="ep"><span class="ep__n">06</span><div class="ep__b"><span class="ep__t">Self-checkout</span><span class="ep__d">Scanning an item. The unexpected-item light is flashing. He has noticed you instead.</span></div></div>
+      <div class="ep--arc ep"><span class="ep__n">07</span><div class="ep__b"><span class="ep__t">First sighting on CCTV</span><span class="ep__d">Grainy security-camera frame with a timestamp. The notched ear is clearly visible. The channel's first "evidence" post.</span></div></div>
+      <div class="ep"><span class="ep__n">08</span><div class="ep__b"><span class="ep__t">Bus stop</span><span class="ep__d">Seated on the bench in the rain, waiting, entirely at ease among three commuters.</span></div></div>
+      <div class="ep"><span class="ep__n">09</span><div class="ep__b"><span class="ep__t">The dumpster, formally</span><span class="ep__d">Standing beside it, not in it, holding a single item as if it has been assessed and selected.</span></div></div>
+      <div class="ep"><span class="ep__n">10</span><div class="ep__b"><span class="ep__t">Vending machine</span><span class="ep__d">Both front paws inside the flap, up to the shoulder, looking at the lens.</span></div></div>
+      <div class="ep"><span class="ep__n">11</span><div class="ep__b"><span class="ep__t">Subway platform</span><span class="ep__d">Standing at the yellow line, leaning to look down the tunnel like everyone else.</span></div></div>
+      <div class="ep"><span class="ep__n">12</span><div class="ep__b"><span class="ep__t">Someone's kitchen</span><span class="ep__d">On the counter at night, fridge open, lit only by the fridge. The homeowner's flash fires.</span></div></div>
+      <div class="ep--arc ep"><span class="ep__n">13</span><div class="ep__b"><span class="ep__t">The capybara</span><span class="ep__d">A capybara sitting in frame, adjacent to whatever Duane is doing, declining to acknowledge any of it. Recurring from here on.</span></div></div>
+      <div class="ep"><span class="ep__n">14</span><div class="ep__b"><span class="ep__t">Drive-thru</span><span class="ep__d">Standing at the window at the height of a car door, receiving a bag.</span></div></div>
+      <div class="ep"><span class="ep__n">15</span><div class="ep__b"><span class="ep__t">Open house</span><span class="ep__d">Daylight, for once. Standing in an empty staged living room with an estate agent's flyer.</span></div></div>
+      <div class="ep"><span class="ep__n">16</span><div class="ep__b"><span class="ep__t">Hardware store</span><span class="ep__d">In the key-cutting aisle, holding a key, mid-aisle, mid-eye-contact.</span></div></div>
+      <div class="ep"><span class="ep__n">17</span><div class="ep__b"><span class="ep__t">The wedding</span><span class="ep__d">Background of somebody's reception photo, at the dessert table, unmistakable.</span></div></div>
+      <div class="ep"><span class="ep__n">18</span><div class="ep__b"><span class="ep__t">Police interaction</span><span class="ep__d">Standing calmly beside a patrol car at night, lit blue and red. No arrest. No explanation.</span></div></div>
+      <div class="ep--arc ep"><span class="ep__n">19</span><div class="ep__b"><span class="ep__t">Aftermath</span><span class="ep__d">Show only what is left — an emptied shelf, a door ajar, one paw print. He is not in frame. First post he does not appear in.</span></div></div>
+      <div class="ep--arc ep"><span class="ep__n">20</span><div class="ep__b"><span class="ep__t">The ATM, again</span><span class="ep__d">Identical framing to episode 01, different city. The loop closes and the format resets forever.</span></div></div>
+    </div>
+
+    <div class="note">
+      <span class="note__k">Two structural notes</span>
+      <p>Episode 07 establishes a second visual register — grainy CCTV — which gives you variety without breaking realism, and doubles as proof for the running "it wasn't him" bit. Episode 13 gives the capybara its correct job: the foil that never reacts. Its meme equity is enormous and its personality is passive, which makes it a poor lead and a perfect witness.</p>
+    </div>
+  </section>
+
+  <!-- ── 06 ─────────────────────────────────────────────────── -->
+  <section id="s6">
+    <div class="sec-head"><span class="sec-num">06</span><h2>Captions and the comment engine</h2></div>
+
+    <p>Captions are written as <strong>denial and eyewitness testimony</strong> — never as narration or jokes. The image is the evidence; the caption is the alibi. This is also your original written contribution, which is the human authorship that matters for monetization eligibility.</p>
+
+    <div class="snippet">
+      <div class="snippet__bar"><span class="snippet__n">Caption formula</span><button class="btn" type="button" data-copy="cap">Copy</button></div>
+      <pre id="cap">[Flat factual account of what is happening, present tense, no punchline]
+[One escalating detail, delivered with total neutrality]
+
+It wasn't Duane.
+
+— optional vote line: "Where does he turn up next — laundromat or
+   drive-thru? Comments decide."</pre>
+    </div>
+
+    <ul class="plain">
+      <li><strong>Never explain the joke.</strong> The photo is the joke; the caption is the denial.</li>
+      <li><strong>Never break character.</strong> No emoji, no "lol", no meta-commentary about AI in the caption itself.</li>
+      <li><strong>The vote line is the comment engine.</strong> Reference accounts in this genre run comment-to-like ratios around 0.002 — enormous reach, no community. Asking where he shows up next is the cheapest available fix, and it needs no face and no voice.</li>
+      <li><strong>"It wasn't Duane" closes every caption.</strong> Repetition is what builds a mark.</li>
+      <li><strong>Label the post as AI at upload.</strong> The label carries no ranking penalty; concealment is what costs you.</li>
+      <li><strong>Vary composition deliberately</strong> — night and day, close and wide, phone and CCTV, with and without people. Formula repetition is the specific behaviour that degrades distribution, so variance is a compliance control, not a preference.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>Character, name, mark, markers and episode premises are original to this document. The marker diagram is a schematic drawn in code — it is the specification your generations are measured against, not artwork, and deliberately not a style reference. General information, not legal advice: search trademark availability before relying on any mark, and treat the copyrightability of AI-assisted work as unsettled. Supersedes the goose bible, which remains in the repository as a record of the rejected direction.</p>
+  </footer>
+
+</div>
+
+<script>
+  document.querySelectorAll('[data-copy]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var el = document.getElementById(btn.dataset.copy);
+      if (!el) return;
+      var text = el.textContent;
+      var done = function () {
+        var was = btn.textContent;
+        btn.textContent = 'Copied';
+        setTimeout(function () { btn.textContent = was; }, 1400);
+      };
+      var fallback = function () {
+        var ta = document.createElement('textarea');
+        ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch (e) { btn.textContent = 'Select manually'; }
+        document.body.removeChild(ta);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, fallback);
+      } else { fallback(); }
+    });
+  });
+</script>
