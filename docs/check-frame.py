@@ -11,6 +11,22 @@ from PIL import Image
 
 POUCH  = np.array([150, 110, 205])   # #966ECD
 CAP    = np.array([28,  42,  86])    # navy
+CANON_HUE = 265.3                    # hue of #966ECD, the property that must hold
+
+
+def rgb_hue_sat(c):
+    r, g, b = (float(v) / 255 for v in c)
+    mx, mn = max(r, g, b), min(r, g, b)
+    d = mx - mn
+    if d < 1e-6:
+        return 0.0, 0.0
+    if mx == r:
+        h = ((g - b) / d) % 6
+    elif mx == g:
+        h = (b - r) / d + 2
+    else:
+        h = (r - g) / d + 4
+    return h * 60.0, d / mx if mx > 0 else 0.0
 
 def load(path):
     return np.array(Image.open(path).convert('RGB')).astype(int)
@@ -53,11 +69,18 @@ def check(a, label=''):
             fails.append('pouch: no purple body around the band')
         else:
             med = np.median(reg[body], axis=0).astype(int)
-            dist = float(np.linalg.norm(med - POUCH))
-            if med[0] > med[2]:
-                fails.append(f'pouch: body is magenta/pink {tuple(med)}')
-            elif dist > 90:
-                fails.append(f'pouch: body drifted {tuple(med)} dist {dist:.0f}')
+            # Gate on HUE, not on distance to the swatch. Distance conflates
+            # design drift with the scene's light: a correct pouch in a dim
+            # shop sits 60-90 from #966ECD and fails, while the same reading
+            # passes in daylight. Hue survives the lighting, which is exactly
+            # the property a brand colour needs.
+            hue, sat = rgb_hue_sat(med)
+            dh = abs((hue - CANON_HUE + 180) % 360 - 180)
+            if dh > 14:
+                fails.append(f'pouch: hue {hue:.0f} is {dh:.0f} off canon '
+                             f'{CANON_HUE:.0f} {tuple(med)}')
+            elif sat < 0.25:
+                fails.append(f'pouch: colour washed out, sat {sat:.2f}')
 
     # ---- RUFUS: navy cap present in the upper half
     top = a[:int(h*0.6)]
