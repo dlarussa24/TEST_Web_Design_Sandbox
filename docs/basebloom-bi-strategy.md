@@ -243,7 +243,7 @@ ten clients is ~$16/client and excellent.
 This means the platform cost baked into pricing is **~$14/month for the first
 90 days**, not ~$170 — cheaper than the stated appetite, and the F2 decision
 becomes trigger-based rather than a calendar item. That figure is the BI
-platform alone; site analytics (~$9/mo) is a separate recurring line, so
+platform alone; site analytics ($9/mo) is a separate recurring line, so
 all-in recurring spend in the window is ~$23/mo.
 
 Design rules for when capacity does land:
