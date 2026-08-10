@@ -1,0 +1,295 @@
+<title>Rufus — prompt reference</title>
+
+<style>
+  :root {
+    --ground:#F2F0EC; --surface:#FFFFFF; --surface-alt:#E6E2DB;
+    --ink:#17161A; --ink-soft:#46434C; --ink-mute:#726E79;
+    --hairline:#D8D3CB; --hairline-hi:#BEB8AE;
+    --amber:#B36414; --amber-wash:#F7EBDC; --stop:#A82036; --go:#29694A;
+    --measure:66ch;
+    --step--2:0.72rem; --step--1:0.8125rem; --step-0:1.0625rem;
+    --step-1:1.25rem; --step-2:1.5rem; --step-3:2rem; --step-4:2.9rem;
+    --display:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --body:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:#15141A; --surface:#1D1B23; --surface-alt:#26232D;
+      --ink:#EDEAE4; --ink-soft:#C4BFBA; --ink-mute:#8E8992;
+      --hairline:#2E2A36; --hairline-hi:#423D4C;
+      --amber:#E39B4A; --amber-wash:#2A1D12; --stop:#FF6E82; --go:#5CC08E;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:#15141A; --surface:#1D1B23; --surface-alt:#26232D;
+    --ink:#EDEAE4; --ink-soft:#C4BFBA; --ink-mute:#8E8992;
+    --hairline:#2E2A36; --hairline-hi:#423D4C;
+    --amber:#E39B4A; --amber-wash:#2A1D12; --stop:#FF6E82; --go:#5CC08E;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--ground); color:var(--ink); font-family:var(--body);
+         font-size:var(--step-0); line-height:1.62; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:58rem; margin:0 auto; padding:clamp(2rem,5vw,4rem) clamp(1.1rem,4vw,2rem) 6rem;
+          display:flex; flex-direction:column; gap:2.5rem; }
+  a { color:var(--amber); text-underline-offset:0.16em; }
+  :focus-visible { outline:2px solid var(--amber); outline-offset:2px; }
+  p { margin:0; max-width:var(--measure); }
+  strong { font-weight:650; color:var(--ink); }
+
+  .masthead { display:flex; flex-direction:column; gap:1rem; padding-bottom:1.75rem; border-bottom:3px solid var(--ink); }
+  .docket { font-family:var(--mono); font-size:var(--step--1); letter-spacing:0.1em; text-transform:uppercase;
+            color:var(--ink-mute); display:flex; flex-wrap:wrap; gap:0.4rem 1.1rem; }
+  h1 { font-family:var(--display); font-weight:600; font-size:clamp(2.2rem,7.5vw,var(--step-4));
+       line-height:1.02; letter-spacing:-0.02em; margin:0; text-wrap:balance; }
+  .standfirst { font-size:var(--step-1); line-height:1.5; color:var(--ink-soft); max-width:46ch; }
+
+  section { display:flex; flex-direction:column; gap:0.9rem; scroll-margin-top:1.5rem; }
+  .sec-head { display:flex; align-items:baseline; gap:0.9rem; padding-top:1.1rem; border-top:1px solid var(--hairline); flex-wrap:wrap; }
+  .sec-num { font-family:var(--mono); font-size:var(--step--2); letter-spacing:0.1em;
+             background:var(--ink); color:var(--ground); padding:0.2rem 0.45rem; }
+  h2 { font-family:var(--display); font-weight:600; font-size:clamp(1.35rem,3.8vw,var(--step-3));
+       line-height:1.14; letter-spacing:-0.01em; margin:0; }
+  h3 { font-weight:700; font-size:var(--step-0); margin:0.4rem 0 0; color:var(--ink); }
+
+  ul.plain { margin:0; padding-left:1.15rem; max-width:var(--measure); display:flex; flex-direction:column; gap:0.5rem; }
+  ul.plain li::marker { color:var(--amber); }
+
+  .note { background:var(--surface); border:1px solid var(--hairline); border-left:4px solid var(--ink-mute);
+          padding:1rem 1.2rem; display:flex; flex-direction:column; gap:0.5rem; }
+  .note--key { background:var(--amber-wash); border:0; border-left:4px solid var(--amber); }
+  .note--warn { border-left-color:var(--stop); }
+  .note__k { font-family:var(--mono); font-size:var(--step--2); letter-spacing:0.1em;
+             text-transform:uppercase; color:var(--ink-mute); }
+  .note p { font-size:var(--step--1); line-height:1.6; color:var(--ink-soft); }
+
+  .snippet { border:1px solid var(--hairline); background:var(--surface); display:flex; flex-direction:column; }
+  .snippet__bar { display:flex; align-items:center; gap:0.9rem; padding:0.55rem 0.85rem;
+                  background:var(--surface-alt); border-bottom:1px solid var(--hairline); flex-wrap:wrap; }
+  .snippet__n { font-family:var(--mono); font-size:var(--step--2); letter-spacing:0.09em;
+                text-transform:uppercase; color:var(--ink-mute); }
+  .pill { font-family:var(--mono); font-size:0.62rem; letter-spacing:0.07em; text-transform:uppercase;
+          border:1px solid var(--hairline-hi); padding:0.16rem 0.4rem; color:var(--ink-mute); }
+  .pill--lock { color:var(--go); border-color:currentColor; }
+  .pill--vary { color:var(--amber); border-color:currentColor; }
+  .snippet pre { margin:0; padding:0.95rem; overflow-x:auto; font-family:var(--mono);
+                 font-size:0.74rem; line-height:1.6; color:var(--ink-soft); white-space:pre-wrap; }
+  .btn { font-family:var(--mono); font-size:0.64rem; letter-spacing:0.08em; text-transform:uppercase;
+         color:var(--ink-soft); background:transparent; border:1px solid var(--hairline-hi);
+         padding:0.32rem 0.65rem; cursor:pointer; white-space:nowrap; margin-left:auto; }
+  .btn:hover { background:var(--amber); border-color:var(--amber); color:#fff; }
+
+  .scroller { overflow-x:auto; border:1px solid var(--hairline); background:var(--surface); }
+  table { border-collapse:collapse; width:100%; min-width:34rem; font-size:var(--step--1); }
+  thead th { text-align:left; font-family:var(--mono); font-weight:500; font-size:var(--step--2);
+             letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-mute);
+             padding:0.6rem 0.8rem; border-bottom:1px solid var(--hairline-hi);
+             background:var(--surface-alt); white-space:nowrap; }
+  tbody td { padding:0.65rem 0.8rem; border-bottom:1px solid var(--hairline); vertical-align:top; color:var(--ink-soft); }
+  tbody tr:last-child td { border-bottom:0; }
+  tbody td:first-child { color:var(--ink); font-weight:550; }
+
+  footer { border-top:3px solid var(--ink); padding-top:1.1rem; font-size:var(--step--1);
+           color:var(--ink-mute); max-width:var(--measure); line-height:1.6; }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="docket"><span>Prompt Reference</span><span>Images + Video</span><span>Rev. August 2026</span></div>
+    <h1>Exactly What Gets Sent</h1>
+    <p class="standfirst">Every block used to generate Rufus, in the order it is assembled, with the locked parts marked. Copy them verbatim — editing a locked block is how a character drifts.</p>
+  </header>
+
+  <div class="note note--key">
+    <span class="note__k">How a prompt is built</span>
+    <p>A prompt is <strong>Subject + Scene + Camera + Negative</strong>, concatenated in that order. Only <span class="pill pill--vary">varies</span> blocks change between posts. Everything marked <span class="pill pill--lock">locked</span> is copied character-for-character every single time.</p>
+  </div>
+
+  <!-- 01 IMAGE -->
+  <section id="s1">
+    <div class="sec-head"><span class="sec-num">01</span><h2>Images — both identities</h2></div>
+    <p>Identity is carried by <em>lighting and situation</em>, not by the subject block. The subject is identical in both modes.</p>
+
+    <div class="snippet">
+      <div class="snippet__bar"><span class="snippet__n">Block A — subject</span><span class="pill pill--lock">Locked</span><button class="btn" type="button" data-copy="a">Copy</button></div>
+      <pre id="a">A real North American raccoon, photographed, anatomically accurate, normal
+raccoon size, roughly knee height. Dense grey-brown fur, black facial mask,
+pale muzzle, ringed bushy tail. It is standing up on its hind legs and using
+its real raccoon front paws, as raccoons naturally do — actual raccoon paws
+with claws, never human hands or fingers. It is looking directly into the
+camera lens.</pre>
+    </div>
+
+    <div class="snippet">
+      <div class="snippet__bar"><span class="snippet__n">Block B — scene · community man</span><span class="pill pill--vary">Varies</span><button class="btn" type="button" data-copy="b1">Copy</button></div>
+      <pre id="b1">It is standing behind a small community advice desk in a bright municipal
+hall, front paws resting on a messy stack of paper leaflets that it has
+knocked askew. An elderly member of the public leans in across the desk
+asking a question. Late morning daylight falls through high windows behind
+them.
+
+An unopened foil children's juice pouch lies on the desk beside the
+leaflets, clearly visible but not being touched — PURPLE body, one bold
+solid YELLOW HORIZONTAL BAND level across its middle, white straw still
+attached flat in its wrapper.</pre>
+    </div>
+
+    <div class="snippet">
+      <div class="snippet__bar"><span class="snippet__n">Block B — scene · gone rogue</span><span class="pill pill--vary">Varies</span><button class="btn" type="button" data-copy="b2">Copy</button></div>
+      <pre id="b2">It is standing up on its hind legs with both front paws pressed on the
+keypad of an outdoor cash machine, head turned to stare directly into the
+camera lens, caught in the act and completely unbothered. It is entirely
+alone — no queue, no other people, empty pavement behind it. Banknotes
+protrude from the dispenser slot.
+
+On the ground at its feet lies a CRUSHED EMPTY foil drink pouch — PURPLE
+body with a bold YELLOW HORIZONTAL BAND across it and a white straw,
+flattened and discarded.</pre>
+    </div>
+
+    <div class="snippet">
+      <div class="snippet__bar"><span class="snippet__n">Block C-day — community man</span><span class="pill pill--lock">Locked</span><button class="btn" type="button" data-copy="cd">Copy</button></div>
+      <pre id="cd">Ordinary flat daylight in a plain public interior. Nothing atmospheric,
+nothing flattering — the light a municipal building actually has.
+
+A candid smartphone photograph, handheld, taken quickly by a bystander who
+was not composing. Slightly crooked horizon, subject a little off-centre,
+awkward crop. Mild motion blur, visible sensor noise, imperfect focus.
+4:5 vertical.
+
+It should look like a mediocre photo someone actually took and posted, not
+a good photograph of an animal.</pre>
+    </div>
+
+    <div class="snippet">
+      <div class="snippet__bar"><span class="snippet__n">Block C-night — gone rogue</span><span class="pill pill--lock">Locked</span><button class="btn" type="button" data-copy="cn">Copy</button></div>
+      <pre id="cn">SHOT AT NIGHT, IN THE DARK. The only light sources are an orange sodium
+streetlamp overhead and the glow of a screen. Deep shadows, crushed blacks,
+heavy orange-and-cyan colour cast. NOT daylight. NOT indoors under clean
+lighting.
+
+A bad candid smartphone photograph, handheld, taken in a hurry by someone
+who was not ready. Crooked horizon, subject off-centre, awkward crop.
+Noticeable motion blur, heavy sensor noise and colour speckle in the
+shadows, slight lens smear, blown highlights where the light hits.
+Imperfect focus — softer than it should be. 4:5 vertical.
+
+It should look like a mediocre photo a passer-by actually took and posted,
+not a good photograph of an animal.</pre>
+    </div>
+
+    <div class="snippet">
+      <div class="snippet__bar"><span class="snippet__n">Block D — negative</span><span class="pill pill--lock">Locked</span><button class="btn" type="button" data-copy="d">Copy</button></div>
+      <pre id="d">human hands, fingers, anthropomorphic, humanoid body, cartoon, illustration,
+3D render, CGI, plush toy, clothing, hat, vest, accessories, weapons,
+smiling, teeth, studio lighting, softbox, professional photography, sharp
+clean image, symmetrical framing, text, watermark, logo, oversized raccoon,
+multiple raccoons</pre>
+    </div>
+
+    <div class="snippet">
+      <div class="snippet__bar"><span class="snippet__n">Edit pass — objects only, one pass</span><span class="pill pill--vary">Varies</span><button class="btn" type="button" data-copy="e">Copy</button></div>
+      <pre id="e">Keep this photograph exactly as it is. Same raccoon, same pose, same paws,
+same people, same room, same lighting, same grain and photographic quality.
+Do not restyle or re-render anything. Do not change the animal's body, face,
+ears or markings.
+
+Make these object-level changes only:
+
+1. [ADD / CRUSH THE POUCH — describe placement, and specify PURPLE body,
+   bold YELLOW HORIZONTAL BAND level across the middle, white straw]
+2. [REPAIR ANY DEFECT — describe the flaw and what it should look like]
+
+Change absolutely nothing else — not the face, not the ears, not the
+background, not the exposure.</pre>
+    </div>
+  </section>
+
+  <!-- 02 VIDEO -->
+  <section id="s2">
+    <div class="sec-head"><span class="sec-num">02</span><h2>Video — the motion revision</h2></div>
+
+    <div class="note note--warn">
+      <span class="note__k">Spec change: more motion</span>
+      <p>The original Living Still asked for near-zero movement — roughly 1.2% change between frames. That reads as deadpan in isolation but is too static to hold a feed, where movement is what buys watch time. <strong>Videos now brief for continuous, visible action.</strong></p>
+      <p><strong>The constraint that does not move:</strong> more motion must never mean <em>human</em> motion. Every added movement has to be behaviour a real raccoon performs. The moment Rufus points, shrugs, waves or gestures, the photorealism dies — and the photorealism is the entire hook. <strong>The impossibility stays in the situation, never in the body.</strong></p>
+    </div>
+
+    <h3>Motion vocabulary — build shots from these</h3>
+    <div class="scroller">
+      <table>
+        <thead><tr><th>Movement</th><th>Why it works</th></tr></thead>
+        <tbody>
+          <tr><td>Rapid dexterous paw work</td><td>Raccoons genuinely manipulate objects at speed. The single most watchable thing they do, and it is real</td></tr>
+          <tr><td>Sharp head swivels, glancing off-camera</td><td>Reads as checking whether anyone is coming — motion that also tells story</td></tr>
+          <tr><td>Ear flicks and rotation</td><td>Constant micro-movement that keeps a frame alive between beats</td></tr>
+          <tr><td>Rising higher on the hind legs</td><td>Weight shift, a real posture change, adds vertical dynamics</td></tr>
+          <tr><td>Sniffing, nose working</td><td>Species-typical, cheap, always in character</td></tr>
+          <tr><td>Tail sweep</td><td>Large slow movement that balances the fast paw work</td></tr>
+          <tr><td>Startle then freeze</td><td>The best closer: action, then dead stillness locked on the lens</td></tr>
+          <tr><td>Drop to all fours and back up</td><td>Big movement, entirely natural, resets the frame</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="snippet">
+      <div class="snippet__bar"><span class="snippet__n">Video prompt — structure</span><span class="pill pill--lock">Locked shape</span><button class="btn" type="button" data-copy="v">Copy</button></div>
+      <pre id="v">The raccoon is ACTIVELY BUSY and moving throughout the shot. Continuous
+motion, never static.
+
+[ACTION — two or three beats from the motion vocabulary, in order, ending
+with: then it snaps its head back, locks eyes directly into the camera lens
+and freezes for the last beat, caught.]
+
+All movement must be REAL RACCOON MOVEMENT: scurrying, fidgeting, sniffing,
+head-jerks, ear twitches, weight shifts on the hind legs, dexterous paw
+manipulation. It must NEVER move like a human — no human gestures, no
+pointing, no shrugging, no waving, no anthropomorphic body language.
+
+Handheld phone camera, natural shake, following the action slightly.
+
+AUDIO: [diegetic sources for this scene]. ABSOLUTELY NO MUSIC. NO SPEECH,
+NO VOICES, NO NARRATION, NO HUMAN TALKING, no dialogue of any kind.
+
+Photorealistic, preserving the lighting, colour cast, sensor noise, grain
+and soft focus of the source image. Real handheld phone video, not a
+rendered animation. No stylisation.</pre>
+    </div>
+
+    <div class="note note--key">
+      <span class="note__k">Measured against the old spec</span>
+      <p>Same start frame, both models. Mean change between frames went from <strong>1.18% to 2.91%</strong> — roughly two and a half times the movement — with peaks up from 3.1% to 5.9%. He genuinely works the keypad, turns into the machine, glances back, and reaches for the notes. The movement reads as raccoon: no human gestures appeared, and the crushed pouch stayed in frame throughout.</p>
+      <p><strong>What did not land:</strong> the closing beat. The brief asked him to snap back and freeze on the lens for the final second; instead the model distributed the eye contact into the middle of the clip and ended him facing the machine. If the lock-on matters for a given post, put it <em>first</em> rather than last, or plan to trim the tail.</p>
+    </div>
+
+    <div class="note">
+      <span class="note__k">Settings</span>
+      <p><code>flux_3_video</code>, start_image = the approved still, <code>generate_audio: true</code>, 3:4, 1080p, 5–6 seconds. Decline the model's cinematic preset suggestion — it adds camera moves the format does not want. And with real motion in the shot, <strong>do not ping-pong</strong>: reversed action is obvious, and reversed audio doubly so. Cut a clean end instead of looping.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>Companion to the character bible and the format plan. Blocks marked locked are copied verbatim; the scene and action blocks are the only places a post differs from the last one. Bracketed text is a slot to fill, not literal prompt text.</p>
+  </footer>
+</div>
+
+<script>
+  document.querySelectorAll('[data-copy]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var el = document.getElementById(b.dataset.copy); if (!el) return;
+      var t = el.textContent, done = function () {
+        var w = b.textContent; b.textContent = 'Copied';
+        setTimeout(function () { b.textContent = w; }, 1400);
+      }, fb = function () {
+        var ta = document.createElement('textarea'); ta.value = t;
+        ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch (e) { b.textContent = 'Select manually'; }
+        document.body.removeChild(ta);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, fb);
+      else fb();
+    });
+  });
+</script>
