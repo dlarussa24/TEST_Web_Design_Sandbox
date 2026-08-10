@@ -1,0 +1,278 @@
+<title>Rufus — post format &amp; distribution plan</title>
+
+<style>
+  :root {
+    --ground:#F2F0EC; --surface:#FFFFFF; --surface-alt:#E6E2DB;
+    --ink:#17161A; --ink-soft:#46434C; --ink-mute:#726E79;
+    --hairline:#D8D3CB; --hairline-hi:#BEB8AE;
+    --amber:#B36414; --amber-wash:#F7EBDC; --stop:#A82036; --go:#29694A;
+    --measure:66ch;
+    --step--2:0.72rem; --step--1:0.8125rem; --step-0:1.0625rem;
+    --step-1:1.25rem; --step-2:1.5rem; --step-3:2rem; --step-4:2.9rem;
+    --display:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --body:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:#15141A; --surface:#1D1B23; --surface-alt:#26232D;
+      --ink:#EDEAE4; --ink-soft:#C4BFBA; --ink-mute:#8E8992;
+      --hairline:#2E2A36; --hairline-hi:#423D4C;
+      --amber:#E39B4A; --amber-wash:#2A1D12; --stop:#FF6E82; --go:#5CC08E;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:#15141A; --surface:#1D1B23; --surface-alt:#26232D;
+    --ink:#EDEAE4; --ink-soft:#C4BFBA; --ink-mute:#8E8992;
+    --hairline:#2E2A36; --hairline-hi:#423D4C;
+    --amber:#E39B4A; --amber-wash:#2A1D12; --stop:#FF6E82; --go:#5CC08E;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--ground); color:var(--ink); font-family:var(--body);
+         font-size:var(--step-0); line-height:1.62; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:58rem; margin:0 auto; padding:clamp(2rem,5vw,4rem) clamp(1.1rem,4vw,2rem) 6rem;
+          display:flex; flex-direction:column; gap:2.75rem; }
+  a { color:var(--amber); text-underline-offset:0.16em; }
+  :focus-visible { outline:2px solid var(--amber); outline-offset:2px; }
+  p { margin:0; max-width:var(--measure); }
+  strong { font-weight:650; color:var(--ink); }
+
+  .masthead { display:flex; flex-direction:column; gap:1rem; padding-bottom:1.75rem; border-bottom:3px solid var(--ink); }
+  .docket { font-family:var(--mono); font-size:var(--step--1); letter-spacing:0.1em; text-transform:uppercase;
+            color:var(--ink-mute); display:flex; flex-wrap:wrap; gap:0.4rem 1.1rem; }
+  h1 { font-family:var(--display); font-weight:600; font-size:clamp(2.2rem,7.5vw,var(--step-4));
+       line-height:1.02; letter-spacing:-0.02em; margin:0; text-wrap:balance; }
+  .standfirst { font-size:var(--step-1); line-height:1.5; color:var(--ink-soft); max-width:46ch; }
+
+  section { display:flex; flex-direction:column; gap:1rem; scroll-margin-top:1.5rem; }
+  .sec-head { display:flex; align-items:baseline; gap:0.9rem; padding-top:1.1rem; border-top:1px solid var(--hairline); flex-wrap:wrap; }
+  .sec-num { font-family:var(--mono); font-size:var(--step--2); letter-spacing:0.1em;
+             background:var(--ink); color:var(--ground); padding:0.2rem 0.45rem; }
+  h2 { font-family:var(--display); font-weight:600; font-size:clamp(1.35rem,3.8vw,var(--step-3));
+       line-height:1.14; letter-spacing:-0.01em; margin:0; text-wrap:balance; }
+  h3 { font-weight:700; font-size:var(--step-0); margin:0.5rem 0 0; color:var(--ink); }
+
+  ul.plain, ol.plain { margin:0; padding-left:1.15rem; max-width:var(--measure);
+                       display:flex; flex-direction:column; gap:0.55rem; }
+  ul.plain li::marker { color:var(--amber); }
+  ol.plain li::marker { color:var(--ink-mute); font-family:var(--mono); font-size:0.9em; }
+
+  .note { background:var(--surface); border:1px solid var(--hairline); border-left:4px solid var(--ink-mute);
+          padding:1rem 1.2rem; display:flex; flex-direction:column; gap:0.5rem; }
+  .note--key { background:var(--amber-wash); border:0; border-left:4px solid var(--amber); }
+  .note--warn { border-left-color:var(--stop); }
+  .note__k { font-family:var(--mono); font-size:var(--step--2); letter-spacing:0.1em;
+             text-transform:uppercase; color:var(--ink-mute); }
+  .note p { font-size:var(--step--1); line-height:1.6; color:var(--ink-soft); }
+
+  .scroller { overflow-x:auto; border:1px solid var(--hairline); background:var(--surface); }
+  table { border-collapse:collapse; width:100%; min-width:36rem; font-size:var(--step--1); }
+  thead th { text-align:left; font-family:var(--mono); font-weight:500; font-size:var(--step--2);
+             letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-mute);
+             padding:0.65rem 0.8rem; border-bottom:1px solid var(--hairline-hi);
+             background:var(--surface-alt); white-space:nowrap; }
+  tbody td { padding:0.7rem 0.8rem; border-bottom:1px solid var(--hairline); vertical-align:top; color:var(--ink-soft); }
+  tbody tr:last-child td { border-bottom:0; }
+  tbody td:first-child { color:var(--ink); font-weight:550; }
+
+  /* format cards */
+  .fmts { display:flex; flex-direction:column; gap:0.9rem; }
+  .fmt { background:var(--surface); border:1px solid var(--hairline); display:grid; grid-template-columns:3rem 1fr; }
+  .fmt__k { background:var(--amber); color:#fff; display:flex; align-items:center; justify-content:center;
+            font-family:var(--display); font-size:var(--step-2); line-height:1; }
+  .fmt__b { padding:1rem 1.15rem; display:flex; flex-direction:column; gap:0.55rem; }
+  .fmt__n { font-family:var(--display); font-size:var(--step-1); line-height:1.2; color:var(--ink); }
+  .fmt p { font-size:var(--step--1); line-height:1.55; color:var(--ink-soft); }
+  .meta { display:flex; flex-wrap:wrap; gap:0.35rem 0.95rem; padding-top:0.15rem; }
+  .tag { font-family:var(--mono); font-size:0.68rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-mute); }
+  .tag b { color:var(--amber); font-weight:500; }
+
+  .step { display:grid; grid-template-columns:2.2rem 1fr; gap:0 0.9rem; padding:0.85rem 0; border-bottom:1px solid var(--hairline); }
+  .step:last-child { border-bottom:0; }
+  .step__n { font-family:var(--mono); font-size:var(--step--1); color:var(--amber); padding-top:0.14rem; }
+  .step__t { font-weight:650; color:var(--ink); font-size:var(--step--1); }
+  .step__d { font-size:var(--step--1); color:var(--ink-soft); line-height:1.55; margin-top:0.15rem; }
+
+  footer { border-top:3px solid var(--ink); padding-top:1.1rem; font-size:var(--step--1);
+           color:var(--ink-mute); max-width:var(--measure); line-height:1.6; }
+  @media (prefers-reduced-motion: reduce) { * { transition-duration:0.01ms !important; } }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="docket"><span>Distribution Plan</span><span>Instagram + TikTok</span><span>Rev. August 2026</span></div>
+    <h1>What a Rufus Post Actually Is</h1>
+    <p class="standfirst">Six post formats, what each is for, and how they are assembled — built around one constraint the character imposes and one the platforms do.</p>
+  </header>
+
+  <div class="note note--key">
+    <span class="note__k">The two constraints that decide everything</span>
+    <p><strong>From the platforms:</strong> stills do not travel. Both feeds route reach through video, and a static image posted alone is the weakest thing you can publish. Every format below therefore has a video path.</p>
+    <p><strong>From the character:</strong> Rufus is faceless and voiceless. But <strong>voiceless does not mean silent</strong> — and that distinction is the single biggest unlock in this plan. See § 03.</p>
+  </div>
+
+  <!-- 01 -->
+  <section id="s1">
+    <div class="sec-head"><span class="sec-num">01</span><h2>The hook is the first frame, not the first line</h2></div>
+    <p>This genre's hook is a specific cognitive event: <strong>"wait — is that real?"</strong> It fires in well under a second, from the image alone, and everything else in the post is downstream of it.</p>
+    <ul class="plain">
+      <li><strong>Put the impossibility in frame one.</strong> Upright stance plus paws on a human object. Never build to it, never open on an establishing shot — the viewer has already scrolled.</li>
+      <li><strong>The eye contact is the punchline, so it can be delayed.</strong> That is the only permissible structure: he is doing the thing, then he looks at you. Two beats, no more.</li>
+      <li><strong>Photoreal is the whole asset.</strong> The moment it looks rendered, the hook dies and the post becomes ordinary AI content. Reject any generation that looks like a good photograph or a clean render — see the bible's camera blocks.</li>
+      <li><strong>No text overlay on the image.</strong> Burned-in captions signal "content" and break the found-photo illusion. Platform-native caption text only.</li>
+    </ul>
+  </section>
+
+  <!-- 02 -->
+  <section id="s2">
+    <div class="sec-head"><span class="sec-num">02</span><h2>Six formats</h2></div>
+
+    <div class="fmts">
+      <article class="fmt"><div class="fmt__k">A</div><div class="fmt__b">
+        <span class="fmt__n">The Living Still</span>
+        <p>A finished still, animated just enough to qualify as video — breathing fur, a blink, a flicker in the strip light, a hair of camera drift. Three to five seconds, seamless loop. Nothing "happens".</p>
+        <p><strong>Why it matters most:</strong> it is the cheapest possible conversion of an image into a distributable video, and the deadpan stillness is on-character rather than a compromise. This should be your highest-volume format.</p>
+        <div class="meta"><span class="tag">Build <b>image → video</b></span><span class="tag">Length <b>3–5s loop</b></span><span class="tag">Share of feed <b>~40%</b></span></div>
+      </div></article>
+
+      <article class="fmt"><div class="fmt__k">B</div><div class="fmt__b">
+        <span class="fmt__n">The Turn</span>
+        <p>He is mid-act — paws in the machine, keypad, fridge — and then turns his head to the lens and holds. The reveal is the beat, and the hold after it is what makes people rewatch.</p>
+        <p>Five to eight seconds. The hold should feel two beats too long; that discomfort is the joke.</p>
+        <div class="meta"><span class="tag">Build <b>image → video</b></span><span class="tag">Length <b>5–8s</b></span><span class="tag">Share of feed <b>~25%</b></span></div>
+      </div></article>
+
+      <article class="fmt"><div class="fmt__k">C</div><div class="fmt__b">
+        <span class="fmt__n">The Two-Mode Carousel</span>
+        <p>Slide one: the community man, daylight, helping badly, unopened pouch in shot. Slide two: same raccoon, night, crushed pouch, mid-crime. <strong>The swipe is the punchline.</strong></p>
+        <p>Instagram only — carousels are native there and swipes count as dwell, which is the metric that moves distribution. On TikTok, run it as a two-shot cut instead.</p>
+        <div class="meta"><span class="tag">Build <b>2 stills</b></span><span class="tag">Platform <b>IG carousel</b></span><span class="tag">Share of feed <b>~15%</b></span></div>
+      </div></article>
+
+      <article class="fmt"><div class="fmt__k">D</div><div class="fmt__b">
+        <span class="fmt__n">The CCTV Drop</span>
+        <p>Black-and-white, high corner angle, compression artefacts, night-vision blowout. Framed as recovered evidence rather than a photograph.</p>
+        <p>Its job is <em>register variety</em>. A feed of identical candid phone snaps reads as a formula — which is the specific behaviour that degrades recommendation. This is your variance, and it doubles as proof for the running "it wasn't Rufus" denial.</p>
+        <div class="meta"><span class="tag">Build <b>still or video</b></span><span class="tag">Mode <b>Rogue only</b></span><span class="tag">Share of feed <b>~10%</b></span></div>
+      </div></article>
+
+      <article class="fmt"><div class="fmt__k">E</div><div class="fmt__b">
+        <span class="fmt__n">The Aftermath</span>
+        <p>He is not in frame. An emptied shelf, a door ajar, one crushed pouch on the floor, a single paw print. The audience supplies him.</p>
+        <p>Rare — perhaps one in twenty. It only works once the character is established, and it is the format that proves the audience actually knows who he is.</p>
+        <div class="meta"><span class="tag">Build <b>still → living still</b></span><span class="tag">Mode <b>Rogue only</b></span><span class="tag">Share of feed <b>~5%</b></span></div>
+      </div></article>
+
+      <article class="fmt"><div class="fmt__k">F</div><div class="fmt__b">
+        <span class="fmt__n">The Tentpole</span>
+        <p>The pivot, the promotion, the incident. Higher production, longer, posted deliberately rather than on cadence. Around one a month.</p>
+        <p>Push these as carousels or longer cuts and let the surrounding weeks be setup. The pivot post specifically should carry <strong>no caption at all</strong>.</p>
+        <div class="meta"><span class="tag">Build <b>multi-shot</b></span><span class="tag">Cadence <b>~monthly</b></span><span class="tag">Share of feed <b>~5%</b></span></div>
+      </div></article>
+    </div>
+  </section>
+
+  <!-- 03 -->
+  <section id="s3">
+    <div class="sec-head"><span class="sec-num">03</span><h2>Sound — the unlock</h2></div>
+
+    <div class="note note--key">
+      <span class="note__k">Voiceless does not mean silent</span>
+      <p>TikTok is a sound-on culture and a silent video reads as lifeless there. The character forbids narration — but it does not forbid <strong>diegetic sound</strong>: the sound the scene itself would make. Street hum and a distant siren. Fluorescent buzz. The ATM's key beeps. A fridge compressor. And above all, <strong>the straw</strong> — the wet pull, and the dry rattle when the pouch is empty.</p>
+      <p>That last one is doing real work. A slurp is inherently funny, it is the character's signature act, and it is <em>audio branding you own</em> — the equivalent of the crushed pouch, for ears. Recognisable in one second with the screen face-down.</p>
+    </div>
+
+    <ul class="plain">
+      <li><strong>Design for sound-off first, then add the bed.</strong> Most Instagram viewing is muted; the post must be complete in silence and better with sound.</li>
+      <li><strong>No trending audio.</strong> Meta's label deals cover personal and creator use, not commercial — a monetised business profile using the trending catalogue has a licensing gap independent of everything else. Ambient beds and original sound only.</li>
+      <li><strong>The dry rattle is the Rogue signature.</strong> Empty pouch, straw scraping air. Use it to close Rogue posts the way the caption sign-off closes them in text.</li>
+    </ul>
+  </section>
+
+  <!-- 04 -->
+  <section id="s4">
+    <div class="sec-head"><span class="sec-num">04</span><h2>Platform split</h2></div>
+
+    <div class="scroller">
+      <table>
+        <thead><tr><th></th><th>Instagram</th><th>TikTok</th></tr></thead>
+        <tbody>
+          <tr><td>Primary surface</td><td>Reels, plus carousels for format C</td><td>Video only</td></tr>
+          <tr><td>Aspect</td><td>9:16 Reels · 4:5 carousel stills</td><td>9:16, full bleed</td></tr>
+          <tr><td>Sound default</td><td>Muted — design silent-first</td><td>On — the bed matters more here</td></tr>
+          <tr><td>Caption length</td><td>Full formula from the bible</td><td>Trim to one line plus the sign-off</td></tr>
+          <tr><td>Comment engine</td><td>Vote line in caption</td><td>Vote line in caption <em>and</em> pinned comment</td></tr>
+          <tr><td>AI label</td><td>Apply at upload</td><td>Apply at upload</td></tr>
+          <tr><td>Cross-posting</td><td colspan="2">Re-export natively for each. Never post a file carrying another platform's watermark — it is demoted on sight.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>The two feeds want the same asset cut differently, not different content. Generate once at 4:5, then produce a 9:16 crop for Reels and TikTok — the bible's compositions leave headroom for it because Rufus sits in the middle third.</p>
+  </section>
+
+  <!-- 05 -->
+  <section id="s5">
+    <div class="sec-head"><span class="sec-num">05</span><h2>The production run</h2></div>
+    <p>Batch weekly, publish daily. Everything below is one sitting.</p>
+
+    <div>
+      <div class="step"><span class="step__n">01</span><div>
+        <div class="step__t">Pick the week's acts</div>
+        <div class="step__d">Seven scenes from the episode list, alternating modes — roughly four Rogue to three community man, so the arc keeps moving without the wholesome half disappearing.</div></div></div>
+      <div class="step"><span class="step__n">02</span><div>
+        <div class="step__t">Generate stills in one batch</div>
+        <div class="step__d">Fixed subject block, mode-appropriate camera block, no anatomical marker instruction. Over-generate — expect to bin a third for scale drift, over-polish, or a band that renders at an angle.</div></div></div>
+      <div class="step"><span class="step__n">03</span><div>
+        <div class="step__t">One object-level edit pass</div>
+        <div class="step__d">Add or crush the pouch, repair defects. Never a second pass — realism degrades faster than the fix is worth.</div></div></div>
+      <div class="step"><span class="step__n">04</span><div>
+        <div class="step__t">Composite the wordmark</div>
+        <div class="step__d">Run the band script on any frame where the pouch lettering is legible enough to matter. Skip it where the pouch is small or crushed.</div></div></div>
+      <div class="step"><span class="step__n">05</span><div>
+        <div class="step__t">Animate</div>
+        <div class="step__d">Each approved still becomes a Living Still or a Turn. This is where the week's volume comes from — one still yields one video and one carousel slide.</div></div></div>
+      <div class="step"><span class="step__n">06</span><div>
+        <div class="step__t">Sound pass</div>
+        <div class="step__d">Ambient bed per scene, plus the straw on any post where the pouch is in use. Silent-first check before the bed goes on.</div></div></div>
+      <div class="step"><span class="step__n">07</span><div>
+        <div class="step__t">Score before you queue</div>
+        <div class="step__d">Run the finished cuts through a virality/retention check and let it re-order the week — publish the strongest on the days you have the most audience, not in the order you made them.</div></div></div>
+      <div class="step"><span class="step__n">08</span><div>
+        <div class="step__t">Caption, label, log</div>
+        <div class="step__d">Mode-correct formula and sign-off. AI label at upload. Log each asset's scene, mode, prompt version and rights basis — the source log, adapted.</div></div></div>
+    </div>
+
+    <div class="note">
+      <span class="note__k">On automation</span>
+      <p>The pipeline above is deliberately <em>batch-then-schedule</em>, not generate-on-trigger. A daily automated generation would publish unreviewed frames, and roughly a third of generations fail quality — human hands, scale drift, an angled band. The step that must stay manual is <strong>selection</strong>. Automate the scheduling and the publishing; never automate the accept/reject.</p>
+    </div>
+  </section>
+
+  <!-- 06 -->
+  <section id="s6">
+    <div class="sec-head"><span class="sec-num">06</span><h2>What to measure</h2></div>
+    <p>The reference accounts in this genre run enormous reach and almost no community — share-to-like around 0.6, comment-to-like around 0.002. That is the trap this whole design is built to avoid, so measure the thing you are trying to fix.</p>
+
+    <div class="scroller">
+      <table>
+        <thead><tr><th>Metric</th><th>Why</th><th>Target direction</th></tr></thead>
+        <tbody>
+          <tr><td>Comment : like</td><td>The genre's known failure. Your vote line and two-mode ambiguity exist to move it</td><td>Above 0.01 — five times the reference baseline</td></tr>
+          <tr><td>Saves</td><td>Predicts distribution more than likes, and rewards the CCTV and Aftermath formats</td><td>Rising</td></tr>
+          <tr><td>Rewatch / completion</td><td>The Turn's hold is designed for it</td><td>Above 100% on 3–5s loops</td></tr>
+          <tr><td>Follower conversion per 1k views</td><td>Whether reach is becoming an audience or evaporating</td><td>The number that decides if this is a business</td></tr>
+          <tr><td>Shares</td><td>Will be high whatever you do — the genre's native strength</td><td>Watch, do not optimise</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>If comment rate stays flat at the genre baseline after a month, the fix is not more posts — it is a harder ask in the caption, or more ambiguous frames where the audience has to argue about which Rufus they are looking at.</p>
+  </section>
+
+  <footer>
+    <p>Companion to the character bible; the subject, camera and caption specifications live there and are not repeated here. Platform behaviours described are as of August 2026 and move quickly — treat the format logic as durable and the surface details as needing a re-check before you build automation on them. Label AI content at upload on both platforms.</p>
+  </footer>
+
+</div>
