@@ -37,11 +37,16 @@ METERED = {
         "workspace when last checked. If it is still absent, say so rather "
         "than reporting zero.",
     ),
+    # Not an MCP tool: api.netlify.com is blocked by the sandbox egress
+    # policy, so the figures come from a GitHub Actions run instead.
     "Netlify": (
-        None,
-        "has no billing, quota, or usage field on any exposed tool, and "
-        "there is no NETLIFY_AUTH_TOKEN or CLI here to reach the REST API. "
-        "State that the figures are unavailable and name that reason.",
+        "workflow:netlify-quota.yml",
+        "is read by dispatching .github/workflows/netlify-quota.yml with "
+        "mcp__github__actions_run_trigger (ref: the default branch), then "
+        "reading capabilities.credits.included and capabilities.credits.used "
+        "from the job log. Used/total is used/included; remaining is "
+        "included - used. A run takes roughly 25s, so do this when the "
+        "response actually concerns credits rather than on every mention.",
     ),
 }
 
@@ -88,7 +93,12 @@ def main():
     open(marker, "w").close()
 
     reader, note = METERED[server]
-    if reader:
+    if reader is None:
+        msg = (
+            f"This turn used the metered {server} MCP, whose balance is not "
+            f"readable here: {server} {note}"
+        )
+    elif reader.startswith("mcp__"):
         msg = (
             f"This turn used the metered {server} MCP. Before you finish, call "
             f"{reader} and report the balance at the end of your response: "
@@ -97,8 +107,10 @@ def main():
         )
     else:
         msg = (
-            f"This turn used the metered {server} MCP, whose balance is not "
-            f"readable here: {server} {note}"
+            f"This turn used the metered {server} MCP. Report its balance at "
+            f"the end of your response: used/total and remaining. {server} "
+            f"{note} Report the real numbers only -- never estimate or infer "
+            f"them."
         )
 
     json.dump(

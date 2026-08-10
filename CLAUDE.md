@@ -25,37 +25,60 @@ the `PostToolUse` matcher in `.claude/settings.json`.
 | Higgsfield | `mcp__Higgsfield__balance` | works — `credits`, `subscription_plan_type`; remaining only, no plan total |
 | Cloudinary | `mcp__Cloudinary__get-usage-details` | works — `credits.usage` / `credits.limit` / `credits.used_percent` |
 | Lovable | `mcp__Lovable__get_workspace` | documents a credit balance but returned none for the free workspace |
-| Netlify | none | blocked, see below |
+| Netlify | `.github/workflows/netlify-quota.yml` | works via the Actions bridge — `capabilities.credits.included` / `.used` |
 
 Do not use `mcp__Higgsfield__show_plans_and_credits` as a reader — it opens a
 purchase widget rather than quietly returning a figure.
 
 ### Netlify specifically
 
-**This cannot be satisfied yet.** Checked 2026-08-09:
+**Unblocked 2026-08-10 via the Actions bridge.** It was blocked for two
+independent reasons, and both still hold *inside the sandbox*:
 
-- The Netlify MCP server exposes only `get-user`, `get-teams`, `get-team`,
-  plus project/deploy/extension readers. The team object returns
-  `created_at`, `enforce_mfa`, `members_count`, `slug`, `updated_at`, `id`,
-  `name`, `type_name` and a role/URL enrichment — **no billing, quota, usage
-  or credit fields of any kind**.
-- No `NETLIFY_AUTH_TOKEN` in the environment and no Netlify CLI installed, so
-  the REST API is not reachable either.
+- The Netlify MCP server has **no billing, quota, usage or credit field on any
+  tool**. `netlify-team-services-reader` offers only `get-teams` and
+  `get-team`; the team object carries membership and SAML fields and nothing
+  metered. This is settled — do not re-check it hoping for a different answer.
+- `api.netlify.com` is refused by the environment's egress policy
+  (`CONNECT` → 403), as are `app.netlify.com` and `docs.netlify.com`.
+  Installing `netlify-cli` does not help: it is a client for the blocked host,
+  and `netlify login` needs a browser round-trip that cannot happen here.
 
-Do **not** invent, estimate, or infer these numbers. If a response touches
-Netlify credits while this is still true, say the figures are unavailable and
-name the reason, rather than omitting the topic silently.
+So the figures come from a **GitHub runner** instead:
 
-**To unblock**, one of:
+1. Dispatch `.github/workflows/netlify-quota.yml` (`workflow_dispatch`, ref =
+   the default branch) with `mcp__github__actions_run_trigger`.
+2. Read the job log. The relevant fields:
 
-1. Add a Netlify personal access token to the environment as
-   `NETLIFY_AUTH_TOKEN`, then read
-   `GET https://api.netlify.com/api/v1/accounts` — the account object carries
-   `capabilities` with included/used figures.
-2. Install the Netlify CLI and use an authenticated `netlify api` call.
-3. Confirm which metric "credits" refers to. Netlify meters several things
-   (bandwidth, build minutes, function invocations) and separately sells
-   "credits" for agent/AI features; the right endpoint depends on which.
+   | Field | Meaning |
+   |---|---|
+   | `capabilities.credits.included` | plan total — the denominator |
+   | `capabilities.credits.used` | used — the numerator |
+   | `plan_credits` | same total, top level |
+   | `swar_auto_topup_credits` | auto-topup increment, not a balance |
+
+   Remaining is `included - used`. A run takes roughly 25 s.
+
+The token lives in the repo's Actions secrets as `NETLIFY_AUTH_TOKEN`, **not**
+in the cloud environment's variables — that field is plaintext and readable by
+anyone using the environment, and the docs say not to put credentials there.
+Keep the workflow on `workflow_dispatch` only so no push- or PR-triggered job
+in this public repo can reach the secret.
+
+**This repo is public, so Actions logs are public.** `.github/scripts/
+netlify-quota.py` never prints the raw response: numbers and booleans print in
+full, string values are withheld unless the key names a plan tier, unit,
+period or state. Do not "simplify" it by dumping the JSON — that would publish
+the account name, billing email, slug and IDs.
+
+Reading first ran 2026-08-10: **0 / 1000 credits used, 1000 remaining**, on a
+Personal account. That also answers the old open question about which metric
+"credits" means — `capabilities.credits` is its own counter, separate from
+bandwidth, build minutes and function invocations, which have no entries in
+this account's capabilities at all.
+
+Do **not** invent, estimate, or infer these numbers. If the bridge fails, say
+the figures are unavailable and name the reason rather than omitting them.
 
 ## basebloom
 
