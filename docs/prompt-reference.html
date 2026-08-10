@@ -183,6 +183,14 @@ On the desk among the clutter lies a CRUSHED EMPTY foil drink pouch —
 PURPLE body, bold YELLOW HORIZONTAL BAND, white straw, flattened.</pre>
     </div>
 
+    <div class="note note--warn">
+      <span class="note__k">Gate the pouch — it drifts, and it drifts silently</span>
+      <p>The pouch is the mode indicator, so a drifted pouch is a broken post. It fails in three ways and all three have now been observed: <strong>colour</strong> going magenta instead of purple, <strong>band orientation</strong> going vertical or diagonal, and <strong>object type</strong> rendering as a snack bag instead of a foil drink pouch. The first wrecked-store generation failed on all three at once — body sampled at RGB (174, 51, 107) against a target of (150, 110, 205).</p>
+      <p><strong>Fix it with an object-level pass, do not regenerate the scene.</strong> When the composition is good, replacing the pouch takes one edit and preserves everything else. The corrected frame sampled (180, 139, 200) — inside tolerance.</p>
+      <p><strong>And check the last frame of every video, not just the source.</strong> Colour degrades <em>during</em> generation: over six seconds the pouch shifted from (180, 139, 200) to (141, 65, 141) — still purple, still passing, but visibly travelling toward magenta. A longer clip would fail.</p>
+      <p><code>docs/check-pouch.py</code> automates all of this: it finds the yellow band, measures body colour against target, tests band orientation, and exits non-zero on failure so it can gate a batch.</p>
+    </div>
+
     <h3>What each reference contributes</h3>
     <div class="scroller">
       <table>
