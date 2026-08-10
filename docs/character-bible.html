@@ -400,7 +400,7 @@ waits behind it.</pre>
     </div>
 
     <div class="snippet">
-      <div class="snippet__bar"><span class="snippet__n">Block C — camera · never edit · does the heavy lifting</span><button class="btn" type="button" data-copy="pC">Copy</button></div>
+      <div class="snippet__bar"><span class="snippet__n">Block C-night — Gone Rogue · never edit</span><button class="btn" type="button" data-copy="pC">Copy</button></div>
       <pre id="pC">SHOT AT NIGHT, IN THE DARK. The only light sources are an orange sodium
 streetlamp overhead and the glow of a screen. Deep shadows, crushed blacks,
 heavy orange-and-cyan colour cast. NOT daylight. NOT indoors under clean
@@ -417,6 +417,20 @@ not a good photograph of an animal.</pre>
     </div>
 
     <div class="snippet">
+      <div class="snippet__bar"><span class="snippet__n">Block C-day — the community man · never edit</span><button class="btn" type="button" data-copy="pCd">Copy</button></div>
+      <pre id="pCd">Ordinary flat daylight in a plain public interior. Nothing atmospheric,
+nothing flattering — the light a municipal building actually has.
+
+A candid smartphone photograph, handheld, taken quickly by a bystander who
+was not composing. Slightly crooked horizon, subject a little off-centre,
+awkward crop. Mild motion blur, visible sensor noise, imperfect focus.
+4:5 vertical.
+
+It should look like a mediocre photo someone actually took and posted, not
+a good photograph of an animal.</pre>
+    </div>
+
+    <div class="snippet">
       <div class="snippet__bar"><span class="snippet__n">Block D — negative · never edit</span><button class="btn" type="button" data-copy="pD">Copy</button></div>
       <pre id="pD">human hands, fingers, anthropomorphic, humanoid body, cartoon, illustration,
 3D render, CGI, plush toy, clothing, hat, vest, accessories, weapons,
@@ -426,9 +440,18 @@ multiple raccoons</pre>
     </div>
 
     <div class="note note--key">
-      <span class="note__k">Findings from generation 001 — the ATM, soul_2, seed 525496</span>
-      <p><strong>The thesis held; the details did not.</strong> Paws rendered as real raccoon paws with claws on the keypad — no hands, no fingers — which is the whole reason this character beat the goose. Bipedal stance, lens eye contact, correct scale against the ATM and the queue: all landed. But <strong>three of four markers were dropped</strong> (mask break, pale brow, and a notch that came back ambiguous at best), and Block C was <strong>ignored outright</strong> — the model returned a bright, clean, well-composed daytime interior instead of a night street.</p>
-      <p>Two lessons, both now folded into this document. <strong>Markers will not survive a long text prompt</strong> — detail buried mid-paragraph gets averaged away, which is exactly why the reference-image chain below is not optional. And <strong>models default to making a good photograph</strong>, so the camera block has to be aggressive and negative about it; the version above was rewritten after this generation to lead with darkness and ask explicitly for a mediocre image.</p>
+      <span class="note__k">Findings across six generations</span>
+      <p><strong>Paws passed every single time.</strong> Real raccoon paws with claws, no hands, no fingers — six for six. That is the whole reason this character beat the goose, and it is now settled.</p>
+      <p><strong>The camera block works once it is aggressive.</strong> Generation 001 ignored a politely-worded night brief and returned a bright, clean daylight interior. Rewritten to lead with darkness, name the light sources, and explicitly ask for a <em>mediocre</em> photo, it then delivered on every subsequent attempt — night sodium, dim strip-lit corridor, and flat municipal daylight all landed on request. Mode differentiation through lighting is reliable.</p>
+      <p><strong>The notch will not come from a text prompt.</strong> Stated mid-paragraph it failed; stated first, in capitals, as the subject's one unmistakable feature, it still failed in two of three attempts and came back as a vaguely tattered ear in the third. Only a dedicated single-purpose edit pass produced a clean, thumbnail-legible wedge.</p>
+      <p><strong>And edit passes are not free.</strong> Three stacked edits turned a convincing photograph into something visibly painterly — smeared surfaces, fur stripped of micro-detail. Generation loss compounds fast.</p>
+    </div>
+
+    <div class="note note--key">
+      <span class="note__k">The validated pipeline — two steps, never three</span>
+      <p><strong>1. Generate the scene clean.</strong> Text-to-image, no marker instruction at all. Let the model make a convincing photograph, which it does well.<br>
+      <strong>2. One single-purpose edit pass for the notch.</strong> Change nothing else, and ask for it big: a deep V-shaped wedge, a quarter of the ear, obvious in a thumbnail. One instruction, one change.<br>
+      <strong>3. Stop.</strong> If the notch did not land, go back to step one with a new scene rather than editing again. A second corrective pass costs more realism than the marker is worth.</p>
     </div>
 
     <div class="note note--key">
