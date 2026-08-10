@@ -1,15 +1,38 @@
 # Project notes
 
-## Netlify credits reporting
+## Metered MCP balance reporting
 
-**Standing instruction.** In any response that touches Netlify credits, report:
+**Standing instruction.** In any response whose turn used a metered MCP
+server, report at the end of the response, after the substantive answer:
 
 - **Used / total** for the plan, as a numerator over a denominator
-- **Remaining** credits, as a separate figure
+- **Remaining**, as a separate figure
 
-Report these at the end of the response, after the substantive answer.
+Report the real numbers only. Do **not** invent, estimate, or infer them. If a
+figure is unreachable, say so and name the reason rather than omitting it.
+Where a reader returns a remaining balance with no plan total, report the
+remaining figure and say there is no denominator — do not manufacture one.
 
-**Current blocker — this cannot be satisfied yet.** Checked 2026-08-09:
+`.claude/hooks/mcp-balance-reminder.py` fires on `PostToolUse` for these
+servers and injects the reminder, once per server per turn. It cannot fetch
+the figures itself: these are claude.ai connectors authenticated server-side,
+and no token for them reaches this container, so no shell script can query
+them. Adding a server means adding it to the script's `METERED` map *and* to
+the `PostToolUse` matcher in `.claude/settings.json`.
+
+| Server | Reader tool | Verified 2026-08-10 |
+|---|---|---|
+| Higgsfield | `mcp__Higgsfield__balance` | works — `credits`, `subscription_plan_type`; remaining only, no plan total |
+| Cloudinary | `mcp__Cloudinary__get-usage-details` | works — `credits.usage` / `credits.limit` / `credits.used_percent` |
+| Lovable | `mcp__Lovable__get_workspace` | documents a credit balance but returned none for the free workspace |
+| Netlify | none | blocked, see below |
+
+Do not use `mcp__Higgsfield__show_plans_and_credits` as a reader — it opens a
+purchase widget rather than quietly returning a figure.
+
+### Netlify specifically
+
+**This cannot be satisfied yet.** Checked 2026-08-09:
 
 - The Netlify MCP server exposes only `get-user`, `get-teams`, `get-team`,
   plus project/deploy/extension readers. The team object returns

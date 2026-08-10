@@ -22,7 +22,6 @@
       "mcp__Higgsfield__media_confirm",
       "mcp__Higgsfield__sandbox_exec"
     ],
-
     "ask": [
       "mcp__Higgsfield__generate_image",
       "mcp__Higgsfield__generate_image_batch",
@@ -35,6 +34,35 @@
       "mcp__Higgsfield__outpaint_image",
       "mcp__Higgsfield__remove_background",
       "mcp__Higgsfield__motion_control"
+    ]
+  },
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3",
+            "args": [
+              "${CLAUDE_PROJECT_DIR}/.claude/hooks/mcp-balance-reminder.py"
+            ]
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "mcp__(Higgsfield|Cloudinary|Netlify|Lovable)__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3",
+            "args": [
+              "${CLAUDE_PROJECT_DIR}/.claude/hooks/mcp-balance-reminder.py"
+            ]
+          }
+        ]
+      }
     ]
   }
 }
