@@ -1,0 +1,509 @@
+<title>BRENT — character bible</title>
+
+<style>
+  /* ─────────────────────────────────────────────────────────────
+     This one leaves the assessment chrome behind. It is the
+     character's own world: hi-vis field yellow, wet concrete,
+     and the black-and-white of a Canada goose. Hi-vis is used
+     the way hi-vis actually works — as a field behind black
+     type, never as type on white.
+     ───────────────────────────────────────────────────────────── */
+  :root {
+    --ground:      #EFEFEC;
+    --surface:     #FFFFFF;
+    --surface-alt: #E2E2DD;
+    --ink:         #131314;
+    --ink-soft:    #45464A;
+    --ink-mute:    #6E7076;
+    --hairline:    #D2D2CB;
+    --hairline-hi: #B6B6AD;
+
+    --hivis:       #D6E020;
+    --hivis-deep:  #6E7500;
+    --link:        #17615A;
+
+    --goose-black: #17171A;
+    --goose-white: #F5F3EC;
+    --goose-body:  #6B5B47;
+    --goose-beak:  #1C1C1F;
+    --goose-leg:   #23231F;
+
+    --measure: 66ch;
+    --step--2: 0.72rem;
+    --step--1: 0.8125rem;
+    --step-0:  1.0625rem;
+    --step-1:  1.25rem;
+    --step-2:  1.5rem;
+    --step-3:  2rem;
+    --step-4:  2.9rem;
+
+    --display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:      #131315;
+      --surface:     #1B1B1E;
+      --surface-alt: #232327;
+      --ink:         #EDEDE8;
+      --ink-soft:    #C2C2BC;
+      --ink-mute:    #8C8D92;
+      --hairline:    #2C2C30;
+      --hairline-hi: #3E3E44;
+      --hivis:       #DCE62E;
+      --hivis-deep:  #A8B300;
+      --link:        #4FD1BE;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:      #131315;
+    --surface:     #1B1B1E;
+    --surface-alt: #232327;
+    --ink:         #EDEDE8;
+    --ink-soft:    #C2C2BC;
+    --ink-mute:    #8C8D92;
+    --hairline:    #2C2C30;
+    --hairline-hi: #3E3E44;
+    --hivis:       #DCE62E;
+    --hivis-deep:  #A8B300;
+    --link:        #4FD1BE;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--ground); color: var(--ink);
+    font-family: var(--body); font-size: var(--step-0); line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 58rem; margin: 0 auto;
+    padding: clamp(2rem,5vw,4rem) clamp(1.1rem,4vw,2rem) 6rem;
+    display: flex; flex-direction: column; gap: 2.75rem;
+  }
+  a { color: var(--link); text-underline-offset: 0.16em; }
+  :focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+  p { margin: 0; max-width: var(--measure); }
+  strong { font-weight: 650; color: var(--ink); }
+
+  /* ── Masthead ─────────────────────────────────────────────── */
+  .masthead { display: flex; flex-direction: column; gap: 1rem; padding-bottom: 1.75rem; border-bottom: 3px solid var(--ink); }
+  .docket {
+    font-family: var(--mono); font-size: var(--step--1); letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--ink-mute); display: flex; flex-wrap: wrap; gap: 0.4rem 1.1rem;
+  }
+  h1 {
+    font-family: var(--body); font-weight: 800;
+    font-size: clamp(2.4rem, 9vw, 4.5rem); line-height: 0.92;
+    letter-spacing: -0.035em; margin: 0; text-transform: uppercase;
+  }
+  h1 mark { background: var(--hivis); color: #131314; padding: 0 0.12em; }
+  .standfirst { font-size: var(--step-1); line-height: 1.5; color: var(--ink-soft); max-width: 44ch; }
+
+  section { display: flex; flex-direction: column; gap: 1rem; scroll-margin-top: 1.5rem; }
+  .sec-head { display: flex; align-items: baseline; gap: 0.9rem; padding-top: 1.1rem; border-top: 1px solid var(--hairline); flex-wrap: wrap; }
+  .sec-num {
+    font-family: var(--mono); font-size: var(--step--2); letter-spacing: 0.1em;
+    background: var(--ink); color: var(--ground); padding: 0.2rem 0.45rem;
+  }
+  h2 {
+    font-family: var(--body); font-weight: 750; text-transform: uppercase;
+    font-size: clamp(1.2rem, 3.4vw, 1.75rem); line-height: 1.1;
+    letter-spacing: -0.02em; margin: 0;
+  }
+  h3 { font-weight: 700; font-size: var(--step-0); margin: 0.5rem 0 0; color: var(--ink); }
+
+  ul.plain, ol.plain { margin: 0; padding-left: 1.15rem; max-width: var(--measure); display: flex; flex-direction: column; gap: 0.55rem; }
+  ul.plain li::marker { color: var(--hivis-deep); }
+  ol.plain li::marker { color: var(--ink-mute); font-family: var(--mono); font-size: 0.9em; }
+
+  .note {
+    background: var(--surface); border: 1px solid var(--hairline);
+    border-left: 4px solid var(--hivis); padding: 1rem 1.2rem;
+    display: flex; flex-direction: column; gap: 0.5rem;
+  }
+  .note--hard { border-left-color: var(--ink); }
+  .note__k { font-family: var(--mono); font-size: var(--step--2); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); }
+  .note p { font-size: var(--step--1); line-height: 1.6; color: var(--ink-soft); }
+
+  /* ── Model sheet ──────────────────────────────────────────── */
+  .sheet { display: grid; grid-template-columns: minmax(0,16rem) minmax(0,1fr); gap: 1.5rem; align-items: start; }
+  @media (max-width: 44rem) { .sheet { grid-template-columns: minmax(0,1fr); } }
+
+  .figure {
+    background: var(--surface); border: 1px solid var(--hairline);
+    padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem;
+  }
+  .figure svg { width: 100%; height: auto; display: block; }
+  .figure__cap {
+    font-family: var(--mono); font-size: var(--step--2); letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink-mute); text-align: center;
+  }
+
+  .locks { display: flex; flex-direction: column; }
+  .lock { display: grid; grid-template-columns: 8rem 1fr; gap: 0.25rem 1rem; padding: 0.65rem 0; border-bottom: 1px solid var(--hairline); }
+  .lock:last-child { border-bottom: 0; }
+  @media (max-width: 30rem) { .lock { grid-template-columns: 1fr; } }
+  .lock__k { font-family: var(--mono); font-size: var(--step--2); letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-mute); padding-top: 0.12rem; }
+  .lock__v { font-size: var(--step--1); color: var(--ink-soft); line-height: 1.5; }
+  .lock__v b { color: var(--ink); font-weight: 650; }
+
+  /* ── Palette ──────────────────────────────────────────────── */
+  .swatches { display: grid; grid-template-columns: repeat(auto-fit, minmax(7rem,1fr)); gap: 0.5rem; }
+  .sw { border: 1px solid var(--hairline); background: var(--surface); }
+  .sw__chip { height: 3.25rem; }
+  .sw__meta { padding: 0.5rem 0.6rem; display: flex; flex-direction: column; gap: 0.1rem; }
+  .sw__n { font-size: var(--step--2); color: var(--ink); font-weight: 650; }
+  .sw__h { font-family: var(--mono); font-size: 0.66rem; color: var(--ink-mute); }
+
+  /* ── The badge ────────────────────────────────────────────── */
+  .badge-wrap { display: grid; grid-template-columns: minmax(0,13rem) minmax(0,1fr); gap: 1.5rem; align-items: start; }
+  @media (max-width: 40rem) { .badge-wrap { grid-template-columns: minmax(0,1fr); } }
+  .badge {
+    background: var(--hivis); color: #131314; border: 2px solid #131314;
+    padding: 0.85rem 0.9rem; display: flex; flex-direction: column; gap: 0.5rem;
+    max-width: 13rem;
+  }
+  .badge__top { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.14em; text-transform: uppercase; display: flex; justify-content: space-between; }
+  .badge__name { font-weight: 850; font-size: 2.1rem; line-height: 0.9; letter-spacing: -0.04em; }
+  .badge__role { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; }
+  .badge__bar { height: 0.55rem; background: repeating-linear-gradient(90deg,#131314 0 3px,transparent 3px 6px); }
+  .badge__foot { font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  /* ── Copy blocks ──────────────────────────────────────────── */
+  .snippet { border: 1px solid var(--hairline); background: var(--surface); display: flex; flex-direction: column; }
+  .snippet__bar { display: flex; align-items: center; gap: 1rem; padding: 0.55rem 0.85rem; background: var(--surface-alt); border-bottom: 1px solid var(--hairline); }
+  .snippet__n { font-family: var(--mono); font-size: var(--step--2); letter-spacing: 0.09em; text-transform: uppercase; color: var(--ink-mute); }
+  .snippet pre {
+    margin: 0; padding: 0.95rem; overflow-x: auto;
+    font-family: var(--mono); font-size: 0.76rem; line-height: 1.65; color: var(--ink-soft);
+    white-space: pre-wrap;
+  }
+  .snippet pre b { color: var(--ink); font-weight: 650; }
+  .btn {
+    font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.09em; text-transform: uppercase;
+    color: var(--ink-soft); background: transparent; border: 1px solid var(--hairline-hi);
+    padding: 0.35rem 0.7rem; cursor: pointer; white-space: nowrap; margin-left: auto;
+  }
+  .btn:hover { background: var(--hivis); border-color: #131314; color: #131314; }
+
+  /* ── Episodes ─────────────────────────────────────────────── */
+  .eps { display: grid; grid-template-columns: repeat(auto-fill, minmax(16rem,1fr)); gap: 0.6rem; }
+  .ep { background: var(--surface); border: 1px solid var(--hairline); padding: 0.7rem 0.85rem; display: flex; gap: 0.7rem; }
+  .ep__n { font-family: var(--mono); font-size: var(--step--2); color: var(--hivis-deep); flex: none; padding-top: 0.14rem; font-variant-numeric: tabular-nums; }
+  .ep__b { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
+  .ep__t { font-weight: 650; font-size: var(--step--1); color: var(--ink); }
+  .ep__d { font-size: var(--step--2); color: var(--ink-soft); line-height: 1.5; }
+  .ep--arc { border-left: 3px solid var(--hivis); }
+
+  .scroller { overflow-x: auto; border: 1px solid var(--hairline); background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; min-width: 32rem; font-size: var(--step--1); }
+  thead th {
+    text-align: left; font-family: var(--mono); font-weight: 500; font-size: var(--step--2);
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-mute);
+    padding: 0.65rem 0.8rem; border-bottom: 1px solid var(--hairline-hi); background: var(--surface-alt); white-space: nowrap;
+  }
+  tbody td { padding: 0.7rem 0.8rem; border-bottom: 1px solid var(--hairline); vertical-align: top; color: var(--ink-soft); }
+  tbody tr:last-child td { border-bottom: 0; }
+  tbody td:first-child { color: var(--ink); font-weight: 550; }
+
+  footer {
+    border-top: 3px solid var(--ink); padding-top: 1.1rem;
+    font-size: var(--step--1); color: var(--ink-mute); max-width: var(--measure); line-height: 1.6;
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition-duration: 0.01ms !important; } }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="docket">
+      <span>Character Bible</span>
+      <span>v1.0</span>
+      <span>Faceless · Voiceless · Rung 01</span>
+    </div>
+    <h1>Ask for <mark>Brent</mark></h1>
+    <p class="standfirst">A Canada goose in a customer-facing role. He is confident, he is wrong, and he would like to speak to you about the returns policy.</p>
+  </header>
+
+  <div class="note note--hard">
+    <span class="note__k">Why the premise is built this way</span>
+    <p>The comedy engine is <strong>total self-assurance meeting total incompetence, with menace underneath</strong>. Brent does not know he is bad at the job. That single decision generates infinite episodes, gives every image a reason to exist beyond "goose standing up," and — because he is always <em>at work</em> — supplies a continuity prop that solves three problems at once. See <a href="#s3">§ 03</a>.</p>
+  </div>
+
+  <!-- ── 01 ─────────────────────────────────────────────────── -->
+  <section id="s1">
+    <div class="sec-head"><span class="sec-num">01</span><h2>The name</h2></div>
+
+    <div class="scroller">
+      <table>
+        <thead><tr><th>Option</th><th>Reads as</th><th>Trademark strength</th></tr></thead>
+        <tbody>
+          <tr><td>BRENT</td><td>Mid-tier corporate, hard consonants, one syllable, legible at thumbnail</td><td>Weak alone — strong as <em>Ask for Brent</em></td></tr>
+          <tr><td>NIGEL</td><td>Bureaucratic, pompous, very British</td><td>Weak alone; regional</td></tr>
+          <tr><td>DERECK</td><td>Misspelled on purpose — he made his own badge</td><td>Stronger: misspellings are distinctive</td></tr>
+          <tr><td>GAVIN</td><td>Assistant manager energy</td><td>Weak alone</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>Recommendation: BRENT, with the wordmark <em>ASK FOR BRENT</em>.</strong> A bare first name is a weak mark — common personal names are hard to protect. A phrase is not: <em>Ask for Brent</em> is distinctive, it is what you say at a service desk, and in context it reads as a mild threat. It also works as the handle, the merch line, and the sign-off on every caption.</p>
+
+    <div class="note">
+      <span class="note__k">Do this in week one</span>
+      <p>The name and mark are the <strong>entire moat</strong>. AI output carries no copyright, so trademark is the only protection available to you — and trademark rights build from <em>use in commerce</em>, which starts the day you post. Use the mark consistently from post one, keep dated records, and look at a registration once the account has traction.</p>
+    </div>
+  </section>
+
+  <!-- ── 02 ─────────────────────────────────────────────────── -->
+  <section id="s2">
+    <div class="sec-head"><span class="sec-num">02</span><h2>Model sheet — the canon lock</h2></div>
+    <p>Consistency across generations is the single hardest technical problem in this format, and it is solved by discipline rather than by tooling. Everything below is fixed forever. If it changes, it is not Brent.</p>
+
+    <div class="sheet">
+      <div class="figure">
+        <svg viewBox="0 0 200 300" role="img" aria-label="Model sheet: Brent, a Canada goose standing upright in a high-visibility vest with a name badge">
+          <!-- feet, then legs -->
+          <path d="M80 278h18l3 8H77z" fill="#C8892B"/>
+          <path d="M105 278h18l3 8H102z" fill="#C8892B"/>
+          <rect x="86" y="243" width="9" height="36" fill="var(--goose-leg)"/>
+          <rect x="107" y="243" width="9" height="36" fill="var(--goose-leg)"/>
+          <!-- arms first, so the body edge reads in front of the shoulder -->
+          <path d="M72 170Q50 188 47 214l3 20" stroke="var(--goose-body)" stroke-width="16" fill="none" stroke-linecap="round"/>
+          <path d="M130 170q22 16 24 40" stroke="var(--goose-body)" stroke-width="16" fill="none" stroke-linecap="round"/>
+          <!-- body -->
+          <path d="M101 118c26 0 42 24 42 66 0 38-14 62-42 62s-42-24-42-62c0-42 16-66 42-66z" fill="var(--goose-body)"/>
+          <!-- vest -->
+          <path d="M76 152h50c7 0 10 5 10 14v52c0 11-4 16-12 16H78c-8 0-12-5-12-16v-52c0-9 3-14 10-14z" fill="var(--hivis)"/>
+          <rect x="94" y="152" width="14" height="82" fill="var(--goose-body)"/>
+          <rect x="66" y="186" width="70" height="7" fill="#2A2A2E"/>
+          <rect x="66" y="205" width="70" height="7" fill="#2A2A2E"/>
+          <!-- clipboard, held at the right wingtip -->
+          <rect x="140" y="196" width="32" height="42" fill="#E8E2D2" stroke="#2A2A2E" stroke-width="3"/>
+          <rect x="148" y="191" width="16" height="8" fill="#8A8A82"/>
+          <rect x="147" y="209" width="18" height="3" fill="#A8A89E"/>
+          <rect x="147" y="217" width="18" height="3" fill="#A8A89E"/>
+          <rect x="147" y="225" width="12" height="3" fill="#A8A89E"/>
+          <!-- right wingtip over the board -->
+          <path d="M148 210q8 4 8 14" stroke="var(--goose-body)" stroke-width="13" fill="none" stroke-linecap="round"/>
+          <!-- badge on lanyard -->
+          <path d="M92 152l9 24 9-24" fill="none" stroke="#2A2A2E" stroke-width="3"/>
+          <rect x="88" y="174" width="26" height="18" fill="var(--goose-white)" stroke="#2A2A2E" stroke-width="2.5"/>
+          <rect x="91" y="178" width="20" height="4" fill="#2A2A2E"/>
+          <rect x="91" y="185" width="13" height="3" fill="#8A8A82"/>
+          <!-- neck -->
+          <path d="M92 40c0-8 6-13 12-13s12 5 12 13v84H92z" fill="var(--goose-black)"/>
+          <!-- chinstrap -->
+          <path d="M92 52c6 6 18 6 24 0v13c-7 6-17 6-24 0z" fill="var(--goose-white)"/>
+          <!-- head -->
+          <path d="M104 12c14 0 24 11 24 25 0 13-10 23-24 23S80 50 80 37c0-14 10-25 24-25z" fill="var(--goose-black)"/>
+          <!-- beak -->
+          <path d="M80 33c-14 1-22 4-22 7s8 6 22 7z" fill="var(--goose-beak)"/>
+          <!-- eye: flat, unblinking, dead centre -->
+          <circle cx="97" cy="31" r="5" fill="var(--goose-white)"/>
+          <circle cx="97" cy="31" r="2.4" fill="#0B0B0C"/>
+        </svg>
+        <span class="figure__cap">Canon pose · three-quarter · eye level</span>
+      </div>
+
+      <div class="locks">
+        <div class="lock"><span class="lock__k">Species</span><span class="lock__v"><b>Canada goose.</b> Chosen for the black head and white chinstrap — the highest-contrast head marking of any goose, which is what survives the 120px thumbnail test.</span></div>
+        <div class="lock"><span class="lock__k">Posture</span><span class="lock__v">Fully upright, weight even, shoulders square to camera. <b>Never crouching, never mid-flap.</b> He stands like a man waiting for a lift.</span></div>
+        <div class="lock"><span class="lock__k">Arms</span><span class="lock__v">Wings read as arms with a clear elbow. The transgression is arms alone — he was already bipedal, so do not also add hands with fingers. <b>Wingtips, not fingers.</b></span></div>
+        <div class="lock"><span class="lock__k">Wardrobe</span><span class="lock__v"><b>Hi-vis vest, always.</b> Two reflective bands, open front. It is the silhouette anchor and it survives any setting.</span></div>
+        <div class="lock"><span class="lock__k">Prop</span><span class="lock__v"><b>Lanyard and name badge, always.</b> See <a href="#s3">§ 03</a> — this is the most important object in the entire brand.</span></div>
+        <div class="lock"><span class="lock__k">Expression</span><span class="lock__v">Flat. Unblinking. <b>Brent never emotes.</b> All the acting is done by the neck and the situation. This is the deadpan rule and it is non-negotiable.</span></div>
+        <div class="lock"><span class="lock__k">Scale</span><span class="lock__v">Roughly one metre tall — smaller than the humans around him, which is funnier and keeps him unthreatening in frame.</span></div>
+        <div class="lock"><span class="lock__k">Never</span><span class="lock__v">No weapons. No clothing beyond the vest. No speech bubbles. No sunglasses. No human hands.</span></div>
+      </div>
+    </div>
+
+    <h3>Palette</h3>
+    <div class="swatches">
+      <div class="sw"><div class="sw__chip" style="background:#17171A"></div><div class="sw__meta"><span class="sw__n">Head &amp; neck</span><span class="sw__h">#17171A</span></div></div>
+      <div class="sw"><div class="sw__chip" style="background:#F5F3EC"></div><div class="sw__meta"><span class="sw__n">Chinstrap</span><span class="sw__h">#F5F3EC</span></div></div>
+      <div class="sw"><div class="sw__chip" style="background:#6B5B47"></div><div class="sw__meta"><span class="sw__n">Body</span><span class="sw__h">#6B5B47</span></div></div>
+      <div class="sw"><div class="sw__chip" style="background:#D6E020"></div><div class="sw__meta"><span class="sw__n">Hi-vis</span><span class="sw__h">#D6E020</span></div></div>
+      <div class="sw"><div class="sw__chip" style="background:#C8892B"></div><div class="sw__meta"><span class="sw__n">Feet</span><span class="sw__h">#C8892B</span></div></div>
+    </div>
+  </section>
+
+  <!-- ── 03 ─────────────────────────────────────────────────── -->
+  <section id="s3">
+    <div class="sec-head"><span class="sec-num">03</span><h2>The badge — one prop, three problems</h2></div>
+
+    <div class="badge-wrap">
+      <div class="badge">
+        <div class="badge__top"><span>Staff</span><span>No. 001</span></div>
+        <div class="badge__name">BRENT</div>
+        <div class="badge__role">Ask for me</div>
+        <div class="badge__bar"></div>
+        <div class="badge__foot">Employee of the month</div>
+      </div>
+      <div>
+        <p>The lanyard badge is the highest-leverage design decision in this bible, because one object does three jobs no other prop can:</p>
+        <ul class="plain">
+          <li><strong>Continuity anchor.</strong> Image models drift. A high-contrast rectangular object in a fixed position is far easier to hold stable across generations than subtle anatomy, and its presence instantly tells a viewer this is the same character even when the render wobbles.</li>
+          <li><strong>Wordmark carrier.</strong> Your trademark appears inside the artwork, in every single post, without a watermark. It cannot be cropped out without destroying the image — and unlike a corner logo, it is diegetic, so it never reads as branding.</li>
+          <li><strong>Premise engine.</strong> The role line changes with each episode. That one text field is the whole series format, and it is the thing your audience will start predicting in the comments.</li>
+        </ul>
+        <p style="margin-top:0.8rem"><strong>Rule:</strong> the badge is always visible and always legible. If a composition hides it, the composition is wrong.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 04 ─────────────────────────────────────────────────── -->
+  <section id="s4">
+    <div class="sec-head"><span class="sec-num">04</span><h2>Prompt scaffold</h2></div>
+    <p>Four blocks. Three of them never change — copy them verbatim every time. Editing the character block is how characters drift, and drift is how a property becomes a stock image.</p>
+
+    <div class="snippet">
+      <div class="snippet__bar"><span class="snippet__n">Block A — character · never edit</span><button class="btn" type="button" data-copy="pA">Copy</button></div>
+      <pre id="pA">A Canada goose standing fully upright on two legs, about one metre tall,
+with a black head and neck, a crisp white chinstrap marking, and a warm
+brown body. Its wings are held like human arms with a visible elbow bend,
+ending in wingtips — not hands, no fingers. It wears an open high-visibility
+yellow-green safety vest with two dark reflective bands across the chest,
+and a lanyard with a small white rectangular name badge on its chest. Its
+expression is completely flat and unblinking. Orange webbed feet.</pre>
+    </div>
+
+    <div class="snippet">
+      <div class="snippet__bar"><span class="snippet__n">Block B — scene · the only part you change</span><button class="btn" type="button" data-copy="pB">Copy</button></div>
+      <pre id="pB">It is standing behind the counter of a suburban garden centre, holding a
+clipboard, while a confused customer gestures at a dead plant. Mid-morning.</pre>
+    </div>
+
+    <div class="snippet">
+      <div class="snippet__bar"><span class="snippet__n">Block C — camera · never edit</span><button class="btn" type="button" data-copy="pC">Copy</button></div>
+      <pre id="pC">Shot on a phone camera, candid, slightly imperfect framing, natural
+available light, shallow depth of field, subtle motion blur, 4:5 vertical.
+Photographic realism, documentary feel, no stylisation. Eye-level, medium
+shot, the goose in the middle third of the frame with its badge legible.</pre>
+    </div>
+
+    <div class="snippet">
+      <div class="snippet__bar"><span class="snippet__n">Block D — negative · never edit</span><button class="btn" type="button" data-copy="pD">Copy</button></div>
+      <pre id="pD">human hands, fingers, cartoon, illustration, 3D render, smiling, open beak,
+teeth, sunglasses, clothing other than the vest, weapons, text overlay,
+speech bubble, watermark, wings spread, flying, crouching, multiple geese</pre>
+    </div>
+
+    <div class="note">
+      <span class="note__k">Beyond the prompt</span>
+      <p>Text alone will not hold a character. Generate a <strong>reference sheet first</strong> — front, three-quarter, profile, and a close-up of the badge — then use it as a character or style reference on every subsequent image. Keep the best output as the canonical reference and re-anchor to it whenever drift creeps in. That reference sheet is also your evidence of creative control if you ever want to argue human authorship over a composite.</p>
+    </div>
+
+    <div class="note note--hard">
+      <span class="note__k">The one prompt discipline that matters legally</span>
+      <p>Block C asks for a <em>generated</em> photographic scene, not an edit of a real photograph. Do not feed real street photos in as a base — that is the derivative-work trap. If you want real backgrounds, <strong>shoot them yourself</strong> and composite; that also gives you a genuine human contribution to claim.</p>
+    </div>
+  </section>
+
+  <!-- ── 05 ─────────────────────────────────────────────────── -->
+  <section id="s5">
+    <div class="sec-head"><span class="sec-num">05</span><h2>First twenty episodes</h2></div>
+    <p>Each is a job Brent is confidently unqualified for. The badge role line changes; nothing else does. Marked entries are arc beats — post them in order.</p>
+
+    <div class="eps">
+      <div class="ep"><span class="ep__n">01</span><div class="ep__b"><span class="ep__t">First day</span><span class="ep__d">Brent behind a garden centre counter, clipboard out, customer holding a dead plant. Badge: TRAINEE.</span></div></div>
+      <div class="ep"><span class="ep__n">02</span><div class="ep__b"><span class="ep__t">Returns desk</span><span class="ep__d">Arms folded. The queue is nine people long. Badge: NO REFUNDS.</span></div></div>
+      <div class="ep"><span class="ep__n">03</span><div class="ep__b"><span class="ep__t">Barista</span><span class="ep__d">Standing at the espresso machine, wingtip on the steam wand, milk everywhere. Badge: BARISTA.</span></div></div>
+      <div class="ep"><span class="ep__n">04</span><div class="ep__b"><span class="ep__t">Parking enforcement</span><span class="ep__d">Beside a car, ticket already under the wiper, driver running toward frame. Badge: ENFORCEMENT.</span></div></div>
+      <div class="ep"><span class="ep__n">05</span><div class="ep__b"><span class="ep__t">Passport control</span><span class="ep__d">Behind glass, stamp raised, unblinking. Badge: BORDER FORCE.</span></div></div>
+      <div class="ep"><span class="ep__n">06</span><div class="ep__b"><span class="ep__t">Supply teacher</span><span class="ep__d">At a whiteboard covered in nothing. Thirty empty chairs. Badge: SUPPLY.</span></div></div>
+      <div class="ep"><span class="ep__n">07</span><div class="ep__b"><span class="ep__t">Wedding photographer</span><span class="ep__d">In the aisle, camera round his neck, back to the couple. Badge: PHOTOGRAPHY.</span></div></div>
+      <div class="ep--arc ep"><span class="ep__n">08</span><div class="ep__b"><span class="ep__t">The capybara arrives</span><span class="ep__d">A capybara in an identical vest, sitting, entirely unbothered. It will never react to anything, ever. Badge: BRENT / SENIOR.</span></div></div>
+      <div class="ep"><span class="ep__n">09</span><div class="ep__b"><span class="ep__t">Health and safety</span><span class="ep__d">Pointing a wingtip at a wet floor sign lying flat in a puddle. Badge: COMPLIANCE.</span></div></div>
+      <div class="ep"><span class="ep__n">10</span><div class="ep__b"><span class="ep__t">IT support</span><span class="ep__d">Under a desk, cables in both wings, monitor showing a blue screen. Badge: HAVE YOU TRIED.</span></div></div>
+      <div class="ep"><span class="ep__n">11</span><div class="ep__b"><span class="ep__t">Sommelier</span><span class="ep__d">Presenting a bottle at a white-tablecloth table. Diners silent. Badge: SOMMELIER.</span></div></div>
+      <div class="ep"><span class="ep__n">12</span><div class="ep__b"><span class="ep__t">Lifeguard</span><span class="ep__d">High chair, whistle, facing directly away from the pool. Badge: LIFEGUARD.</span></div></div>
+      <div class="ep--arc ep"><span class="ep__n">13</span><div class="ep__b"><span class="ep__t">Promotion</span><span class="ep__d">Same vest, new lanyard, slightly larger badge. Everything else identical. Badge: ACTING MANAGER.</span></div></div>
+      <div class="ep"><span class="ep__n">14</span><div class="ep__b"><span class="ep__t">Performance review</span><span class="ep__d">Across a desk from an empty chair, reading from the clipboard. Badge: ACTING MANAGER.</span></div></div>
+      <div class="ep"><span class="ep__n">15</span><div class="ep__b"><span class="ep__t">Team building</span><span class="ep__d">A conference room, flipchart reading SYNERGY, the capybara asleep. Badge: FACILITATOR.</span></div></div>
+      <div class="ep"><span class="ep__n">16</span><div class="ep__b"><span class="ep__t">Air traffic control</span><span class="ep__d">Tower window, two paddles, a very large plane close behind him. Badge: GROUND CREW.</span></div></div>
+      <div class="ep"><span class="ep__n">17</span><div class="ep__b"><span class="ep__t">Museum invigilator</span><span class="ep__d">Standing far too close to a priceless vase. Badge: DO NOT TOUCH.</span></div></div>
+      <div class="ep"><span class="ep__n">18</span><div class="ep__b"><span class="ep__t">Substitute best man</span><span class="ep__d">At a microphone, clipboard raised, entire room turned toward him. Badge: BEST MAN.</span></div></div>
+      <div class="ep--arc ep"><span class="ep__n">19</span><div class="ep__b"><span class="ep__t">The incident</span><span class="ep__d">Aftermath only — never show the event. Sprinklers on, everyone gone, Brent unmoved. Badge obscured for the first and only time.</span></div></div>
+      <div class="ep--arc ep"><span class="ep__n">20</span><div class="ep__b"><span class="ep__t">Day one, again</span><span class="ep__d">New building, new counter, identical posture. Badge: TRAINEE. The loop closes and the format resets forever.</span></div></div>
+    </div>
+
+    <div class="note">
+      <span class="note__k">The capybara's correct job</span>
+      <p>Episode 08 gives the capybara the role it is actually built for: the colleague who never reacts. Its meme equity is enormous and its personality is <em>passive</em>, which makes it a terrible protagonist and a perfect foil. Brent generates the chaos; the capybara declines to acknowledge it. You get the capybara's reach without asking it to carry a series.</p>
+    </div>
+  </section>
+
+  <!-- ── 06 ─────────────────────────────────────────────────── -->
+  <section id="s6">
+    <div class="sec-head"><span class="sec-num">06</span><h2>Voice, captions, and the comment engine</h2></div>
+
+    <p>Captions are written <strong>as internal corporate communication</strong>, never as narration. Brent's world has memos, not jokes. This is what keeps the account from reading as an image dump, and it is your original written contribution — the human authorship that matters for both monetization eligibility and any copyright claim over the composite.</p>
+
+    <div class="snippet">
+      <div class="snippet__bar"><span class="snippet__n">Caption formula</span><button class="btn" type="button" data-copy="cap">Copy</button></div>
+      <pre id="cap">[Flat operational statement, present tense, no punchline]
+[One escalating detail delivered with total neutrality]
+
+Ask for Brent.
+
+— optional: the vote line, e.g. "Next shift: air traffic control or
+   passport control? Comments decide."</pre>
+    </div>
+
+    <ul class="plain">
+      <li><strong>Never explain the joke.</strong> The image is the joke; the caption is the paperwork.</li>
+      <li><strong>Never break character.</strong> No "lol", no emoji, no meta-commentary about AI.</li>
+      <li><strong>The vote line is your comment engine.</strong> Reference posts in this genre run comment-to-like ratios around 0.002. Asking the audience to choose the next job is the cheapest available fix, it needs no face and no voice, and it creates the continuity that turns viewers into followers.</li>
+      <li><strong>"Ask for Brent" closes every caption.</strong> Repetition is what builds a mark.</li>
+      <li><strong>Label the post as AI at upload.</strong> The label is not a ranking penalty, and concealment is the thing that actually costs you.</li>
+    </ul>
+  </section>
+
+  <!-- ── 07 ─────────────────────────────────────────────────── -->
+  <section id="s7">
+    <div class="sec-head"><span class="sec-num">07</span><h2>Production rules</h2></div>
+    <ol class="plain">
+      <li><strong>Generate the reference sheet before episode one.</strong> Nothing ships until Brent is stable across four angles.</li>
+      <li><strong>One variable per image.</strong> Change the scene block only. When output drifts, re-anchor to the reference rather than patching the character block.</li>
+      <li><strong>Vary composition deliberately</strong> — interior and exterior, close and wide, with and without humans. Formula repetition is the specific behaviour that degrades recommendation and monetization, so treat variance as a compliance control, not a preference.</li>
+      <li><strong>Backgrounds generated or self-shot.</strong> Never composite over someone else's photograph.</li>
+      <li><strong>Log every post</strong> — date, prompt version, reference image used, badge role. This is your source log, adapted: it evidences the human creative control behind each image.</li>
+      <li><strong>Three a week beats ten a week</strong> if ten means repeating the same frame. The reference accounts' weakness is sameness; that is the gap you are attacking.</li>
+    </ol>
+  </section>
+
+  <footer>
+    <p>Character, name, wordmark, episode premises, and all specifications here are original to this document. The model sheet is a schematic drawn in code, not a generated image — treat it as the specification your generations are measured against, not as the artwork. General information, not legal advice: trademark availability must be searched before you rely on a mark, and the copyrightability of AI-assisted work is unsettled and moving. Worth an hour with an IP attorney before you file anything or start selling merchandise.</p>
+  </footer>
+
+</div>
+
+<script>
+  document.querySelectorAll('[data-copy]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var el = document.getElementById(btn.dataset.copy);
+      if (!el) return;
+      var text = el.textContent;
+      var done = function () {
+        var was = btn.textContent;
+        btn.textContent = 'Copied';
+        setTimeout(function () { btn.textContent = was; }, 1400);
+      };
+      var fallback = function () {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); done(); } catch (e) { btn.textContent = 'Select manually'; }
+        document.body.removeChild(ta);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, fallback);
+      } else { fallback(); }
+    });
+  });
+</script>
