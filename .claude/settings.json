@@ -3,8 +3,6 @@
   "permissions": {
     "defaultMode": "bypassPermissions",
     "allow": [
-      "mcp__Higgsfield",
-
       "mcp__Higgsfield__balance",
       "mcp__Higgsfield__transactions",
       "mcp__Higgsfield__show_plans_and_credits",
@@ -22,19 +20,7 @@
       "mcp__Higgsfield__media_import_url",
       "mcp__Higgsfield__media_upload",
       "mcp__Higgsfield__media_confirm",
-      "mcp__Higgsfield__sandbox_exec",
-
-      "mcp__Higgsfield__generate_image",
-      "mcp__Higgsfield__generate_image_batch",
-      "mcp__Higgsfield__generate_video",
-      "mcp__Higgsfield__generate_video_batch",
-      "mcp__Higgsfield__generate_3d",
-      "mcp__Higgsfield__upscale_image",
-      "mcp__Higgsfield__upscale_video",
-      "mcp__Higgsfield__reframe",
-      "mcp__Higgsfield__outpaint_image",
-      "mcp__Higgsfield__remove_background",
-      "mcp__Higgsfield__motion_control"
+      "mcp__Higgsfield__sandbox_exec"
     ]
   }
 }
