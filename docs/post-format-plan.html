@@ -185,11 +185,33 @@
       <p>That last one is doing real work. A slurp is inherently funny, it is the character's signature act, and it is <em>audio branding you own</em> — the equivalent of the crushed pouch, for ears. Recognisable in one second with the screen face-down.</p>
     </div>
 
+    <div class="note note--key">
+      <span class="note__k">Generate it natively — the audio comes with the video</span>
+      <p>The standalone audio tool is text-to-speech only, which is easy to mistake for "no sound generation available." It is not. <strong>A dozen video models generate synchronized audio as part of the render</strong>, from the same start image, in one step — so ambience is a generation parameter, not a sourcing problem.</p>
+      <p><strong>Tested and confirmed.</strong> A five-second image-to-video render with audio enabled returned a real AAC track at about &minus;30&nbsp;dBFS — quiet, correct for a bed. Its spectral profile ran <strong>55–69% low-frequency, 28–32% mid, under 15% high, smooth and transient-free across the whole clip</strong>, which is the signature of continuous traffic rumble and electrical hum. Speech would have spiked the mid band and produced sharp onsets; music would have shown structure and stronger highs. Neither appeared. The negative instruction held.</p>
+    </div>
+
+    <div class="scroller">
+      <table>
+        <thead><tr><th>Model</th><th>Audio flag</th><th>Why pick it</th></tr></thead>
+        <tbody>
+          <tr><td>flux_3_video</td><td><code>generate_audio</code></td><td>Explicitly covers effects and ambience, 3:4 and 9:16, 5–20s, 1080p. The default choice</td></tr>
+          <tr><td>seedance_2_0</td><td><code>generate_audio</code></td><td>Same shape, up to 4K, and accepts audio references if you want to steer the bed</td></tr>
+          <tr><td>wan3_0</td><td><code>generate_audio</code></td><td>Long durations and first/last frame control</td></tr>
+          <tr><td>kling3_0 / veo3</td><td><code>sound</code></td><td>Strong motion, but no 3:4 — 9:16 only, so they force the crop decision early</td></tr>
+        </tbody>
+      </table>
+    </div>
+
     <div class="note note--warn">
-      <span class="note__k">Where the sound has to come from</span>
-      <p>The generation stack used for the images and video <strong>cannot produce this audio</strong>. Its audio tool is text-to-speech only and states plainly that it has no standalone music or sound-effects model. So the bed is not a generation step — it is a sourcing step, and it needs deciding before the first post, not after.</p>
-      <p><strong>Record it yourself.</strong> This is the rare case where the cheapest option is also the best one. A phone and an actual foil pouch gets you the wet pull and the dry rattle in about five minutes, and street hum, a fluorescent buzz and a fridge compressor are all a walk away. Everything you record you own outright — which puts the audio on the same footing as the rest of this project, makes the slurp a genuinely protectable signature rather than a stock clip a competitor can buy, and sidesteps licence terms entirely.</p>
-      <p>Failing that, a paid SFX library with a perpetual commercial licence. Never a free sound site with unclear terms, and never trending audio.</p>
+      <span class="note__k">Two things to get right</span>
+      <p><strong>Negative-prompt the audio explicitly.</strong> These models will happily add speech, music and footsteps. Every prompt needs the audio equivalent of a negative block — no music, no voices, no narration, no dialogue — or the voiceless rule breaks on the first render.</p>
+      <p><strong>Do not ping-pong a clip with audio.</strong> Reversing the video reverses the track. Pure ambience mostly survives it, but any transient plays backwards and reads as wrong. Loop the picture and lay a forward audio pass across the doubled length instead.</p>
+    </div>
+
+    <div class="note">
+      <span class="note__k">Still record the straw yourself</span>
+      <p>Generated ambience solves the bed. It will not reliably give you the <em>signature</em> — the wet pull and the dry rattle of an empty pouch. A phone and a real foil pouch gets that in five minutes, you own it outright, and it becomes a protectable audio mark rather than a model output. Generate the room; record the character.</p>
     </div>
 
     <ul class="plain">
