@@ -61,9 +61,34 @@ def check(a, label=''):
         x0, y0 = max(0, cx-160), max(0, cy-160)
         x1, y1 = min(w, cx+300), min(h, cy+300)
         reg, ry = a[y0:y1, x0:x1], yellow[y0:y1, x0:x1]
-        ys, xs = np.nonzero(ry)
-        if not (xs.max()-xs.min() > (ys.max()-ys.min()) * 1.4):
-            fails.append('pouch: band is not horizontal')
+        # Trace the WHOLE band, not just the part inside this window: fitting
+        # a slope to a clipped fragment exaggerates whatever section the
+        # window happens to catch.
+        from scipy import ndimage as _ndi
+        lab, _n = _ndi.label(yellow)
+        blk = lab[cy:cy+240, cx:cx+240]
+        ids, counts = np.unique(blk[blk > 0], return_counts=True)
+        full = lab == ids[np.argmax(counts)] if ids.size else ry
+        ys, xs = np.nonzero(full)
+        ry_full = full
+        # Orientation, not shape. The bounding-box aspect test punished a band
+        # that sags as the bag slumps — which is the realism the design wants,
+        # and still a level band ON the pouch. Fit a line through the band's
+        # per-column centreline instead: sag bends the line's residuals, but
+        # only a rotated band tilts its slope.
+        centers_x, centers_y = [], []
+        for x in range(xs.min(), xs.max() + 1):
+            col = np.nonzero(ry_full[:, x])[0]
+            if col.size >= 4:
+                centers_x.append(x)
+                centers_y.append(col.mean())
+        if len(centers_x) < 20:
+            fails.append('pouch: band too fragmentary to trace')
+        else:
+            slope = np.polyfit(centers_x, centers_y, 1)[0]
+            tilt = abs(np.degrees(np.arctan(slope)))
+            if tilt > 20:
+                fails.append(f'pouch: band tilted {tilt:.0f} deg')
         body = (~ry) & (reg[:,:,2] - reg[:,:,1] > 30) & (reg[:,:,2] > 80)
         if body.sum() < 300:
             fails.append('pouch: no purple body around the band')

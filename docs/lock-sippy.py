@@ -98,13 +98,23 @@ def _body_for(band, hsv):
     box[max(0, cy - half_h):min(H, cy + half_h),
         max(0, cx - half_w):min(W, cx + half_w)] = True
 
-    # Excluding the band's own rows also excludes the navy lettering inside the
-    # band, which must stay navy.
-    box[ys.min():ys.max() + 1, :] = False
+    # Exclude the band itself (dilated past its antialiased rim), NOT its
+    # whole rows. Row-exclusion cut the pouch in half: everything below the
+    # band stayed unlocked and the result had a hard colour seam at the
+    # band's top edge. Dark lettering inside the band is safe either way —
+    # it falls below the value floor.
+    box &= ~ndimage.binary_dilation(band, iterations=4)
 
     chroma = ((s > 0.20) & (v > 0.14) & box
               & (h > BODY_HUE_LO) & (h < BODY_HUE_HI))
-    return largest(chroma, 300)
+    # The band splits the body into disconnected regions above and below it,
+    # so take every sizeable blob rather than only the largest.
+    lab, n = ndimage.label(chroma)
+    if n == 0:
+        return None
+    sizes = ndimage.sum(chroma, lab, range(1, n + 1))
+    body = np.isin(lab, [k + 1 for k in range(n) if sizes[k] >= 300])
+    return body if body.sum() >= 300 else None
 
 
 def find_pouch(hsv, box=None):
