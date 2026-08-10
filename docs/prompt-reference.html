@@ -202,6 +202,15 @@ PURPLE body, bold YELLOW HORIZONTAL BAND, white straw, flattened.</pre>
       <p><code>docs/check-pouch.py</code> automates all of this: it finds the yellow band, measures body colour against target, tests band orientation, and exits non-zero on failure so it can gate a batch.</p>
     </div>
 
+    <div class="note note--key">
+      <span class="note__k">Post-production order — the label is embedded, never overlaid</span>
+      <p>The flat composite (solid yellow rectangle + straight text) was retired: it deleted the band&rsquo;s wrinkles and highlights, so the label read as a sticker floating over the photo. The pipeline that replaced it, in order, per frame:</p>
+      <p><strong>1. Generate the pouch blank</strong> — purple body, level yellow band, no text. Models render gibberish type; don&rsquo;t ask for the wordmark.<br>
+      <strong>2. <code>lock-sippy.py</code></strong> pins body and band to canon hue and saturation while leaving per-pixel value alone, so scene lighting survives. Pass <code>--box</code> in any cluttered frame — auto-detect has locked onto crisp packets. The body finder unions the regions above and below the band; excluding whole band rows once cut the pouch in half and left a colour seam.<br>
+      <strong>3. <code>embed-sippy.py</code></strong> sets the type <em>into</em> the surface: it traces the band&rsquo;s own top and bottom edges per column, warps the baseline through that curve so the letters bend where the bag slumps, and lights the ink with the band&rsquo;s luminance — shadows and speculars cross the letters. Tighten <code>--span</code> off a steep dip or the end glyphs shear.<br>
+      <strong>4. <code>check-frame.py</code></strong> gates the result. It tests <em>hue</em>, not distance-to-swatch (distance conflates drift with dim light), and band <em>tilt</em> via fitted centreline slope, not bounding box (a sagging band is realism, a rotated band is a defect).</p>
+    </div>
+
     <h3>What each reference contributes</h3>
     <div class="scroller">
       <table>
