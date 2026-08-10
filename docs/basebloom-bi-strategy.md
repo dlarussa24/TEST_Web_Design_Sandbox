@@ -242,7 +242,9 @@ ten clients is ~$16/client and excellent.
 
 This means the platform cost baked into pricing is **~$14/month for the first
 90 days**, not ~$170 — cheaper than the stated appetite, and the F2 decision
-becomes trigger-based rather than a calendar item.
+becomes trigger-based rather than a calendar item. That figure is the BI
+platform alone; site analytics (~$9/mo) is a separate recurring line, so
+all-in recurring spend in the window is ~$23/mo.
 
 Design rules for when capacity does land:
 - **Service principal, never a master user.** Registered Entra ID app, tenant
@@ -401,7 +403,7 @@ front-loads reusable assets over bespoke client work.
 ### Days 1–30 — Make the existing promise true, and build the proof
 
 Goal: BaseBloom can honestly deliver the report it already sells, and has one
-public artifact proving dashboard capability. Nothing new is sold yet. Spend: ~$14/mo.
+public artifact proving dashboard capability. Nothing new is sold yet. Spend: ~$23/mo.
 
 - **Week 1 — Instrument and verify.** Install analytics on basebloomdesign.com
   and every care-plan client site. Connect GBP. Inventory what data actually

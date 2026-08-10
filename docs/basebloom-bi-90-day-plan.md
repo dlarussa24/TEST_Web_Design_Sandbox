@@ -14,8 +14,8 @@ it is done.
 |---|---|
 | Capacity | 10–15 hrs/week, evenings and weekends, around a full-time role |
 | Total budget of hours | ~130–195 hrs across 13 weeks |
-| Platform spend, weeks 1–13 | **~$14/mo** (one Power BI Pro license). No Fabric capacity is bought inside this window unless Gate C fires. |
-| One-time spend | Georgia LLC filing (~$100), domain/analytics (~$0–$10/mo), optional E&O quote |
+| Recurring spend, weeks 1–13 | **~$23/mo** — one Power BI Pro license (~$14) plus site analytics (Plausible, ~$9; confirm the tier at signup). No Fabric capacity is bought inside this window unless Gate C fires. |
+| One-time spend | Georgia LLC filing (~$100), domain registration, optional E&O quote |
 | Entity | BaseBloom LLC (Georgia) — filing is a Week 4 deliverable |
 | Employment conflict | Confirmed none. Day-job hygiene rules in strategy §4 still apply. |
 | Platform decision | Power BI / Fabric. Tableau is a competency, not the product. See strategy §2.4. |
@@ -74,8 +74,9 @@ third-party requests.
 
 1. **Pick and install analytics.** Requirement: cookieless (no consent banner),
    <2 KB, no third-party render-blocking, self-hostable or single-endpoint.
-   Candidates: Plausible, Fathom, Umami (self-host). Install on
-   `basebloomdesign.com` first.
+   Candidates were Plausible, Fathom, Umami (self-host). **Chosen: Plausible**
+   (~$9/mo) — that is the second half of the ~$23/mo recurring line above.
+   Install on `basebloomdesign.com` first.
    - Load it `defer`, after the fold. The site's measured mobile LCP is 428 ms —
      that number is a sales asset, do not spend it on a tag.
 2. **Roll analytics to every care-plan client site.** One deploy each. Record
@@ -591,7 +592,7 @@ instead of promises.
    | New MRR | $150–$400 | |
    | Realized hourly, engagement #1 | ≥$100 | |
    | Manual reporting time per client | ≤30 min/mo | |
-   | Platform spend | ~$14/mo | |
+   | Recurring spend | ~$23/mo | |
 
 2. **Answer four questions in writing:**
    - Did Tier 1 reduce churn or increase care-plan conversations?
