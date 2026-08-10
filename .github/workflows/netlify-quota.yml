@@ -1,0 +1,21 @@
+name: Netlify quota probe
+
+# Manual only. api.netlify.com is blocked by the sandbox egress policy, so
+# this runner is the only place the API is reachable. workflow_dispatch keeps
+# the secret away from any push- or PR-triggered job in this public repo.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Probe account quotas
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: python3 .github/scripts/netlify-quota.py
