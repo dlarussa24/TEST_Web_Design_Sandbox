@@ -76,18 +76,33 @@ def check(a, label=''):
         # and still a level band ON the pouch. Fit a line through the band's
         # per-column centreline instead: sag bends the line's residuals, but
         # only a rotated band tilts its slope.
+        # Use the envelope midline (top+bottom)/2, not the yellow-pixel mean:
+        # lettering printed on the band punches holes in the yellow mask and
+        # drags per-column means around, which once pushed a level band to
+        # the tilt threshold. The band's edges don't move when ink is on it.
         centers_x, centers_y = [], []
         for x in range(xs.min(), xs.max() + 1):
             col = np.nonzero(ry_full[:, x])[0]
             if col.size >= 4:
                 centers_x.append(x)
-                centers_y.append(col.mean())
+                centers_y.append((col.min() + col.max()) / 2)
         if len(centers_x) < 20:
             fails.append('pouch: band too fragmentary to trace')
         else:
-            slope = np.polyfit(centers_x, centers_y, 1)[0]
+            # Fit the CENTRAL 60% of the run. At the pouch's side seams the
+            # band wraps away from the camera and curls up or down — that
+            # wrap read as ~20 deg of "tilt" on a band whose front face is
+            # level. Rotation shows up in the middle; wrap lives at the ends.
+            n_c = len(centers_x)
+            lo, hi = int(n_c * 0.2), int(n_c * 0.8)
+            slope = np.polyfit(centers_x[lo:hi], centers_y[lo:hi], 1)[0]
             tilt = abs(np.degrees(np.arctan(slope)))
-            if tilt > 20:
+            # Threshold calibrated on the library, not chosen a priori:
+            # approved frames of a slumped bag measure 20-24 deg here (the
+            # slump is real drape, and it is wanted), while the genuinely
+            # diagonal defect frames measure 40+. The boundary sits between
+            # the clusters.
+            if tilt > 30:
                 fails.append(f'pouch: band tilted {tilt:.0f} deg')
         body = (~ry) & (reg[:,:,2] - reg[:,:,1] > 30) & (reg[:,:,2] > 80)
         if body.sum() < 300:

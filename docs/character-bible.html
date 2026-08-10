@@ -389,15 +389,15 @@
         <thead><tr><th>Element</th><th>Locked</th></tr></thead>
         <tbody>
           <tr><td>Format</td><td>Foil drink pouch, child-size, slightly crumpled</td></tr>
-          <tr><td>Body</td><td>Purple — approx <code>#966ECD</code></td></tr>
-          <tr><td>Mark</td><td>One bold yellow band, <code>#F8CD1E</code>, running <strong>horizontally</strong> across the middle, edge to edge, level — never diagonal</td></tr>
-          <tr><td>Straw</td><td><strong>White</strong> plastic, always inserted — never yellow, which would collide with the band</td></tr>
-          <tr><td>Lettering</td><td>Bold black, set <em>inside</em> the yellow band — a bonus when it renders, never depended on</td></tr>
+          <tr><td>Body</td><td>Purple — approx <code>#966ECD</code>, <strong>one purple only</strong>: no two-tone panelling, the top fold matches the body</td></tr>
+          <tr><td>Mark</td><td>One bold yellow band, <code>#F8CD1E</code>, running <strong>horizontally</strong> across the middle, edge to edge, level on the pouch — sag and drape are realism, rotation is a defect</td></tr>
+          <tr><td>Straw</td><td><strong>Band-yellow</strong>, thick, short — protruding only a stub above the pouch. (Revised from white: the yellow ties the straw into the scheme and keeps it visible.)</td></tr>
+          <tr><td>Wordmark</td><td>Two words, both centred on the pouch's centre column. <strong>BIG</strong> large in band-yellow on the purple body above the band, B and G high with the I dipping. <strong>SIPPY</strong> in dark ink <em>inside</em> the band, arranged as a smile — S and Y at the ends riding high, the middle P at the bottom of the curve, directly under the I of BIG. Rounded bold grotesque (Liberation Sans Bold, rounded terminals).</td></tr>
         </tbody>
       </table>
     </div>
 
-    <p>Light blue foil, horizontal red band, yellow straw is reproducible in every generation. The <em>name</em> lives where you control the typography: the handle, the captions, the merch. The audience learns the pouch by silhouette and colour, and learns what it is called from you.</p>
+    <p>The wordmark is never asked of the generator — models garble type. The pouch generates <strong>blank</strong> (purple body, level band, no text), then <code>docs/sippy-artwork.py</code> applies the layout in post: it unifies the body to one purple, sets both words into the surface lit by its own shading, and reworks the straw. The audience learns the pouch by silhouette and colour; the name is applied where the typography is controlled.</p>
 
     <div class="note note--key">
       <span class="note__k">Why light blue and why horizontal</span>
