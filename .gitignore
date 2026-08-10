@@ -3,3 +3,8 @@ node_modules/
 *.log
 .DS_Store
 next-env.d.ts
+
+# Per-user Claude Code settings. Never commit: skipDangerousModePermissionPrompt
+# records that THIS user accepted the bypass-permissions warning, and this repo
+# is public — committing it would skip that warning for anyone who clones.
+.claude/settings.local.json
