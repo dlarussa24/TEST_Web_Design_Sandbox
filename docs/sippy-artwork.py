@@ -364,17 +364,55 @@ def main():
     panel[:panel_top] = False
     panel[band_top:] = False
 
+    # BIG must CONFORM to the pouch, not float over it. Print on a real bag
+    # flows between its seams, so the word's baseline is the interpolated
+    # flow line between the panel's top edge (the zip seam) and the band's
+    # top edge: as the bag leans and slumps, the flow line leans and slumps,
+    # and the letters lean with it. Letters approaching the pouch's sides
+    # are foreshortened — the surface turns away from the camera there.
     avail = band_top - panel_top
     big_px = int(avail * 0.40)
-    big_dip = big_px * 0.30
-    big = word_arc('BIG', big_px, big_dip, rots=[-8, 0, 8], gap_frac=0.16)
+    big_dip = big_px * 0.22
+
+    # the two seam curves, per column, smoothed
+    panel_cols = np.nonzero(panel.any(0))[0]
+    top_curve, band_curve, flow_xs = [], [], []
+    for x in panel_cols:
+        col_p = np.nonzero(panel[:, x])[0]
+        if col_p.size < 8 or x not in col_c:
+            continue
+        flow_xs.append(x)
+        top_curve.append(col_p.min())
+        band_curve.append(min(col_c[x]))
+    flow_xs = np.array(flow_xs)
+    top_sm = ndimage.gaussian_filter1d(np.array(top_curve, float), 25)
+    band_sm = ndimage.gaussian_filter1d(np.array(band_curve, float), 25)
+    T_FLOW = 0.45                     # word sits 45% of the way down the panel
+    flow = top_sm * (1 - T_FLOW) + band_sm * T_FLOW
+    flow_slope = np.gradient(ndimage.gaussian_filter1d(flow, 15), flow_xs)
+
+    def flow_at(x):
+        i = int(np.clip(np.searchsorted(flow_xs, x), 1, len(flow_xs) - 1))
+        return float(flow[i]), float(flow_slope[i])
+
+    band_mid = word_mid               # stacks the I over SIPPY's middle P
+    big = word_arc('BIG', big_px, big_dip, rots=[0, 0, 0], gap_frac=0.16)
     a_big = np.zeros(rgb.shape[:2], np.float32)
-    big_cy = panel_top + avail * 0.48
-    # centre BIG on the band's run midpoint — SIPPY distributes evenly over
-    # that same run, so this is what stacks the I over the middle P
-    band_mid = word_mid
-    for g, dx, dy in big:
-        stamp(a_big, g, band_mid + dx, big_cy + dy - big_dip / 2)
+    for ch, (g0, dx, dy) in zip('BIG', big):
+        x_l = band_mid + dx
+        y_flow, slp = flow_at(x_l)
+        # foreshorten toward the panel's edges at this letter's row
+        row = np.nonzero(panel[int(np.clip(y_flow, 0, panel.shape[0] - 1))])[0]
+        if row.size:
+            u = np.clip((x_l - row.min()) / max(1, row.max() - row.min()), 0, 1)
+            xsc = 0.72 + 0.28 * float(np.sin(np.pi * u) ** 0.7)
+        else:
+            xsc = 1.0
+        g = glyph(ch, big_px, -float(np.degrees(np.arctan(slp))))
+        if xsc < 0.98:
+            g = np.asarray(Image.fromarray((g * 255).astype(np.uint8)).resize(
+                (max(2, int(g.shape[1] * xsc)), g.shape[0]))) / 255.0
+        stamp(a_big, g, x_l, y_flow + dy - big_dip / 2)
     a_big *= ndimage.binary_erosion(panel, iterations=2)  # stay on the panel
     hsv_now = locksippy.rgb_to_hsv(rgb.astype(np.uint8))
     body_lum = float(np.median(hsv_now[:, :, 2][body]))
@@ -415,6 +453,12 @@ def main():
         th_here = float(np.median([thick.get(int(np.clip(x_here + o, run_l, run_r)), th_med)
                                    for o in range(-40, 41, 10)]))
         g = glyph(ch, max(24, int((th_here - 2 * margin) * 0.80)), local_rot(x_here))
+        # foreshorten toward the band's ends — the surface turns away there
+        u_b = np.clip((x_l - run_l) / max(1, run_r - run_l), 0, 1)
+        xsc = 0.74 + 0.26 * float(np.sin(np.pi * u_b) ** 0.7)
+        if xsc < 0.98:
+            g = np.asarray(Image.fromarray((g * 255).astype(np.uint8)).resize(
+                (max(2, int(g.shape[1] * xsc)), g.shape[0]))) / 255.0
         y_here = cline.get(x_here, (band_top + band_bot) / 2)
         stamp(a_sip, g, x_l, y_here)
     a_sip *= safe  # belt and braces — sizing should already keep the margin
