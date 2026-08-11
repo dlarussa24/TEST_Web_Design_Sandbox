@@ -10,3 +10,4 @@ link and is what gets passed to Instagram publishing.
 |----|------|---------|--------|------|--------------|---------|-------|-------|
 | seed-001 | 2026-08-11 | https://res.cloudinary.com/wxsm9slh/image/upload/v1786468220/wrecked-store-v10.png | Aftermath still | rogue | — | (canon reference, not for posting) | archived | — |
 | seed-002 | 2026-08-11 | https://res.cloudinary.com/wxsm9slh/video/upload/v1786468230/wrecked-store-v7-clip.mp4 | The Turn | rogue | — | (canon reference, not for posting) | archived | — |
+| post-2026-08-11-001 | 2026-08-11 | https://res.cloudinary.com/wxsm9slh/image/upload/v1786470797/post-2026-08-11-001.jpg | Living Still | community | A | he has been working here for years. he started this morning. | pending (dry run) | — |

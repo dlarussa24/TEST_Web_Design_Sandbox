@@ -97,8 +97,15 @@ def word_arc(word, px, dip, rots, gap_frac=0.14):
 # ---------------------------------------------------------------- surface ops
 
 def lit_ink(rgb, hsv, alpha, ink, ref_lum, strength=0.94):
-    """Blend ink onto rgb through alpha, lit by local luminance."""
-    shade = np.clip(hsv[:, :, 2] / max(ref_lum, 0.05), 0.35, 1.55)
+    """Blend ink onto rgb through alpha, lit by local luminance.
+
+    The upper clamp is deliberately tight. Letting a blown specular highlight
+    scale the ink by 1.55 erased the middle of BIG where a glare crossed the
+    pouch — printed ink does not turn white under a highlight, it stays ink
+    and the highlight rides over it. Shadow still darkens the ink freely;
+    highlight barely lifts it.
+    """
+    shade = np.clip(hsv[:, :, 2] / max(ref_lum, 0.05), 0.35, 1.12)
     rng = np.random.default_rng(23)
     grain = rng.normal(0, 2.0, rgb.shape[:2])
     layer = ink[None, None, :] * shade[:, :, None] + grain[:, :, None]
@@ -363,6 +370,12 @@ def main():
     panel = body.copy()
     panel[:panel_top] = False
     panel[band_top:] = False
+    # Fill interior holes before using the panel to clip type. A specular
+    # highlight on the plastic is near-white, so it fails the saturation test
+    # and drops out of the body mask — clipping letters against the raw mask
+    # punched the glare straight through the middle of BIG, erasing the I.
+    # The glare should ride OVER the ink, not delete it.
+    panel = ndimage.binary_fill_holes(panel)
 
     # BIG must CONFORM to the pouch, not float over it. Print on a real bag
     # flows between its seams, so the word's baseline is the interpolated
