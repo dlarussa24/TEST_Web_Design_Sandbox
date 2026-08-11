@@ -166,8 +166,9 @@
       <li><strong>Video durations:</strong> 6–10s loopable is the workhorse
       (the 8s wrecked-store clip is the template — completion % is the ranked
       metric and a clean loop double-counts). Living Stills 5–7s. Tentpoles
-      15–20s. One 60s+ episode cut per week exists solely because TikTok's
-      monetization program requires 1min+ originals.</li>
+      15–20s. One 60s+ episode per week exists for TikTok's 1min+
+      originality bar — generated fresh each Sunday, never cut from the
+      week's posts (see §5b), with the week's shorts harvested from it.</li>
     </ul>
   </section>
 
@@ -204,6 +205,47 @@
   </section>
 
   <section>
+    <h2>5b · The weekly 60-second episode</h2>
+    <p><strong>How it gets made.</strong> No generation model exceeds 20
+    seconds, so the episode is necessarily an <em>assembly</em>: ~7
+    frame-chained clips (flux_3_video, 8&ndash;10s, native ambience), where the
+    last frame of clip N becomes the start frame of clip N+1 alongside the
+    canon reference &mdash; that chain is what holds identity across cuts. Claude
+    writes the 7-beat "Turn, extended" beat sheet, gates each clip, assembles
+    (<code>tools/assemble-episode.py</code>: xfaded seams, one continuous
+    ambience bed, loudnorm, beats.json sidecar), and harvests
+    (<code>tools/cut-shorts.py</code>). Higgsfield renders pixels; everything
+    editorial is Claude's.</p>
+    <p><strong>Generated fresh, always.</strong> A compilation of
+    already-posted clips is duplicate content, and TikTok's payout program is
+    gated on <em>original</em> 1min+ video &mdash; assembling the episode from the
+    week's posts would forfeit the one thing the episode exists for. The
+    calendar therefore runs episode-first: Sunday generates the episode, and
+    the week's shorts are harvested from it.</p>
+    <p><strong>Where 60s is actually required: TikTok only.</strong> Creator
+    Rewards pays RPM on 1min+ originals (plus follower/view thresholds &mdash;
+    re-check terms before relying on numbers). Instagram has no duration
+    minimum at all, and the long cut actively <em>loses</em> there: Reels
+    ranks on completion rate, where a 10s loop beats a 60s episode every
+    time. IG and Facebook get the shorts, never the episode.</p>
+    <p><strong>Harvesting is the economics.</strong> Seven fresh clips
+    replace roughly two days of separate daily generation, so the episode
+    pays for itself. The beats.json sidecar makes cutting mechanical; each
+    short is re-captioned from the bank so it stands alone; the episode log
+    guarantees no beat posts twice. The episode also gives the lore its
+    spine &mdash; daily posts are disconnected gags, and lore is what converts
+    viewers into followers.</p>
+    <p><strong>Expansion.</strong> Facebook Reels is wired now &mdash; same Meta
+    connection as IG, zero new asset work, and an older-skewing audience
+    where animal content still travels. YouTube Shorts is next: same 9:16
+    asset, real revenue share, 60s fits natively. <strong>X is skipped for
+    video</strong> &mdash; weak non-news video reach, Premium-gated monetization,
+    no cold-start discovery &mdash; though Rufus's deadpan caption voice would
+    suit a future text-only X account as a separate play.</p>
+  </section>
+
+
+  <section>
     <h2>6 · The pipeline (BetterWallet pattern)</h2>
     <p>Mirrors the BetterWallet Facebook routine: <strong>scheduled generation
     → Slack log → human approval in Slack → automated publish</strong>.
@@ -217,6 +259,7 @@
         <tr><td>Log</td><td>same run</td><td>Assets committed to <code>content/YYYY-MM-DD/</code>; one Slack message per post in <code>#rufus-posts</code>: preview link, platform targets, caption (bank pick, 70/30 rotation), slot. Post log updated.</td></tr>
         <tr><td>Approve</td><td>you, anytime</td><td>✅ reaction = approved · ❌ = rejected · no reaction = held for next sweep. Reply in thread to swap the caption.</td></tr>
         <tr><td>Publish</td><td>Daily ~17:00 ET (routine)</td><td>Reads reactions → IG via Zapier <em>Instagram for Business</em> actions (photo/carousel/reel) → TikTok via Higgsfield <code>tiktok_publish</code> → live links posted back in thread → log updated, failures flagged in channel.</td></tr>
+        <tr><td>Episode</td><td>Sunday ~9:00 ET (routine)</td><td>Generates the fresh 7-clip episode, gates, assembles, posts the card to <code>#rufus-posts</code> — TikTok only (§5b).</td></tr>
         <tr><td>Report</td><td>Sunday (routine)</td><td>Weekly rollup: posts shipped, approval rate, per-format performance → Slack summary → informs the next week's format mix.</td></tr>
       </tbody>
     </table></div>
