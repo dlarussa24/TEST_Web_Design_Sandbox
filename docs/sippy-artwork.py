@@ -107,23 +107,34 @@ def lit_ink(rgb, hsv, alpha, ink, ref_lum, strength=0.94):
 
 
 def unify_body(rgb, hsv, body):
-    """One purple: renormalise each body region's value to the shared median."""
-    v = hsv[:, :, 2]
+    """ONE purple, literally: pin hue and saturation to canon across the whole
+    body and flatten the large-scale tone.
+
+    Per-region value scaling was not enough — the tone varies WITHIN a
+    connected region (the fold fades to washed lavender near the straw), so
+    region-level correction left the pouch two-toned twice. This rebuilds the
+    body colour per pixel: hue and saturation become canon everywhere, and
+    value keeps only its high-frequency detail (wrinkles, grain) while the
+    low-frequency illumination field is divided out toward the shared median.
+    """
+    v = hsv[:, :, 2].astype(np.float32)
     target = float(np.median(v[body]))
-    lab, n = ndimage.label(body)
-    out = rgb.astype(np.float32).copy()
-    for k in range(1, n + 1):
-        m = lab == k
-        if m.sum() < 300:
-            continue
-        med = float(np.median(v[m]))
-        scale = target / max(med, 0.05)
-        if abs(scale - 1) < 0.06:
-            continue
-        # scale the region toward the shared tone, feathered at its edge
-        a = ndimage.gaussian_filter(m.astype(np.float32), 3)[:, :, None]
-        out = out * (1 - a) + (out * scale) * a
-    return np.clip(out, 0, 255)
+    # low-pass illumination estimated from body pixels only, spread outward
+    vb = np.where(body, v, 0.0)
+    wb = body.astype(np.float32)
+    L = ndimage.gaussian_filter(vb, 45) / np.maximum(ndimage.gaussian_filter(wb, 45), 1e-4)
+    flat_v = np.clip(v * np.clip(target / np.maximum(L, 0.05), 0.55, 1.9), 0, 1)
+
+    h_new = np.full_like(v, locksippy.CANON_BODY_H)
+    s_new = np.full_like(v, locksippy.CANON_BODY_S)
+    rebuilt = hsv.copy()
+    rebuilt[:, :, 0] = h_new
+    rebuilt[:, :, 1] = s_new
+    rebuilt[:, :, 2] = flat_v
+    fixed = locksippy.hsv_to_rgb(rebuilt).astype(np.float32)
+
+    a = ndimage.gaussian_filter(body.astype(np.float32), 2)[:, :, None]
+    return np.clip(rgb.astype(np.float32) * (1 - a) + fixed * a, 0, 255)
 
 
 def rework_straw(rgb, hsv, body, band, yellow_med, straw_box,
@@ -261,33 +272,28 @@ def main():
 
     yellow_med = np.median(rgb[band], axis=0).astype(np.float32)
 
-    # ---- the top fold renders pinker than the lock's hue arc reaches, so it
-    # escapes every body pass and survives as a second colour. Catch it by
-    # its own hue range, but only a blob wide enough to be the fold — the
-    # shelf packets behind the pouch are pink too, and small.
+    # ---- inclusive body capture. The pouch's purple is not one detection
+    # class: the fold renders pink, the area around the straw fades to
+    # washed-out lavender that sits UNDER every saturation floor, and both
+    # survived as second colours through two "fixes". Capture the full
+    # purple-through-pink arc down to barely-saturated, then keep only the
+    # blobs that touch the pouch already found — the box also contains pink
+    # shelf packets, and touching is what separates pouch from packet.
     h_ch, s_ch, v_ch = hsv[:, :, 0], hsv[:, :, 1], hsv[:, :, 2]
-    ys_bd0, xs_bd0 = np.nonzero(band)
-    bw0 = xs_bd0.max() - xs_bd0.min()
-    ys_b0 = np.nonzero(body.any(1))[0]
-    zone_f = np.zeros_like(body)
+    wide = ((h_ch > 0.52) | (h_ch < 0.03)) & (s_ch > 0.10) & (v_ch > 0.12)
     if box is not None:
-        zone_f[box[1]:ys_b0.min() + 200, box[0]:box[2]] = True
-    else:
-        zone_f[:ys_b0.min() + 200, :] = True
-    pinkish = (h_ch > 290 / 360) & (s_ch > 0.2) & (v_ch > 0.14) & zone_f
-    lab_f, n_f = ndimage.label(pinkish)
-    fold = np.zeros_like(body)
-    for k in range(1, n_f + 1):
-        m = lab_f == k
-        xs_f = np.nonzero(m.any(0))[0]
-        if m.sum() > 2000 and xs_f.size > bw0 * 0.5:
-            fold |= m
-    if fold.any():
-        rgb = locksippy.relock(rgb.astype(np.uint8),
-                               locksippy.CANON_BODY_H, locksippy.CANON_BODY_S,
-                               fold).astype(np.float32)
-        hsv = locksippy.rgb_to_hsv(rgb.astype(np.uint8))
-        body = body | fold
+        keep_b = np.zeros_like(wide)
+        keep_b[box[1]:box[3], box[0]:box[2]] = True
+        wide &= keep_b
+    wide &= ~ndimage.binary_dilation(band, iterations=3)
+    anchor = ndimage.binary_dilation(body | band, iterations=6)
+    lab_w, n_w = ndimage.label(wide)
+    touching = np.zeros_like(body)
+    for k in range(1, n_w + 1):
+        m = lab_w == k
+        if m.sum() >= 300 and (m & anchor).any():
+            touching |= m
+    body = body | touching
 
     # ---- one purple
     rgb = unify_body(rgb, hsv, body)
@@ -306,14 +312,39 @@ def main():
     core = yk[int(len(yk) * 0.25):int(len(yk) * 0.75)]
     cx = int(np.median([(rows[y][0] + rows[y][1]) / 2 for y in core]))
 
-    # band centreline as a function of x, for anchoring SIPPY
+    # Band centreline per column, from the band's ACTUAL pixels in that
+    # column. An earlier row-fill construction (every column between a row's
+    # extents inherits that row's y) let the sagging band's side arms bleed
+    # their heights into the middle columns: thickness read 258 where the
+    # band is 150 thick, the centreline sat ~70px above the band's true
+    # centre, and letters printed through the band's top edge onto purple.
     col_c = {}
-    for y in yk:
-        x0r, x1r = rows[y]
-        for x in range(x0r, x1r + 1):
-            col_c.setdefault(x, []).append(y)
+    for x in range(w_img := band.shape[1]):
+        col = np.nonzero(band[:, x])[0]
+        if col.size >= 6:
+            col_c[x] = list(col)
     cxs = sorted(col_c)
     cline = {x: float(np.mean(col_c[x])) for x in cxs}
+
+    thick = {x: len(col_c[x]) for x in cxs}
+    th_med = float(np.median(list(thick.values())))
+    # Distribute across the FRONT FACE only — identified by centreline SLOPE.
+    # Thickness cannot find the wrap: where the band dives around a seam its
+    # per-column footprint gets TALLER, not thinner, so a thickness filter
+    # kept the wrap and the first two even distributions put the Y half off
+    # the pouch. The face is where the band runs level; the wrap is where it
+    # dives.
+    xs_arr = np.array(cxs, dtype=float)
+    cl_arr = np.array([cline[x] for x in cxs])
+    cl_sm = ndimage.gaussian_filter1d(cl_arr, 15)
+    slope_arr = np.gradient(cl_sm, xs_arr)
+    good = xs_arr[(np.abs(slope_arr) < 0.5)]
+    stretches = np.split(good, np.nonzero(np.diff(good) > 8)[0] + 1)
+    face = max(stretches, key=len)
+    run_l, run_r = int(face[0]), int(face[-1])
+    inset = (run_r - run_l) * 0.08
+    xs_letters = np.linspace(run_l + inset, run_r - inset, 5)
+    word_mid = float(xs_letters[2])          # middle P — BIG's I aligns to this
 
     # ---- BIG on the MAIN PANEL, band-yellow, shallow arc (I dips)
     # The panel is found by ROW COVERAGE, not connectivity: walking up from
@@ -339,8 +370,11 @@ def main():
     big = word_arc('BIG', big_px, big_dip, rots=[-8, 0, 8], gap_frac=0.16)
     a_big = np.zeros(rgb.shape[:2], np.float32)
     big_cy = panel_top + avail * 0.48
+    # centre BIG on the band's run midpoint — SIPPY distributes evenly over
+    # that same run, so this is what stacks the I over the middle P
+    band_mid = word_mid
     for g, dx, dy in big:
-        stamp(a_big, g, cx + dx, big_cy + dy - big_dip / 2)
+        stamp(a_big, g, band_mid + dx, big_cy + dy - big_dip / 2)
     a_big *= ndimage.binary_erosion(panel, iterations=2)  # stay on the panel
     hsv_now = locksippy.rgb_to_hsv(rgb.astype(np.uint8))
     body_lum = float(np.median(hsv_now[:, :, 2][body]))
@@ -351,8 +385,6 @@ def main():
     # top of it pushed the middle letters out the bottom of the band. The
     # letters sit ON the centreline, sized from the band's thickness, each
     # rotated to the centreline's local slope so they lean into the curve.
-    thick = {x: len(col_c[x]) for x in cxs}
-    th_med = float(np.median(list(thick.values())))
     sip_px = int(th_med * 0.46)
 
     def local_rot(x):
@@ -363,25 +395,29 @@ def main():
             return 0.0
         return -float(np.degrees(np.arctan2(yb - ya, xb - xa)))
 
-    # lay letters flat first to learn their x offsets, then re-render each
-    # with its local rotation
-    flat = word_arc('SIPPY', sip_px, 0, rots=[0] * 5, gap_frac=0.12)
-    a_sip = np.zeros(rgb.shape[:2], np.float32)
-    for ch, (g0, dx, _) in zip('SIPPY', flat):
-        x_here = int(np.clip(cx + dx, cxs[0], cxs[-1]))
-        # size each letter from the band's LOCAL thickness — the band thins
-        # toward its ends, and a uniform size clipped the Y where the band
-        # curves away
-        th_here = float(np.median([thick.get(int(np.clip(x_here + o, cxs[0], cxs[-1])), th_med)
-                                   for o in range(-40, 41, 10)]))
-        g = glyph(ch, max(24, int(th_here * 0.46)), local_rot(cx + dx))
-        y_here = cline.get(x_here, (band_top + band_bot) / 2)
-        stamp(a_sip, g, cx + dx, y_here)
+    # Letters are DISTRIBUTED EVENLY across the band's visible run — equal
+    # margins from both pouch edges, equal steps between letter centres, so
+    # the word is centred width-wise by construction. Each letter sizes from
+    # the band's LOCAL thickness minus a hard yellow margin: the ink must
+    # never touch the band's edge, so the margin is reserved before the
+    # glyph is sized, not clipped away after.
     band_solid = np.zeros_like(band)
     for x in cxs:
         ys_c = col_c[x]
         band_solid[min(ys_c):max(ys_c) + 1, x] = True
-    a_sip *= ndimage.binary_erosion(band_solid, iterations=2)  # never leave the band
+    margin = max(6, int(th_med * 0.14))
+    safe = ndimage.binary_erosion(band_solid, np.ones((margin, 1), bool))
+
+
+    a_sip = np.zeros(rgb.shape[:2], np.float32)
+    for ch, x_l in zip('SIPPY', xs_letters):
+        x_here = int(np.clip(x_l, run_l, run_r))
+        th_here = float(np.median([thick.get(int(np.clip(x_here + o, run_l, run_r)), th_med)
+                                   for o in range(-40, 41, 10)]))
+        g = glyph(ch, max(24, int((th_here - 2 * margin) * 0.80)), local_rot(x_here))
+        y_here = cline.get(x_here, (band_top + band_bot) / 2)
+        stamp(a_sip, g, x_l, y_here)
+    a_sip *= safe  # belt and braces — sizing should already keep the margin
     band_lum = float(np.median(hsv_now[:, :, 2][band]))
     rgb = lit_ink(rgb, hsv_now, a_sip, NAVY_INK, band_lum)
 
