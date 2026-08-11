@@ -53,24 +53,49 @@ dedicated `rufus-media` repo, those docs move into `docs/` here.)
 at 3 posts/day that is ~6.4 GB/year of clone weight. The repo holds text,
 tools, and a handful of reference frames only.
 
-Every final asset goes to Cloudinary instead:
+Every final asset goes to Cloudinary instead. Two upload paths — pick by
+where the file currently lives.
 
-1. `mcp__Cloudinary__upload-asset` with `asset_folder: rufus/YYYY-MM-DD`,
-   `public_id` = the post id, `tags` = [mode, format, platform targets],
-   `resource_type` image or video.
-2. The returned **`secure_url`** is the canonical link — it goes in the Slack
-   card, the `cdn_url` column of the post log, and the Instagram publish call.
-   Assets upload as `type: upload`, which is public delivery, so Instagram and
-   TikTok can fetch them even though the repo is private.
-3. Publish compressed exports, not 2K PNG masters — the Cloudinary image cap
-   is 10 MB and some masters exceed it. Either run `tools/make-exports.py`
-   first, or request the derivative by inserting `f_auto,q_auto` into the
-   delivery URL after `/upload/`.
-4. `res.cloudinary.com` may be blocked by the sandbox egress proxy — that
-   affects only *downloading* here, not Instagram/TikTok fetching it, and not
-   uploading (the Cloudinary MCP runs server-side). Never conclude from a
-   local curl failure that an asset is broken; check with
-   `mcp__Cloudinary__get-asset-details`.
+### A. The file is already at a URL (raw Higgsfield output, unprocessed)
+
+`mcp__Cloudinary__upload-asset` with `file` = that URL, `asset_folder:
+rufus/YYYY-MM-DD`, `public_id` = the post id, `tags` = [mode, format,
+platform targets], `resource_type` image or video. Cloudinary fetches it
+server-side.
+
+### B. The file is LOCAL (anything through the post chain) — the normal case
+
+The Cloudinary MCP runs server-side and cannot read the sandbox filesystem,
+so a local path will not work. Use a signed direct POST. This recipe is
+tested and works:
+
+1. `mcp__Cloudinary__sign-upload` with the signable params only —
+   `public_id`, `asset_folder`, `tags`, `display_name`. Do NOT pass `file`,
+   `resource_type`, `api_key` or `signature`.
+2. POST multipart to
+   `https://api.cloudinary.com/v1_1/<cloud_name>/<image|video>/upload`,
+   echoing **every** key from the returned `upload_params` as its own `-F`
+   field, plus `api_key`, `signature`, and the file.
+   The response includes fields that are easy to miss — `colors`,
+   `upload_preset`, `audit_context`, `overwrite` — and **dropping or
+   renaming any one of them invalidates the signature**. Echo them verbatim.
+3. `resource_type` goes in the URL path, never in the form fields.
+
+### Both paths
+
+- The returned **`secure_url`** is the canonical link — Slack card, the
+  `cdn_url` column of the post log, and the Instagram publish call. Assets
+  upload as `type: upload` (public delivery), so Instagram and TikTok can
+  fetch them even though the repo is private.
+- **Export before upload.** Save stills as JPEG quality 90 rather than
+  uploading 2K PNG masters — the Cloudinary image cap is 10 MB and some
+  masters exceed it. Measured: 4.74 MB PNG → 0.70 MB JPEG.
+- **Deliver a derivative, not the original.** Insert `f_auto,q_auto,w_1080`
+  after `/upload/` in the URL. Measured: 206 KB delivered vs a 4.74 MB
+  master, generated on the fly with no extra upload.
+- If a fetch fails locally, check `mcp__Cloudinary__get-asset-details` before
+  concluding the asset is broken — an egress problem here says nothing about
+  whether Instagram can fetch it.
 
 ## Posting rules
 
