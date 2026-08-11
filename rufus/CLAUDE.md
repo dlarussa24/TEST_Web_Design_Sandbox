@@ -46,12 +46,39 @@ dedicated `rufus-media` repo, those docs move into `docs/` here.)
 6. Eyes-on review happens in Slack — that is what the approval step is for.
    Identity consistency is not machine-checkable.
 
+## Media hosting — Cloudinary, never git
+
+**Do not commit generated media to git.** Binaries in git are permanent
+(history never shrinks) and the routines clone the repo on every firing;
+at 3 posts/day that is ~6.4 GB/year of clone weight. The repo holds text,
+tools, and a handful of reference frames only.
+
+Every final asset goes to Cloudinary instead:
+
+1. `mcp__Cloudinary__upload-asset` with `asset_folder: rufus/YYYY-MM-DD`,
+   `public_id` = the post id, `tags` = [mode, format, platform targets],
+   `resource_type` image or video.
+2. The returned **`secure_url`** is the canonical link — it goes in the Slack
+   card, the `cdn_url` column of the post log, and the Instagram publish call.
+   Assets upload as `type: upload`, which is public delivery, so Instagram and
+   TikTok can fetch them even though the repo is private.
+3. Publish compressed exports, not 2K PNG masters — the Cloudinary image cap
+   is 10 MB and some masters exceed it. Either run `tools/make-exports.py`
+   first, or request the derivative by inserting `f_auto,q_auto` into the
+   delivery URL after `/upload/`.
+4. `res.cloudinary.com` may be blocked by the sandbox egress proxy — that
+   affects only *downloading* here, not Instagram/TikTok fetching it, and not
+   uploading (the Cloudinary MCP runs server-side). Never conclude from a
+   local curl failure that an asset is broken; check with
+   `mcp__Cloudinary__get-asset-details`.
+
 ## Posting rules
 
 - Captions come from `docs/caption-bank.md`, 70% Type A / 30% Type B,
   rotation tracked in `pipeline/post-log.md`. Never explain the joke.
 - Label posts as AI-generated on Meta surfaces.
 - Slack log channel: `#rufus-posts`. ✅ = approved, ❌ = rejected,
-  no reaction = hold. Publish IG via Zapier "Instagram for Business",
-  TikTok via Higgsfield `tiktok_publish`. Reply in-thread with live links.
+  no reaction = hold. Publish IG via Zapier "Instagram for Business" using the
+  Cloudinary `secure_url` as the media parameter; TikTok via Higgsfield
+  `tiktok_publish`. Reply in-thread with live links.
 - Update `pipeline/post-log.md` on every state change.

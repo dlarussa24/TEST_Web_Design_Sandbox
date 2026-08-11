@@ -4,3 +4,7 @@ node_modules/
 .DS_Store
 next-env.d.ts
 __pycache__/
+
+# Rufus pipeline: generated media goes to Cloudinary, never git
+rufus/content/**
+!rufus/content/.gitkeep
